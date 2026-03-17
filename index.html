@@ -7,10 +7,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v4-8.html
+  File Name   : cookie-vault-v4-9.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v4.8
+  Version     : v4.9
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -822,7 +822,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Cookie Vault v4.8</title>
+<title>Cookie Vault v4.9</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -1483,6 +1483,47 @@ body[data-csize="lg"] .gcard-srv{font-size:clamp(9px,1.2vw,11px);padding:2px cla
 .vhint{font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.6;margin-bottom:8px;}
 .vhint a{color:var(--a2);text-decoration:none;}
 
+/* ── BAN CHECKER CUSTOM SELECT ── */
+.bt-sel-wrap{position:relative;width:100%;}
+.bt-sel-btn{width:100%;background:rgba(255,48,96,.04);border:1px solid rgba(255,48,96,.15);
+  border-radius:6px;padding:7px 12px;font-family:var(--mono);font-size:10px;color:var(--txt);
+  cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;
+  transition:all .12s;}
+.bt-sel-btn:hover{border-color:rgba(255,48,96,.35);background:rgba(255,48,96,.08);}
+.bt-sel-chev{color:var(--dim);font-size:10px;transition:transform .15s;}
+.bt-sel-btn.open .bt-sel-chev{transform:rotate(180deg);}
+.bt-sel-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+  background:rgba(7,11,18,.98);border:1px solid rgba(255,48,96,.25);border-radius:8px;
+  overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.bt-sel-drop.open{display:block;}
+.bt-sel-opt{padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--txt);
+  cursor:pointer;transition:background .1s;border-bottom:1px solid rgba(26,48,80,.3);}
+.bt-sel-opt:last-child{border-bottom:none;}
+.bt-sel-opt:hover{background:rgba(255,48,96,.1);color:var(--bright);}
+.bt-sel-opt.active{color:var(--danger);background:rgba(255,48,96,.08);}
+
+/* ── BAN CHECKER MODE TOGGLE ── */
+.bt-mode-bar{display:flex;gap:4px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);
+  background:rgba(0,0,0,.15);}
+.bt-mode-btn{flex:1;padding:6px 10px;font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  border:1px solid rgba(255,48,96,.2);border-radius:6px;background:transparent;
+  color:var(--dim);cursor:pointer;transition:all .12s;text-transform:uppercase;}
+.bt-mode-btn.on{background:rgba(255,48,96,.15);border-color:var(--danger);color:var(--danger);}
+.bt-mode-btn:not(.on):hover{border-color:rgba(255,48,96,.4);color:var(--txt);}
+
+/* ── BAN PASTE SECTION ── */
+.bt-paste-wrap{padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);display:none;}
+.bt-paste-wrap.open{display:block;}
+.bt-paste-ta{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,48,96,.2);
+  border-radius:6px;padding:10px 12px;font-family:var(--mono);font-size:11px;
+  color:var(--ok);resize:none;min-height:80px;line-height:1.7;outline:none;
+  transition:border-color .15s;caret-color:var(--danger);}
+.bt-paste-ta:focus{border-color:rgba(255,48,96,.4);}
+.bt-paste-ta::placeholder{color:var(--dim);opacity:.4;}
+.bt-paste-info{font-family:var(--mono);font-size:9px;color:var(--dim);
+  margin-top:5px;letter-spacing:.5px;}
+.bt-paste-info span{color:var(--ok);}
+
 /* ── EXPORT POPUP ── */
 .exp-popup{position:fixed;z-index:300;background:rgba(7,11,18,.97);border:1px solid var(--bdrb);
   border-radius:12px;padding:6px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.6);
@@ -1747,17 +1788,33 @@ body[data-csize="lg"] .gcard-srv{font-size:clamp(9px,1.2vw,11px);padding:2px cla
           <span style="font-family:var(--mono);font-size:10px;color:var(--dim);" id="bt-chev">▾</span>
         </div>
         <div class="bt-body" id="bt-body">
+          <!-- MODE TOGGLE -->
+          <div class="bt-mode-bar">
+            <button class="bt-mode-btn on" id="bt-mode-group">⊞ Group Mode</button>
+            <button class="bt-mode-btn" id="bt-mode-paste">⌨ Paste Mode</button>
+          </div>
+          <!-- PASTE INPUT (shown in paste mode) -->
+          <div class="bt-paste-wrap" id="bt-paste-wrap">
+            <textarea class="bt-paste-ta" id="bt-paste-ta"
+              placeholder="username:password:cookie&#10;username:cookie&#10;cookie only (one per line)"></textarea>
+            <div class="bt-paste-info" id="bt-paste-info">Awaiting input...</div>
+          </div>
+          <!-- GROUP SELECT (shown in group mode) -->
+          <div style="padding:6px 14px;border-bottom:1px solid rgba(255,48,96,.1);" id="bt-group-wrap">
+            <div class="bt-sel-wrap" id="bt-sel-wrap">
+              <button class="bt-sel-btn" id="bt-sel-btn">
+                <span id="bt-sel-label">All Groups</span>
+                <span class="bt-sel-chev">▾</span>
+              </button>
+              <div class="bt-sel-drop" id="bt-sel-drop"></div>
+            </div>
+          </div>
           <div class="bt-controls">
             <button class="bt-ctrl-btn primary" id="bt-run">▶ Run Check</button>
             <button class="bt-ctrl-btn" id="bt-stop" disabled>■ Stop</button>
             <label class="bt-skip-label"><input type="checkbox" id="bt-skip-banned" checked> Skip Already Banned</label>
-            <label class="bt-skip-label"><input type="checkbox" id="bt-all-groups" checked> All Groups</label>
+            <label class="bt-skip-label" id="bt-all-groups-wrap"><input type="checkbox" id="bt-all-groups" checked> All Groups</label>
             <div class="bt-progress" id="bt-progress"></div>
-          </div>
-          <div style="padding:6px 14px;border-bottom:1px solid rgba(255,48,96,.1);">
-            <select id="bt-group-select" style="background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:5px 10px;font-family:var(--mono);font-size:10px;color:var(--txt);outline:none;width:100%;">
-              <option value="all">All Groups</option>
-            </select>
           </div>
           <div class="bt-log" id="bt-log"></div>
           <div class="bt-footer">
@@ -2047,6 +2104,8 @@ let pinBuffer='',pinFails=0,pinLocked=false,pinLockUntil=0,decoyMode=false;
 let ghPendingSync=false,ghDebounceTimer=null;
 let banCheckRunning=false,banCheckAbort=false,banWorkerIdx=0,banFailedCookies=[];
 let activeFilter='all';
+let btSelectedGroup='all';
+let btPasteMode=false;
 
 function getColor(name){
   if(!name)return PALETTE[0];
@@ -2669,12 +2728,27 @@ document.getElementById('ds-import-f').addEventListener('change',function(){
 
 // BAN CHECKER GROUP SELECT populate
 function populateBanGroupSelect(){
-  const sel=document.getElementById('bt-group-select');if(!sel)return;
-  sel.innerHTML='<option value="all">All Groups</option>';
+  const drop=document.getElementById('bt-sel-drop');if(!drop)return;
+  drop.innerHTML='';
+  const allOpt=document.createElement('div');
+  allOpt.className='bt-sel-opt'+(btSelectedGroup==='all'?' active':'');
+  allOpt.textContent='All Groups';
+  allOpt.addEventListener('click',()=>setBtGroup('all','All Groups'));
+  drop.appendChild(allOpt);
   vault.forEach(g=>{
-    const o=document.createElement('option');o.value=g.id;o.textContent=g.name+(g.serverName?' ('+g.serverName+')':'');
-    sel.appendChild(o);
+    const opt=document.createElement('div');
+    opt.className='bt-sel-opt'+(btSelectedGroup===g.id?' active':'');
+    opt.textContent=esc(g.name)+(g.serverName?' ('+esc(g.serverName)+')':'');
+    opt.addEventListener('click',()=>setBtGroup(g.id,g.name+(g.serverName?' ('+g.serverName+')':'')));
+    drop.appendChild(opt);
   });
+}
+function setBtGroup(id,label){
+  btSelectedGroup=id;
+  document.getElementById('bt-sel-label').textContent=label;
+  document.getElementById('bt-sel-btn').classList.remove('open');
+  document.getElementById('bt-sel-drop').classList.remove('open');
+  populateBanGroupSelect();
 }
 
 checkBackupReminder();
@@ -3510,7 +3584,13 @@ function delGroup(id){
 // CHANGELOG
 // ═══════════════════════════════════════
 const APP_CHANGELOG=[
-  {version:'v4.8',date:'Mar 2026',latest:true,entries:[
+  {version:'v4.9',date:'Mar 2026',latest:true,entries:[
+    {type:'change',desc:'Ban checker group select replaced with styled custom dropdown'},
+    {type:'add',desc:'Ban checker paste mode — paste u:p:c cookies directly to check without a group'},
+    {type:'add',desc:'Mode toggle in ban checker: Group Mode / Paste Mode'},
+    {type:'fix',desc:'Decoy PIN now correctly shows empty vault instead of real data'},
+  ]},
+  {version:'v4.8',date:'Mar 2026',latest:false,entries:[
     {type:'change',desc:'Command dock redesigned — bigger buttons, Title Case font, 2×2 grid'},
     {type:'change',desc:'Export split into .txt (all u:p:c) and .json (full vault) via popup'},
     {type:'change',desc:'Copy now copies all cookies in u:p:c format to clipboard'},
@@ -3710,11 +3790,11 @@ function submitPin(){
   } else if(decoy&&pinBuffer===decoy){
     // Decoy — show empty vault
     decoyMode=true;
+    vault=[]; // clear in memory — saveVault() is a no-op in decoy mode so real data is safe
     pinFails=0;
     scr.classList.add('hidden');
     setTimeout(()=>{scr.style.display='none';},350);
     pinBuffer='';updatePinDots();
-    // Decoy: render shows empty state, all saves are no-ops
     render();
   } else {
     // Wrong
@@ -4018,6 +4098,54 @@ async function runBanCheck(){
 }
 
 // ban-back and bt-close removed (terminal is now inline, not floating)
+
+// MODE TOGGLE
+document.getElementById('bt-mode-group').addEventListener('click',()=>{
+  btPasteMode=false;
+  document.getElementById('bt-mode-group').classList.add('on');
+  document.getElementById('bt-mode-paste').classList.remove('on');
+  document.getElementById('bt-paste-wrap').classList.remove('open');
+  document.getElementById('bt-group-wrap').style.display='';
+  document.getElementById('bt-all-groups-wrap').style.display='';
+});
+document.getElementById('bt-mode-paste').addEventListener('click',()=>{
+  btPasteMode=true;
+  document.getElementById('bt-mode-paste').classList.add('on');
+  document.getElementById('bt-mode-group').classList.remove('on');
+  document.getElementById('bt-paste-wrap').classList.add('open');
+  document.getElementById('bt-group-wrap').style.display='none';
+  document.getElementById('bt-all-groups-wrap').style.display='none';
+  document.getElementById('bt-paste-ta').focus();
+});
+
+// PASTE TEXTAREA live counter
+document.getElementById('bt-paste-ta').addEventListener('input',()=>{
+  const val=document.getElementById('bt-paste-ta').value;
+  const info=document.getElementById('bt-paste-info');
+  if(!val.trim()){info.innerHTML='Awaiting input...';return;}
+  const parsed=parseInput(val);
+  if(!parsed.length){info.innerHTML='<span style="color:var(--danger)">No valid cookies detected</span>';return;}
+  info.innerHTML=`<span>${parsed.length}</span> cookie${parsed.length!==1?'s':''} detected`;
+});
+
+// CUSTOM SELECT toggle
+document.getElementById('bt-sel-btn').addEventListener('click',e=>{
+  e.stopPropagation();
+  const btn=document.getElementById('bt-sel-btn');
+  const drop=document.getElementById('bt-sel-drop');
+  const isOpen=drop.classList.contains('open');
+  btn.classList.toggle('open',!isOpen);
+  drop.classList.toggle('open',!isOpen);
+  if(!isOpen)populateBanGroupSelect();
+});
+document.addEventListener('click',e=>{
+  const btn=document.getElementById('bt-sel-btn');
+  const drop=document.getElementById('bt-sel-drop');
+  if(btn&&drop&&!btn.contains(e.target)&&!drop.contains(e.target)){
+    btn.classList.remove('open');drop.classList.remove('open');
+  }
+});
+
 document.getElementById('bt-run').addEventListener('click',runBanCheck);
 document.getElementById('bt-stop').addEventListener('click',()=>{banCheckAbort=true;});
 document.getElementById('bt-clear-log').addEventListener('click',()=>{
