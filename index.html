@@ -4041,7 +4041,6 @@ async function runBanCheck(){
   const urls=getWorkerUrls();
   if(!urls.length){toast('No CF Worker URLs configured. Open Vault Settings.','err');return;}
   const skipBanned=document.getElementById('bt-skip-banned').checked;
-  const allGroups=document.getElementById('bt-all-groups').checked;
   const log=document.getElementById('bt-log');
   log.innerHTML='';
   banFailedCookies=[];banCheckAbort=false;banCheckRunning=true;banWorkerIdx=0;
