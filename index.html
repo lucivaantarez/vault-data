@@ -2004,11 +2004,11 @@ body[data-csize="lg"] .gcard-srv{font-size:clamp(9px,1.2vw,11px);padding:2px cla
   <button class="qc-btn" data-qf="username">usernames only</button>
 </div>
 
-<input type="file" id="import-f" accept=".json">
-<input type="file" id="import-tf" accept=".txt">
-<input type="file" id="update-f" accept=".json,.txt">
-<input type="file" id="import-unified" accept=".json,.txt">
-<input type="file" id="ds-import-f" accept=".json">
+<input type="file" id="import-f" accept=".json" style="display:none">
+<input type="file" id="import-tf" accept=".txt" style="display:none">
+<input type="file" id="update-f" accept=".json,.txt" style="display:none">
+<input type="file" id="import-unified" accept=".json,.txt" style="display:none">
+<input type="file" id="ds-import-f" accept=".json" style="display:none">
 <div id="toast"><span id="toast-msg"></span></div>
 
 <script>
@@ -2133,7 +2133,7 @@ document.getElementById('search-in').addEventListener('input',()=>{applyFilter()
 // Paste
 const ppanel=document.getElementById('paste-panel');
 document.getElementById('paste-toggle').addEventListener('click',()=>ppanel.classList.toggle('open'));
-['hdr-add','sb-add'].forEach(id=>document.getElementById(id).addEventListener('click',()=>{
+['hdr-add'].forEach(id=>document.getElementById(id).addEventListener('click',()=>{
   ppanel.classList.add('open');
   document.getElementById('main').scrollTo({top:0,behavior:'smooth'});
   setTimeout(()=>document.getElementById('paste-ta').focus(),200);
