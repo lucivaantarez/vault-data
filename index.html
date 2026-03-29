@@ -7,10 +7,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-1.html
+  File Name   : cookie-vault-v4-9.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.1
+  Version     : v4.9
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -121,7 +121,6 @@
     cookies     : Cookie[]
     changelog   : Entry[]  — Capped at 30.
     pc          : number   — [OPTIONAL] Panel column preference (1–3).
-    lastChecked : number   — [OPTIONAL] Unix ms of last ban check run on this group.
   }
 
   Cookie {
@@ -823,7 +822,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Cookie Vault v5.1</title>
+<title>Cookie Vault v4.9</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -866,18 +865,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .stat-chip:last-child{border-right:none;}
 .stat-v{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--bright);line-height:1;}
 .stat-l{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;}
-.hdr-search{flex:1;max-width:320px;position:relative;}
+.hdr-search{flex:1;max-width:240px;position:relative;}
 .hdr-search input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);
-  border-radius:8px;padding:8px 32px 8px 32px;font-family:var(--mono);font-size:12px;color:var(--txt);
+  border-radius:8px;padding:7px 11px 7px 30px;font-family:var(--mono);font-size:12px;color:var(--txt);
   outline:none;transition:all .15s;}
 .hdr-search input:focus{border-color:var(--ac);background:rgba(15,111,255,.06);}
 .hdr-search input::placeholder{color:var(--dim);}
 .srch-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--dim);pointer-events:none;}
-.srch-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;
-  color:var(--dim);cursor:pointer;font-size:13px;line-height:1;padding:2px 4px;display:none;
-  transition:color .12s;}
-.srch-clear:hover{color:var(--bright);}
-.srch-clear.visible{display:block;}
 .hdr-right{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;}
 .sort-btn,.card-size-btn{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:7px;
   padding:6px 9px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
@@ -893,14 +887,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   color:#fff;cursor:pointer;box-shadow:0 0 14px rgba(15,111,255,.3);transition:all .15s;white-space:nowrap;}
 .btn-add:hover{box-shadow:0 0 22px rgba(15,111,255,.5);transform:translateY(-1px);}
 /* Header meta buttons: stats + changelog */
-.hdr-meta{display:flex;gap:0px;}
-.hdr-meta-btn{background:none;border:none;border-bottom:2px solid transparent;border-radius:0;
-  padding:5px 9px 4px;cursor:pointer;transition:color .12s,border-color .12s;display:flex;align-items:center;gap:5px;
-  font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
-.hdr-meta-btn:hover{color:var(--bright);border-bottom-color:rgba(0,212,255,.35);}
-.hdr-meta-btn.hdr-active{color:var(--a2);border-bottom-color:var(--a2);}
-.hdr-meta-btn svg{opacity:.45;transition:opacity .12s;}
-.hdr-meta-btn:hover svg,.hdr-meta-btn.hdr-active svg{opacity:1;}
+.hdr-meta{display:flex;gap:4px;}
+.hdr-meta-btn{background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:7px;
+  padding:5px 8px;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.5px;}
+.hdr-meta-btn:hover{border-color:var(--ac);color:var(--a2);}
+.hdr-meta-btn svg{opacity:.7;}
+.hdr-meta-btn:hover svg{opacity:1;}
 
 /* ── BODY LAYOUT ── */
 .app-body{flex:1;display:flex;overflow:hidden;}
@@ -1099,29 +1092,6 @@ body[data-csize="lg"] .gcard-srv{font-size:clamp(9px,1.2vw,11px);padding:2px cla
 .exp-tile span{font-family:var(--mono);font-size:9px;letter-spacing:1px;}
 
 .empty-state{text-align:center;padding:70px 20px;color:var(--dim);}
-
-/* ── LIST VIEW ── */
-body.list-view .card-grid{display:flex;flex-direction:column;gap:3px;}
-body.list-view .exp-tile{display:none;}
-body.list-view .gcard{aspect-ratio:unset;height:44px;border-radius:8px;flex-direction:row;align-items:center;overflow:hidden;}
-body.list-view .gcard-bar{width:3px;height:100%;flex-shrink:0;}
-body.list-view .gcard-body{flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;padding:0 10px;text-align:left;}
-body.list-view .gcard-dot{width:7px!important;height:7px!important;flex-shrink:0;}
-body.list-view .gcard-name{font-size:12px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-body.list-view .gcard-count{font-size:9px;padding:1px 7px;flex-shrink:0;white-space:nowrap;}
-body.list-view .gcard-srv{font-size:9px;padding:1px 7px;flex-shrink:0;max-width:120px;}
-body.list-view .gcard-status{margin-top:0;font-size:9px;flex-shrink:0;}
-body.list-view .gcard-alt-badge{font-size:7px;padding:1px 5px;flex-shrink:0;}
-body.list-view .gcard-pin{top:50%;right:34px;transform:translateY(-50%);}
-body.list-view .gcard-banned-tag{top:50%;transform:translateY(-50%);font-size:8px;padding:1px 4px;}
-body.list-view .card-qc-btn{bottom:unset;top:50%;transform:translateY(-50%);right:5px;}
-body.list-view .gcard::before{display:none;}
-.list-view-btn{background:none;border:1px solid var(--bdr);border-radius:7px;padding:6px 9px;
-  font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;letter-spacing:1px;
-  transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
-.list-view-btn:hover{border-color:var(--ac);color:var(--a2);}
-.list-view-btn.active{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.08);}
-.list-view-btn svg{opacity:.6;}
 .empty-state p{font-family:var(--mono);font-size:12px;letter-spacing:1px;line-height:1.9;}
 
 /* ── QUICK COPY ── */
@@ -1206,11 +1176,6 @@ body.list-view .gcard::before{display:none;}
 .ck-status-tag.exp{background:rgba(255,170,0,.1);color:var(--warn);border:1px solid rgba(255,170,0,.2);}
 .ck-status-tag.face{background:rgba(255,107,0,.1);color:#ff6b00;border:1px solid rgba(255,107,0,.2);}
 .ck-item-actions{display:flex;gap:4px;margin-left:auto;}
-.ck-fmt-row{display:flex;gap:4px;padding:5px 10px 0;flex-wrap:wrap;}
-.ck-fmt-btn{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:4px;
-  font-family:var(--mono);font-size:9px;color:var(--dim);cursor:pointer;padding:3px 8px;
-  transition:all .12s;letter-spacing:.5px;}
-.ck-fmt-btn:hover{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.08);}
 .ck-copy-btn{background:rgba(15,111,255,.1);border:1px solid rgba(15,111,255,.2);border-radius:4px;
   padding:3px 8px;font-family:var(--mono);font-size:8px;color:var(--a2);cursor:pointer;
   transition:all .12s;letter-spacing:.5px;}
@@ -1370,31 +1335,6 @@ body.list-view .gcard::before{display:none;}
 .p-banned-badge{font-family:var(--mono);font-size:10px;color:var(--danger);background:rgba(255,48,96,.1);
   border:1px solid rgba(255,48,96,.25);padding:2px 10px;border-radius:20px;}
 
-/* ── BULK SELECT ── */
-.gcard-chk{position:absolute;top:8px;right:8px;z-index:10;width:18px;height:18px;
-  border-radius:5px;border:2px solid rgba(255,255,255,.25);background:rgba(0,0,0,.5);
-  cursor:pointer;display:none;align-items:center;justify-content:center;
-  transition:all .12s;}
-.gcard:hover .gcard-chk,.gcard.bulk-selected .gcard-chk{display:flex;}
-.gcard.bulk-selected .gcard-chk{border-color:var(--a2);background:var(--a2);}
-.gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:11px;color:#000;font-weight:900;line-height:1;}
-.gcard.bulk-selected{border-color:var(--a2)!important;box-shadow:0 0 14px rgba(0,212,255,.3)!important;}
-body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
-.bulk-bar{position:fixed;bottom:0;left:0;right:0;z-index:400;
-  background:rgba(7,11,18,.97);border-top:1px solid var(--bdrb);
-  padding:10px 20px;display:flex;align-items:center;gap:10px;
-  transform:translateY(100%);transition:transform .25s cubic-bezier(.34,1.3,.64,1);}
-.bulk-bar.open{transform:translateY(0);}
-.bulk-bar-count{font-family:var(--mono);font-size:11px;color:var(--a2);margin-right:auto;letter-spacing:1px;}
-.bulk-bar-btn{background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:8px;
-  padding:8px 14px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
-  letter-spacing:.5px;transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
-.bulk-bar-btn:hover{border-color:var(--ac);color:var(--a2);}
-.bulk-bar-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
-.bulk-bar-cancel{background:none;border:none;color:var(--dim);cursor:pointer;font-family:var(--mono);
-  font-size:10px;padding:8px 6px;transition:color .12s;}
-.bulk-bar-cancel:hover{color:var(--bright);}
-
 /* ── ALTERNATIVES ── */
 .alt-section{margin-top:14px;border-top:1px solid var(--bdr);padding-top:10px;}
 .alt-sec-head{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 0;user-select:none;margin-bottom:6px;}
@@ -1472,18 +1412,12 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
 @keyframes syncPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 
 /* ── FILTER BAR ── */
-.filter-bar{display:flex;align-items:stretch;gap:0;padding:0 0 12px 0;border-bottom:1px solid var(--bdr);margin-bottom:12px;}
-.filter-pill{background:none;border:none;border-bottom:2px solid transparent;border-radius:0;
-  font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);padding:6px 12px;
-  cursor:pointer;transition:color .12s,border-color .12s;white-space:nowrap;
-  display:flex;align-items:center;gap:5px;}
-.filter-pill svg{opacity:.45;transition:opacity .12s;}
-.filter-pill:hover{color:var(--bright);}
-.filter-pill:hover svg{opacity:.8;}
-.filter-pill.on{color:var(--a2);border-bottom-color:var(--a2);}
-.filter-pill.on svg{opacity:1;}
-.filter-pill.on.f-banned{color:var(--danger);border-bottom-color:var(--danger);}
-.filter-pill.on.f-alts{color:var(--a3);border-bottom-color:var(--a3);}
+.filter-bar{display:flex;align-items:center;gap:6px;padding:0 0 12px 0;flex-wrap:wrap;}
+.filter-pill{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:20px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);padding:4px 11px;cursor:pointer;transition:all .12s;white-space:nowrap;}
+.filter-pill:hover{border-color:var(--ac);color:var(--a2);}
+.filter-pill.on{background:rgba(15,111,255,.15);border-color:var(--ac);color:var(--a2);}
+.filter-pill.on.f-banned{background:rgba(255,48,96,.12);border-color:var(--danger);color:var(--danger);}
+.filter-pill.on.f-alts{background:rgba(123,47,255,.12);border-color:var(--a3);color:var(--a3);}
 .health-badge{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.3);border:1px solid var(--bdr);border-radius:20px;padding:3px 10px;cursor:pointer;transition:all .12s;}
 .health-badge:hover{border-color:var(--bdrb);}
 .health-score{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--bright);}
@@ -1649,19 +1583,6 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
 .import-scroll::-webkit-scrollbar{width:3px;}
 .import-scroll::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
 
-
-/* ── SORT/DISTRIBUTE MODAL ── */
-.sort-modal{width:min(92vw,460px);}
-.sort-preview{margin-top:12px;max-height:160px;overflow-y:auto;background:rgba(0,0,0,.3);
-  border:1px solid var(--bdr);border-radius:7px;padding:8px 12px;display:none;}
-.sort-preview.show{display:block;}
-.sort-preview-row{font-family:var(--mono);font-size:10px;color:var(--dim);padding:2px 0;
-  border-bottom:1px solid rgba(26,48,80,.3);}
-.sort-preview-row:last-child{border-bottom:none;}
-.sort-preview-row .srv{color:var(--a3);}
-.sort-preview-row .grp{color:var(--a2);}
-.sort-preview-row .cnt{color:var(--ok);}
-
 </style>
 </head>
 <body data-csize="md">
@@ -1741,25 +1662,21 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
       <input type="text" id="search-in" placeholder="Search groups or usernames...">
-      <button class="srch-clear" id="srch-clear" title="Clear search">✕</button>
     </div>
     <div class="hdr-right">
       <div class="hdr-meta">
         <button class="hdr-meta-btn" id="hdr-stats-btn" title="Vault Stats">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-          </svg>Stats
+          </svg>stats
         </button>
         <button class="hdr-meta-btn" id="hdr-cl-btn" title="Changelog">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-          </svg>Log
+          </svg>log
         </button>
       </div>
-      <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List
-      </button>
       <button class="sort-btn" id="sort-btn">A→Z</button>
       <button class="card-size-btn" id="size-btn">M</button>
       <div class="col-pills">
@@ -1853,7 +1770,6 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
             <div class="paste-info" id="paste-info">Awaiting input...</div>
             <div class="paste-ft-btns">
               <button class="btn-primary" id="create-group-btn" style="background:rgba(123,47,255,.2);border:1px solid rgba(123,47,255,.4);box-shadow:none;font-size:11px;padding:7px 12px;" title="Create an empty group">+ Empty Group</button>
-              <button class="btn-primary" id="distribute-btn" style="display:none;background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.35);box-shadow:none;font-size:11px;padding:7px 12px;" title="Distribute into multiple groups">⟁ Distribute</button>
               <button class="btn-primary" id="add-btn" disabled>+ Add to Vault</button>
             </div>
           </div>
@@ -1904,22 +1820,12 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
         </div>
       </div>
       <div class="filter-bar" id="filter-bar">
-        <button class="filter-pill on" data-filter="all">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>All
-        </button>
-        <button class="filter-pill" data-filter="pinned">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Pinned
-        </button>
-        <button class="filter-pill f-banned" data-filter="banned">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Banned
-        </button>
-        <button class="filter-pill f-alts" data-filter="alts">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>Has Alts
-        </button>
-        <button class="filter-pill" data-filter="empty">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Empty
-        </button>
-        <div class="health-badge" id="health-badge" title="Vault Health Score — click for breakdown">
+        <button class="filter-pill on" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="pinned">📌 Pinned</button>
+        <button class="filter-pill f-banned" data-filter="banned">🚫 Banned</button>
+        <button class="filter-pill f-alts" data-filter="alts">⟁ Has Alts</button>
+        <button class="filter-pill" data-filter="empty">○ Empty</button>
+        <div class="health-badge" id="health-badge" title="Vault Health Score">
           <span class="health-lbl">health</span>
           <span class="health-score" id="health-score">—</span>
           <span class="health-grade" id="health-grade">?</span>
@@ -1932,49 +1838,18 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
 
 <!-- EXPORT POPUP -->
 <div class="exp-popup" id="exp-popup">
-  <div style="font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;padding:6px 14px 2px;text-transform:uppercase;">Export Format</div>
-  <button class="exp-pop-btn" data-expfmt="user:pass:cookie">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">u:p:c</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">user:pass:cookie</span>
-  </button>
-  <button class="exp-pop-btn" data-expfmt="user:cookie">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">u:c</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">user:cookie</span>
-  </button>
-  <button class="exp-pop-btn" data-expfmt="cookie">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">cookie only</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">raw cookie</span>
-  </button>
-  <button class="exp-pop-btn" data-expfmt="username">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">username only</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">u</span>
+  <button class="exp-pop-btn" id="exp-txt-btn">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Export as .txt <span style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto">u:p:c</span>
   </button>
   <div class="exp-pop-sep"></div>
-  <button class="exp-pop-btn" data-expfmt="json">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    <span style="flex:1">vault.json</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">full backup</span>
+  <button class="exp-pop-btn" id="exp-json-btn">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Export as .json <span style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto">full</span>
   </button>
 </div>
 
-<!-- BULK ACTION BAR -->
-<div class="bulk-bar" id="bulk-bar">
-  <div class="bulk-bar-count" id="bulk-bar-count">0 selected</div>
-  <button class="bulk-bar-btn" id="bulk-bar-export">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export
-  </button>
-  <button class="bulk-bar-btn" id="bulk-bar-copy">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy All
-  </button>
-  <button class="bulk-bar-btn" id="bulk-bar-ban">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Ban All
-  </button>
-  <button class="bulk-bar-btn danger" id="bulk-bar-delete">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Delete All
-  </button>
-  <button class="bulk-bar-cancel" id="bulk-bar-cancel">✕ Cancel</button>
-</div>
-
-
+<!-- NEW DATA CONFIG MODAL -->
 <div class="m-ov" id="new-data-modal">
   <div class="modal" style="width:min(90vw,340px)">
     <h3>New Data Config</h3>
@@ -1998,35 +1873,6 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
     <div class="m-act" style="margin-top:14px">
       <button class="bsm b-ghost" id="import-review-cancel">Cancel</button>
       <button class="bsm b-save" id="import-review-ok">Apply Selected</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- SORT/DISTRIBUTE PANEL (shown when 6+ cookies pasted) -->
-<div class="m-ov" id="sort-modal">
-  <div class="modal sort-modal">
-    <h3>Distribute Cookies</h3>
-    <p id="sort-modal-desc">Split <span id="sort-count">0</span> cookies into groups automatically.</p>
-    <div class="flbl">Server name prefix (e.g. WH → WH 1, WH 2…)</div>
-    <input class="finput" id="sort-server-pfx" placeholder="e.g. WH, SEC, FARM" maxlength="20">
-    <div class="flbl">Group name prefix (e.g. SP → SP 1, SP 2…)</div>
-    <input class="finput" id="sort-group-pfx" placeholder="e.g. SP, GRP, ALT" maxlength="20">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-      <div>
-        <div class="flbl">Max groups per server</div>
-        <input class="finput" id="sort-groups-per-srv" type="number" min="1" max="18" value="18">
-      </div>
-      <div>
-        <div class="flbl">Cookies per group</div>
-        <input class="finput" id="sort-cookies-per-grp" type="number" min="1" max="50" value="5">
-      </div>
-    </div>
-    <div class="sort-preview" id="sort-preview"></div>
-    <div class="m-act">
-      <button class="bsm b-ghost" id="sort-cancel">Cancel</button>
-      <button class="bsm b-ghost" id="sort-preview-btn" style="border-color:var(--a2);color:var(--a2);">Preview</button>
-      <button class="bsm b-save" id="sort-confirm">Create Groups</button>
     </div>
   </div>
 </div>
@@ -2250,7 +2096,6 @@ let pending=[],panelId=null,bulkGroups=[],bulkLabel='';
 let lastDeleted=null,undoTimer=null;
 let cols=parseInt(localStorage.getItem(CK))||2;
 let sort=(()=>{const s=localStorage.getItem(SORT_K);return['az','za','newest','most'].includes(s)?s:'az';})();
-let listView=localStorage.getItem('cv_list_view')==='1';
 let settings=loadSettings();
 let qcGroupId=null,activeSrv='all';
 let staggerTimers=[];
@@ -2266,7 +2111,6 @@ let banCheckRunning=false,banCheckAbort=false,banWorkerIdx=0,banFailedCookies=[]
 let activeFilter='all';
 let btSelectedGroup='all';
 let btPasteMode=false;
-let currentRequestController=null; // AbortController for live ban-check fetch
 
 function getColor(name){
   if(!name)return PALETTE[0];
@@ -2347,31 +2191,8 @@ sb2.addEventListener('click',()=>{
   localStorage.setItem(SORT_K,sort);sb2.textContent=SLBL[sort];render();
 });
 
-// List View
-function applyListView(){
-  document.body.classList.toggle('list-view',listView);
-  const btn=document.getElementById('list-view-btn');
-  if(btn)btn.classList.toggle('active',listView);
-}
-applyListView();
-document.getElementById('list-view-btn').addEventListener('click',()=>{
-  listView=!listView;
-  localStorage.setItem('cv_list_view',listView?'1':'0');
-  applyListView();
-});
-
 // Search
-document.getElementById('search-in').addEventListener('input',()=>{
-  const val=document.getElementById('search-in').value;
-  document.getElementById('srch-clear').classList.toggle('visible',val.length>0);
-  applyFilter();
-});
-document.getElementById('srch-clear').addEventListener('click',()=>{
-  document.getElementById('search-in').value='';
-  document.getElementById('srch-clear').classList.remove('visible');
-  applyFilter();
-  document.getElementById('search-in').focus();
-});
+document.getElementById('search-in').addEventListener('input',()=>{applyFilter();});
 
 // Paste
 const ppanel=document.getElementById('paste-panel');
@@ -2384,20 +2205,11 @@ document.getElementById('paste-toggle').addEventListener('click',()=>ppanel.clas
 const ta=document.getElementById('paste-ta'),pi=document.getElementById('paste-info'),ab=document.getElementById('add-btn');
 ta.addEventListener('input',()=>{
   const p=parseInput(ta.value);
-  if(!ta.value.trim()){pi.innerHTML='Awaiting input...';ab.disabled=true;
-    document.getElementById('distribute-btn').style.display='none';return;}
-  if(!p.length){pi.innerHTML='<span style="color:var(--danger)">No valid cookies</span>';ab.disabled=true;
-    document.getElementById('distribute-btn').style.display='none';}
-  else{
-    pi.innerHTML=`<span>${p.length}</span> detected`;ab.disabled=false;
-    // Show distribute button when 6+ cookies pasted
-    document.getElementById('distribute-btn').style.display=p.length>=6?'':'none';
-  }
+  if(!ta.value.trim()){pi.innerHTML='Awaiting input...';ab.disabled=true;return;}
+  if(!p.length){pi.innerHTML='<span style="color:var(--danger)">No valid cookies</span>';ab.disabled=true;}
+  else{pi.innerHTML=`<span>${p.length}</span> detected`;ab.disabled=false;}
 });
 ab.addEventListener('click',()=>{const p=parseInput(ta.value);if(p.length)openAddModal(p);});
-document.getElementById('distribute-btn').addEventListener('click',()=>{
-  const p=parseInput(ta.value);if(p.length>=6)openSortModal(p);
-});
 
 // Add modal — merge suggestion on server name input
 document.getElementById('ms').addEventListener('input',()=>{
@@ -2432,9 +2244,7 @@ document.getElementById('mc-ok').addEventListener('click',confirmAdd);
 document.getElementById('bk-cancel').addEventListener('click',()=>closeMod('bulk-modal'));
 document.querySelectorAll('.bulk-opt').forEach(btn=>btn.addEventListener('click',()=>{
   const fmt=btn.dataset.f;
-  // Sort groups in display order (sortVault) then flatten cookies in array order (top-to-bottom)
-  const sortedGroups=sortVault(bulkGroups);
-  const all=sortedGroups.flatMap(g=>g.cookies);
+  const all=bulkGroups.flatMap(g=>g.cookies);
   const lines=all.map(c=>fmtLine(c,fmt)).filter(Boolean);
   dl(lines.join('\n'),sf(bulkLabel)+'.txt');
   toast(`Exported ${lines.length} entries as ${fmt}`,'ok');
@@ -2560,52 +2370,32 @@ document.getElementById('sb-nav').addEventListener('click',e=>{
 // EXPORT button → show popup
 document.getElementById('sb-exp').addEventListener('click',e=>{
   if(!vault.length){toast('Nothing to export','err');return;}
-  openExpPopup(e.currentTarget,null);
-});
-// Unified export popup handler
-let expPopupTarget=null; // null=whole vault, array=specific groups
-function openExpPopup(anchor,groups){
-  expPopupTarget=groups||null;
   const popup=document.getElementById('exp-popup');
-  popup.classList.add('open');
-  const rect=anchor.getBoundingClientRect();
-  let left=rect.left,top=rect.bottom+6;
-  if(left+220>window.innerWidth-8)left=window.innerWidth-228;
-  if(top+240>window.innerHeight-8)top=rect.top-246;
-  popup.style.left=left+'px';popup.style.top=top+'px';
-}
-function closeExpPopup(){document.getElementById('exp-popup').classList.remove('open');}
-document.querySelectorAll('.exp-pop-btn[data-expfmt]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const fmt=btn.dataset.expfmt;
-    const src=expPopupTarget||(sortVault(vault));
-    if(fmt==='json'){
-      const expVault=expPopupTarget?expPopupTarget:vault;
-      dl(JSON.stringify({version:1,exported:Date.now(),vault:expVault},null,2),`cookie-vault-${Date.now()}.json`);
-      settings.lastBackup=Date.now();saveSettings();
-      document.getElementById('backup-banner').classList.remove('show');
-      toast('Vault exported as .json','ok');
-    }else{
-      const lines=src.flatMap(g=>g.cookies.map(c=>fmtLine(c,fmt))).filter(Boolean);
-      dl(lines.join('\n'),`cookie-vault-${Date.now()}.txt`);
-      settings.lastBackup=Date.now();saveSettings();
-      document.getElementById('backup-banner').classList.remove('show');
-      toast(`Exported ${lines.length} lines (${fmt})`,'ok');
-    }
-    closeExpPopup();
-  });
-});
-document.addEventListener('click',e=>{
-  const popup=document.getElementById('exp-popup');
-  if(popup.classList.contains('open')&&!popup.contains(e.target)&&!e.target.closest('#sb-exp')&&!e.target.closest('.bulk-bar-export-anchor')){
-    closeExpPopup();
+  popup.classList.toggle('open');
+  if(popup.classList.contains('open')){
+    const rect=e.currentTarget.getBoundingClientRect();
+    popup.style.left=rect.left+'px';popup.style.top=(rect.bottom+6)+'px';
   }
+});
+document.getElementById('exp-txt-btn').addEventListener('click',()=>{
+  const lines=vault.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
+  dl(lines.join('\n'),`cookie-vault-${Date.now()}.txt`);
+  settings.lastBackup=Date.now();saveSettings();
+  document.getElementById('backup-banner').classList.remove('show');
+  document.getElementById('exp-popup').classList.remove('open');
+  toast(`Exported ${lines.length} cookies as u:p:c`,'ok');
+});
+document.getElementById('exp-json-btn').addEventListener('click',()=>{
+  dl(JSON.stringify({version:1,exported:Date.now(),vault},null,2),`cookie-vault-${Date.now()}.json`);
+  settings.lastBackup=Date.now();saveSettings();
+  document.getElementById('backup-banner').classList.remove('show');
+  document.getElementById('exp-popup').classList.remove('open');
+  toast('Vault exported as .json','ok');
 });
 // COPY button → all u:p:c
 document.getElementById('sb-clip').addEventListener('click',()=>{
   if(!vault.length){toast('Nothing to copy','err');return;}
-  // Use sortVault to copy in display order (top to bottom)
-  const lines=sortVault(vault).flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
+  const lines=vault.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
   copyText(lines.join('\n'),()=>{
     toast(`Copied ${lines.length} cookies (u:p:c)`,'ok');
   },()=>toast('Clipboard copy failed','err'));
@@ -2810,7 +2600,7 @@ document.getElementById('create-group-btn').addEventListener('click',()=>{
     createdAt:Date.now(),pinned:false,banned:false,alternatives:[],cookies:[],changelog:[]
   };
   logChange(group,'Created as empty group');
-  sortedInsert(group);saveVault();render();
+  vault.unshift(group);saveVault();render();
   toast(`"${group.name}" created (empty)`,'ok');
 });
 
@@ -3096,7 +2886,7 @@ async function confirmAdd(){
     cookies:pending.map(c=>({...c})),changelog:[]
   };
   logChange(group,`Created with <span>${pending.length} cookie${pending.length!==1?'s':''}</span>`);
-  sortedInsert(group);saveVault();
+  vault.unshift(group);saveVault();
   document.getElementById('paste-ta').value='';
   document.getElementById('paste-info').innerHTML='Awaiting input...';
   document.getElementById('add-btn').disabled=true;
@@ -3377,9 +3167,7 @@ function mkCard(group){
     card.appendChild(banTag);
   }
   card.appendChild(body);
-  const chkDiv=document.createElement('div');chkDiv.className='gcard-chk';
-  chkDiv.addEventListener('click',e=>{e.stopPropagation();toggleBulkSelect(group.id);});
-  card.appendChild(chkDiv);
+  const qcBtn=document.createElement('button');qcBtn.className='card-qc-btn';qcBtn.textContent='copy';qcBtn.title='Quick copy';
   qcBtn.addEventListener('click',e=>{e.stopPropagation();openQC(group.id,qcBtn);});
   card.appendChild(qcBtn);
   card.addEventListener('click',e=>{if(e.target===qcBtn||qcBtn.contains(e.target))return;openPanel(group.id);});
@@ -3631,27 +3419,6 @@ function mkCkItem(c,i,gid,opts){
   }
   hdr.appendChild(actions);wrap.appendChild(hdr);
 
-  // Format copy row — tap to copy in different formats
-  const fmtRow=document.createElement('div');fmtRow.className='ck-fmt-row';
-  const fmtDefs=[
-    {label:'u:p:c',fmt:'user:pass:cookie'},
-    {label:'u:c',fmt:'user:cookie'},
-    {label:'u',fmt:'username'},
-    {label:'u:p',fmt:'user:pass'},
-  ];
-  fmtDefs.forEach(({label,fmt})=>{
-    const fb=document.createElement('button');fb.className='ck-fmt-btn';fb.textContent=label;
-    fb.addEventListener('click',e=>{
-      e.stopPropagation();
-      const text=fmtLine(c,fmt);
-      if(!text){toast('No data for this format','warn');return;}
-      copyText(text,()=>{fb.textContent='✓';setTimeout(()=>fb.textContent=label,1200);},
-        ()=>toast('Copy failed','err'));
-    });
-    fmtRow.appendChild(fb);
-  });
-  wrap.appendChild(fmtRow);
-
   // Terminal lines: username, password, cookie
   if(c.username){
     const ln=document.createElement('div');ln.className='ck-line';
@@ -3828,21 +3595,7 @@ function delGroup(id){
 // CHANGELOG
 // ═══════════════════════════════════════
 const APP_CHANGELOG=[
-  {version:'v5.1',date:'Mar 2026',latest:true,entries:[
-    {type:'change',desc:'Header toolbar — no borders, plain text + icons, dim by default, cyan underline on active, Stats/Log capitalized'},
-    {type:'change',desc:'Filter bar — full tab strip with SVG icons (All/Pinned/Banned/Has Alts/Empty), no pills, no emoji'},
-    {type:'change',desc:'Search — bigger, wider, clear ✕ button appears when typing'},
-    {type:'add',desc:'List View — toggle button in header, compact 44px single-row per group showing dot → name → count → server → badges. Persists across reloads'},
-    {type:'add',desc:'Bulk Select — hover a card to see checkbox, select multiple, bulk action bar slides up from bottom: Export / Copy All / Ban All / Delete All'},
-    {type:'change',desc:'Export Popup — clicking export shows format choices: u:p:c / u:c / cookie only / username only / vault.json. Works from dock button and bulk select'},
-    {type:'add',desc:'Auto Sort on Add — new groups insert into A-Z position immediately, no refresh needed'},
-    {type:'add',desc:'Search Lift — matching groups float to top of their section, restore to original order on clear'},
-    {type:'add',desc:'Cookie Sort in Panel — sort bar above cookies: Default / A-Z / Username / Banned first'},
-    {type:'change',desc:'Stats — per-server breakdown (groups · cookies · banned count) inside stats modal'},
-    {type:'change',desc:'Health Score — click the badge to see a toast breakdown (backup age, ban ratio, empty groups, streak, sync)'},
-    {type:'add',desc:'Last Checked — timestamp shows on cards after ban check runs'},
-  ]},
-  {version:'v4.8',date:'Mar 2026',latest:false,entries:[
+  {version:'v4.8',date:'Mar 2026',latest:true,entries:[
     {type:'change',desc:'Command dock redesigned — bigger buttons, Title Case font, 2×2 grid'},
     {type:'change',desc:'Export split into .txt (all u:p:c) and .json (full vault) via popup'},
     {type:'change',desc:'Copy now copies all cookies in u:p:c format to clipboard'},
@@ -4249,15 +4002,9 @@ function updateBtWorkerStatus(){
 }
 
 function openBanTerminal(){
-  // Always reset button state when opening — prevents stuck bt-run from prior failed runs
-  banCheckAbort=false;
-  banCheckRunning=false;
-  if(currentRequestController){currentRequestController.abort();currentRequestController=null;}
-  document.getElementById('bt-run').disabled=false;
-  document.getElementById('bt-stop').disabled=true;
   const body=document.getElementById('bt-body');
   const chev=document.getElementById('bt-chev');
-  if(body)body.classList.add('open');
+  if(body){body.classList.add('open');}
   if(chev)chev.textContent='▴';
   updateBtWorkerStatus();
 }
@@ -4284,17 +4031,10 @@ function btSetProgress(cur,total){
 }
 
 async function callWorker(url,cookie,username){
-  currentRequestController=new AbortController();
-  const timeoutId=setTimeout(()=>currentRequestController.abort(),10000);
-  try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({cookie,username:username||''}),signal:currentRequestController.signal});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return r.json();
-  }finally{
-    clearTimeout(timeoutId);
-    currentRequestController=null;
-  }
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({cookie,username:username||''}),signal:AbortSignal.timeout(10000)});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
 }
 
 async function runBanCheck(){
@@ -4309,88 +4049,55 @@ async function runBanCheck(){
   document.getElementById('bt-export-failed').style.display='none';
   document.getElementById('bt-summary').textContent='running…';
 
-  // Determine what to check: paste mode vs group selection
-  let toCheck=[];
-  if(btPasteMode){
-    const val=document.getElementById('bt-paste-ta').value;
-    const parsed=parseInput(val);
-    if(!parsed.length){
-      toast('No valid cookies in paste area','err');
-      banCheckRunning=false;
-      document.getElementById('bt-run').disabled=false;
-      document.getElementById('bt-stop').disabled=true;
-      return;
-    }
-    toCheck=[{name:'Pasted cookies',serverName:null,cookies:parsed,id:'__paste__'}];
-  }else{
-    // Group mode: use btSelectedGroup ('all' = all vault groups, else specific group id)
-    const baseGroups=btSelectedGroup==='all'?vault:[vault.find(g=>g.id===btSelectedGroup)].filter(Boolean);
-    toCheck=baseGroups.filter(g=>!(skipBanned&&g.banned));
-  }
-
-  if(!toCheck.length){
-    toast('No groups to check','warn');
-    banCheckRunning=false;
-    document.getElementById('bt-run').disabled=false;
-    document.getElementById('bt-stop').disabled=true;
-    return;
-  }
-
+  const groups=allGroups?vault:vault.filter(g=>!g.banned);
+  const toCheck=groups.filter(g=>!(skipBanned&&g.banned));
   let total=toCheck.reduce((s,g)=>s+g.cookies.length,0);
   let done=0,active=0,banned=0,expired=0,facelock=0,errors=0;
-  btLog(`Starting check — ${toCheck.length} group${toCheck.length!==1?'s':''}, ${total} cookies, ${urls.length} worker(s)`,'info');
+  btLog(`Starting check — ${toCheck.length} groups, ${total} cookies, ${urls.length} worker(s)`,'info');
   btSetProgress(0,total);
 
-  try{
-    for(const g of toCheck){
+  for(const g of toCheck){
+    if(banCheckAbort)break;
+    btLog(`── ${g.name}${g.serverName?' ('+g.serverName+')':''}`, 'muted');
+    for(const c of g.cookies){
       if(banCheckAbort)break;
-      btLog(`── ${g.name}${g.serverName?' ('+g.serverName+')':''}`, 'muted');
-      for(const c of g.cookies){
-        if(banCheckAbort)break;
-        const url=urls[banWorkerIdx%urls.length];banWorkerIdx++;
-        const label=(c.username||c.cookie.substring(0,20)+'…');
-        try{
-          const res=await callWorker(url,c.cookie,c.username);
-          const status=(res.status||'').toLowerCase();
-          if(status==='active'){active++;btLog(`✓ ${label} — active`,'ok');}
-          else if(status==='banned'){banned++;c.banStatus='banned';banFailedCookies.push(c);
-            btLog(`✗ ${label} — BANNED${res.duration?' ('+res.duration+')':''}`,'ban');}
-          else if(status==='expired'){expired++;banFailedCookies.push(c);
-            btLog(`⚠ ${label} — expired`,'warn');}
-          else if(status==='facelock'){facelock++;banFailedCookies.push(c);
-            btLog(`⚡ ${label} — FACELOCK`,'facelock');}
-          else{errors++;btLog(`? ${label} — unknown: ${JSON.stringify(res)}`,'err');}
-        }catch(e){
-          if(banCheckAbort)break; // stop pressed — don't log as error
-          errors++;
-          banWorkerIdx++; // rotate past failed worker
-          btLog(`! ${label} — worker error (${e.message})`,'err');
-        }
-        done++;btSetProgress(done,total);
-        await new Promise(r=>setTimeout(r,120));
+      const url=urls[banWorkerIdx%urls.length];banWorkerIdx++;
+      const label=(c.username||c.cookie.substring(0,20)+'…');
+      try{
+        const res=await callWorker(url,c.cookie,c.username);
+        const status=(res.status||'').toLowerCase();
+        if(status==='active'){active++;btLog(`✓ ${label} — active`,'ok');}
+        else if(status==='banned'){banned++;c.banStatus='banned';banFailedCookies.push(c);
+          btLog(`✗ ${label} — BANNED${res.duration?' ('+res.duration+')':''}`,'ban');}
+        else if(status==='expired'){expired++;banFailedCookies.push(c);
+          btLog(`⚠ ${label} — expired`,'warn');}
+        else if(status==='facelock'){facelock++;banFailedCookies.push(c);
+          btLog(`⚡ ${label} — FACELOCK`,'facelock');}
+        else{errors++;btLog(`? ${label} — unknown: ${JSON.stringify(res)}`,'err');}
+      }catch(e){
+        errors++;
+        // Smart skip: rotate to next worker on network failure
+        banWorkerIdx++;
+        btLog(`! ${label} — worker error (${e.message})`,'err');
       }
-    }
-  }finally{
-    // Always runs — buttons can never stay stuck
-    banCheckRunning=false;
-    document.getElementById('bt-run').disabled=false;
-    document.getElementById('bt-stop').disabled=true;
-    const summary=`done — active:${active} banned:${banned} expired:${expired} facelock:${facelock} errors:${errors}`;
-    document.getElementById('bt-summary').textContent=summary;
-    btLog('─────────────────────────────────────────────','muted');
-    btLog(summary,'info');
-    if(banFailedCookies.length){
-      document.getElementById('bt-export-failed').style.display='';
-      btLog(`${banFailedCookies.length} cookies flagged — click "export failed" to download`,'warn');
-    }
-    if(banCheckAbort)btLog('check aborted by user','muted');
-    // Feature 12: stamp lastChecked on checked groups and save
-    if(!btPasteMode){
-      const baseGroups=btSelectedGroup==='all'?vault:[vault.find(g=>g.id===btSelectedGroup)].filter(Boolean);
-      baseGroups.forEach(g=>{g.lastChecked=Date.now();});
-      saveVault();render();
+      done++;btSetProgress(done,total);
+      // Small delay to avoid rate-limiting
+      await new Promise(r=>setTimeout(r,120));
     }
   }
+
+  banCheckRunning=false;
+  document.getElementById('bt-run').disabled=false;
+  document.getElementById('bt-stop').disabled=true;
+  const summary=`done — active:${active} banned:${banned} expired:${expired} facelock:${facelock} errors:${errors}`;
+  document.getElementById('bt-summary').textContent=summary;
+  btLog('─────────────────────────────────────────────','muted');
+  btLog(summary,'info');
+  if(banFailedCookies.length){
+    document.getElementById('bt-export-failed').style.display='';
+    btLog(`${banFailedCookies.length} cookies flagged — click "export failed" to download`,'warn');
+  }
+  if(banCheckAbort)btLog('check aborted by user','muted');
 }
 
 // BAN CHECKER: mode toggle
@@ -4438,12 +4145,7 @@ document.addEventListener('click',e=>{
 });
 // ban-back and bt-close removed (terminal is now inline, not floating)
 document.getElementById('bt-run').addEventListener('click',runBanCheck);
-document.getElementById('bt-stop').addEventListener('click',()=>{
-  banCheckAbort=true;
-  if(currentRequestController)currentRequestController.abort();
-  document.getElementById('bt-stop').disabled=true;
-  btLog('stopping — aborting current request…','warn');
-});
+document.getElementById('bt-stop').addEventListener('click',()=>{banCheckAbort=true;});
 document.getElementById('bt-clear-log').addEventListener('click',()=>{
   document.getElementById('bt-log').innerHTML='';
   document.getElementById('bt-summary').textContent='ready';
@@ -4456,368 +4158,6 @@ document.getElementById('bt-export-failed').addEventListener('click',()=>{
   dl(lines.join('\n'),`ban-failed-${Date.now()}.txt`);
   toast(`Exported ${lines.length} failed cookies`,'ok');
 });
-
-
-// ═══════════════════════════════════════
-// SORT / DISTRIBUTE PASTE
-// ═══════════════════════════════════════
-let sortPending=[];
-
-function openSortModal(cookies){
-  sortPending=cookies;
-  document.getElementById('sort-count').textContent=cookies.length;
-  document.getElementById('sort-modal-desc').innerHTML=`Split <span id="sort-count">${cookies.length}</span> cookies into groups automatically.`;
-  document.getElementById('sort-server-pfx').value='';
-  document.getElementById('sort-group-pfx').value='';
-  document.getElementById('sort-cookies-per-grp').value='5';
-  document.getElementById('sort-groups-per-srv').value='18';
-  document.getElementById('sort-preview').classList.remove('show');
-  document.getElementById('sort-preview').innerHTML='';
-  openMod('sort-modal');
-  document.getElementById('sort-server-pfx').focus();
-}
-
-function calcDistribution(){
-  const srvPfx=document.getElementById('sort-server-pfx').value.trim();
-  const grpPfx=document.getElementById('sort-group-pfx').value.trim();
-  const cookiesPerGrp=Math.max(1,parseInt(document.getElementById('sort-cookies-per-grp').value)||5);
-  const grpsPerSrv=Math.max(1,Math.min(18,parseInt(document.getElementById('sort-groups-per-srv').value)||18));
-  const cookies=sortPending;
-
-  // Chunk cookies into groups (top-to-bottom order preserved)
-  const groups=[];
-  for(let i=0;i<cookies.length;i+=cookiesPerGrp){
-    groups.push(cookies.slice(i,i+cookiesPerGrp));
-  }
-
-  // Assign group + server names
-  const result=[];
-  let srvIdx=1,grpInSrv=0;
-  groups.forEach((ckSlice,gi)=>{
-    if(grpInSrv>=grpsPerSrv){srvIdx++;grpInSrv=0;}
-    const srvName=srvPfx?(srvPfx+' '+srvIdx):null;
-    const grpName=grpPfx?(grpPfx+' '+(gi+1)):('Group '+(gi+1));
-    result.push({srvName,grpName,cookies:ckSlice});
-    grpInSrv++;
-  });
-  return result;
-}
-
-document.getElementById('sort-preview-btn').addEventListener('click',()=>{
-  const dist=calcDistribution();
-  const prev=document.getElementById('sort-preview');
-  prev.innerHTML='';
-  // Group by server for clean preview
-  const bySrv=new Map();
-  dist.forEach(d=>{
-    const k=d.srvName||'(no server)';
-    if(!bySrv.has(k))bySrv.set(k,[]);
-    bySrv.get(k).push(d);
-  });
-  bySrv.forEach((groups,srv)=>{
-    const srvRow=document.createElement('div');srvRow.className='sort-preview-row';
-    srvRow.innerHTML=`<span class="srv">${esc(srv)}</span> — ${groups.length} group${groups.length!==1?'s':''}`;
-    prev.appendChild(srvRow);
-    groups.forEach(g=>{
-      const grpRow=document.createElement('div');grpRow.className='sort-preview-row';
-      grpRow.style.paddingLeft='12px';
-      grpRow.innerHTML=`<span class="grp">${esc(g.grpName)}</span> <span class="cnt">${g.cookies.length} cookie${g.cookies.length!==1?'s':''}</span>`;
-      prev.appendChild(grpRow);
-    });
-  });
-  prev.classList.add('show');
-});
-
-document.getElementById('sort-confirm').addEventListener('click',async()=>{
-  const dist=calcDistribution();
-  if(!dist.length){toast('Nothing to create','warn');return;}
-
-  // Check server limits
-  const srvCounts=new Map();
-  dist.forEach(d=>{
-    if(d.srvName){
-      const k=d.srvName.trim().toLowerCase();
-      const existing=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k).length;
-      srvCounts.set(k,(srvCounts.get(k)||0)+1+existing);
-    }
-  });
-  for(const [k,count] of srvCounts){
-    if(count>18){
-      const srvLabel=dist.find(d=>d.srvName&&d.srvName.trim().toLowerCase()===k)?.srvName||k;
-      toast(`Server "${srvLabel}" would exceed 18 group limit`,'err');
-      return;
-    }
-  }
-
-  // Create all groups — cookies preserved top-to-bottom within each group
-  dist.forEach(d=>{
-    const group={
-      id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
-      name:d.grpName,
-      serverName:d.srvName,
-      createdAt:Date.now(),
-      pinned:false,banned:false,alternatives:[],
-      cookies:d.cookies.map(c=>({...c})),
-      changelog:[]
-    };
-    logChange(group,`Created via distribute (${d.cookies.length} cookies)`);
-    vault.unshift(group);
-  });
-  saveVault();
-  closeMod('sort-modal');
-  document.getElementById('paste-ta').value='';
-  document.getElementById('paste-info').innerHTML='Awaiting input...';
-  document.getElementById('add-btn').disabled=true;
-  render();
-  toast(`Created ${dist.length} groups from ${sortPending.length} cookies`,'ok');
-});
-
-document.getElementById('sort-cancel').addEventListener('click',()=>closeMod('sort-modal'));
-
-// ═══════════════════════════════════════
-// BULK SELECT
-// ═══════════════════════════════════════
-let bulkSelected=new Set();
-
-function toggleBulkSelect(id){
-  if(bulkSelected.has(id))bulkSelected.delete(id);else bulkSelected.add(id);
-  updateBulkBar();
-  const card=document.querySelector(`.gcard[data-id="${id}"]`);
-  if(card)card.classList.toggle('bulk-selected',bulkSelected.has(id));
-}
-
-function updateBulkBar(){
-  const bar=document.getElementById('bulk-bar');
-  const count=bulkSelected.size;
-  document.getElementById('bulk-bar-count').textContent=count+' selected';
-  bar.classList.toggle('open',count>0);
-}
-
-function clearBulkSelect(){
-  bulkSelected.clear();
-  document.querySelectorAll('.gcard.bulk-selected').forEach(c=>c.classList.remove('bulk-selected'));
-  updateBulkBar();
-}
-
-function getBulkGroups(){
-  return vault.filter(g=>bulkSelected.has(g.id));
-}
-
-document.getElementById('bulk-bar-cancel').addEventListener('click',clearBulkSelect);
-
-document.getElementById('bulk-bar-export').addEventListener('click',e=>{
-  if(!bulkSelected.size)return;
-  const groups=getBulkGroups();
-  openExpPopup(e.currentTarget,groups);
-  e.currentTarget.classList.add('bulk-bar-export-anchor');
-});
-
-document.getElementById('bulk-bar-copy').addEventListener('click',()=>{
-  if(!bulkSelected.size)return;
-  const lines=getBulkGroups().flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
-  copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
-  clearBulkSelect();
-});
-
-document.getElementById('bulk-bar-ban').addEventListener('click',async()=>{
-  if(!bulkSelected.size)return;
-  const n=bulkSelected.size;
-  const ok=await customConfirm(`Mark ${n} group${n!==1?'s':''} as banned?`,'Ban All');
-  if(!ok)return;
-  getBulkGroups().forEach(g=>{g.banned=true;logChange(g,'Bulk banned');});
-  saveVault();render();clearBulkSelect();toast(`${n} group${n!==1?'s':''} banned`,'ok');
-});
-
-document.getElementById('bulk-bar-delete').addEventListener('click',async()=>{
-  if(!bulkSelected.size)return;
-  const n=bulkSelected.size;
-  const ok=await customConfirm(`Delete ${n} group${n!==1?'s':''}? This cannot be undone.`,'Delete All');
-  if(!ok)return;
-  vault=vault.filter(g=>!bulkSelected.has(g.id));
-  saveVault();clearBulkSelect();render();toast(`${n} group${n!==1?'s':''} deleted`,'ok');
-});
-
-// ═══════════════════════════════════════
-// COOKIE SORT IN PANEL (Feature 9)
-// ═══════════════════════════════════════
-let panelCookieSort='default';
-
-function buildPanelSortBar(groupId){
-  const existing=document.getElementById('p-cookie-sort-bar');
-  if(existing)existing.remove();
-  const bar=document.createElement('div');
-  bar.id='p-cookie-sort-bar';
-  bar.style.cssText='display:flex;gap:4px;padding:8px 0 4px;margin-bottom:6px;border-bottom:1px solid var(--bdr);';
-  const opts=['default','a-z','username','banned'];
-  const lbls=['Default','A–Z','Username','Banned first'];
-  opts.forEach((o,i)=>{
-    const btn=document.createElement('button');
-    btn.textContent=lbls[i];
-    btn.style.cssText=`background:none;border:1px solid ${o===panelCookieSort?'var(--a2)':'var(--bdr)'};border-radius:6px;
-      padding:3px 9px;font-family:var(--mono);font-size:9px;letter-spacing:.5px;cursor:pointer;
-      color:${o===panelCookieSort?'var(--a2)':'var(--dim)'};transition:all .12s;`;
-    btn.addEventListener('click',()=>{
-      panelCookieSort=o;
-      refreshPanel();
-    });
-    bar.appendChild(btn);
-  });
-  return bar;
-}
-
-function sortedPanelCookies(cookies){
-  if(!cookies)return[];
-  const c=[...cookies];
-  if(panelCookieSort==='a-z')return c.sort((a,b)=>(a.username||'').localeCompare(b.username||''));
-  if(panelCookieSort==='username')return c.sort((a,b)=>(a.username||'zzz').localeCompare(b.username||'zzz'));
-  if(panelCookieSort==='banned')return c.sort((a,b)=>(b.banStatus==='banned'?1:0)-(a.banStatus==='banned'?1:0));
-  return c;
-}
-
-// Patch refreshPanel to inject sort bar + use sorted cookies
-const _origRefreshPanel=refreshPanel;
-refreshPanel=function(){
-  _origRefreshPanel();
-  const g=vault.find(x=>x.id===panelId);if(!g)return;
-  const grid=document.getElementById('p-grid');
-  // Insert sort bar before grid
-  const existing=document.getElementById('p-cookie-sort-bar');
-  if(existing)existing.remove();
-  if(g.cookies&&g.cookies.length>1){
-    grid.parentNode.insertBefore(buildPanelSortBar(g.id),grid);
-  }
-  // Re-render grid with sorted cookies
-  grid.innerHTML='';
-  sortedPanelCookies(g.cookies).forEach((c,i)=>grid.appendChild(mkCkItem(c,i,g.id)));
-};
-
-// ═══════════════════════════════════════
-// AUTO SORT ON ADD (Feature 7)
-// ═══════════════════════════════════════
-// patch render to mark new card position; handled in confirmAdd via fly-in after insert
-// The key: after confirmAdd calls vault.unshift(), we re-sort before saving so card appears in A-Z position
-const _origConfirmAdd=confirmAdd;
-// wrap via event: intercept saveVault after add by patching sortVault to always apply before render
-// Actually simplest: patch vault.unshift to do a sorted insert instead
-function sortedInsert(group){
-  if(sort!=='az'&&sort!=='za'){vault.unshift(group);return;}
-  const dir=sort==='za'?-1:1;
-  let idx=vault.findIndex(g=>g.name.toLowerCase().localeCompare(group.name.toLowerCase())*dir>0);
-  if(idx===-1)vault.push(group);else vault.splice(idx,0,group);
-}
-
-// ═══════════════════════════════════════
-// SEARCH LIFT (Feature 8)
-// ═══════════════════════════════════════
-// Patch applyFilter to lift matching cards to top of their section
-const _origApplyFilter=applyFilter;
-applyFilter=function(){
-  _origApplyFilter();
-  const q=document.getElementById('search-in').value.trim().toLowerCase();
-  if(!q){
-    // Restore original order: re-render
-    // Only if we previously lifted — track with a flag
-    if(document._searchLifted){document._searchLifted=false;render();return;}
-    return;
-  }
-  // Lift matching cards to top of each .card-grid
-  let anyLifted=false;
-  document.querySelectorAll('.card-grid').forEach(grid=>{
-    const cards=[...grid.querySelectorAll('.gcard:not(.dim)')];
-    const dimmed=[...grid.querySelectorAll('.gcard.dim')];
-    if(!cards.length)return;
-    // re-insert matching first, then rest, preserving exp-tile at end
-    const expTile=grid.querySelector('.exp-tile');
-    cards.forEach(c=>grid.insertBefore(c,expTile||null));
-    dimmed.forEach(c=>grid.insertBefore(c,expTile||null));
-    anyLifted=true;
-  });
-  if(anyLifted)document._searchLifted=true;
-};
-
-// ═══════════════════════════════════════
-// STATS: Per-server breakdown (Feature 10)
-// ═══════════════════════════════════════
-const _origShowStats=showStats;
-showStats=function(){
-  _origShowStats();
-  // Inject per-server breakdown below stats-fun
-  const fun=document.getElementById('stats-fun');
-  const existing=document.getElementById('stats-srv-breakdown');
-  if(existing)existing.remove();
-  const srvMap=new Map();
-  vault.forEach(g=>{
-    const k=(g.serverName||'(ungrouped)').trim();
-    if(!srvMap.has(k))srvMap.set(k,{groups:0,cookies:0,banned:0});
-    const s=srvMap.get(k);s.groups++;s.cookies+=g.cookies.length;
-    if(g.banned)s.banned++;
-  });
-  if(!srvMap.size)return;
-  const wrap=document.createElement('div');wrap.id='stats-srv-breakdown';
-  wrap.style.cssText='margin-top:14px;border-top:1px solid var(--bdr);padding-top:12px;';
-  wrap.innerHTML='<div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Per-Server Breakdown</div>';
-  const table=document.createElement('div');
-  table.style.cssText='display:flex;flex-direction:column;gap:5px;';
-  srvMap.forEach((v,k)=>{
-    const row=document.createElement('div');
-    row.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:7px;border:1px solid var(--bdr);';
-    row.innerHTML=`<div style="font-family:var(--sans);font-weight:700;font-size:11px;color:var(--bright);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(k)}</div>
-      <span style="font-family:var(--mono);font-size:9px;color:var(--dim);">${v.groups}g</span>
-      <span style="font-family:var(--mono);font-size:9px;color:var(--a2);">${v.cookies}c</span>
-      ${v.banned?`<span style="font-family:var(--mono);font-size:9px;color:var(--danger);">${v.banned} banned</span>`:''}`;
-    table.appendChild(row);
-  });
-  wrap.appendChild(table);
-  fun.parentNode.insertBefore(wrap,fun.nextSibling);
-};
-
-// ═══════════════════════════════════════
-// HEALTH SCORE TOAST BREAKDOWN (Feature 11)
-// ═══════════════════════════════════════
-document.getElementById('health-badge').removeEventListener('click',showStats);
-document.getElementById('health-badge').addEventListener('click',()=>{
-  const {score,grade}=calcHealthScore();
-  const last=settings.lastBackup;
-  const backupAge=last?Math.floor((Date.now()-last)/86400000):999;
-  const backupMsg=backupAge===999?'no backup':'backup '+backupAge+'d ago';
-  const bannedCount=vault.filter(g=>g.banned).length;
-  const emptyCount=vault.filter(g=>!g.cookies||g.cookies.length===0).length;
-  const streak=settings.streak||0;
-  const syncOk=ghEnabled()&&settings.lastGithubSync&&Math.floor((Date.now()-settings.lastGithubSync)/86400000)<=1;
-  const lines=[
-    `Health: ${score}/100 · Grade ${grade}`,
-    `Backup: ${backupMsg}`,
-    `Ban ratio: ${bannedCount}/${vault.length} groups`,
-    `Empty groups: ${emptyCount}`,
-    `Streak: ${streak} day${streak!==1?'s':''}`,
-    syncOk?'Sync: up to date':'Sync: not recent',
-  ];
-  const el=document.getElementById('toast');
-  document.getElementById('toast-msg').innerHTML=lines.map(l=>`<div style="line-height:1.7">${l}</div>`).join('');
-  el.className='show ok';
-  clearTimeout(window._toastT);
-  window._toastT=setTimeout(()=>{el.className='';},5000);
-});
-
-// ═══════════════════════════════════════
-// LAST CHECKED TIMESTAMP ON CARDS (Feature 12)
-// ═══════════════════════════════════════
-// After ban check completes, store checkedAt on each checked group and show on card
-// Patch the ban run finalize to save checkedAt
-const _origBanFinalize=()=>{};// no-op, we hook via saveVault after ban check
-
-// Patch mkCard to show lastChecked if present
-const _origMkCard=mkCard;
-mkCard=function(group){
-  const card=_origMkCard(group);
-  if(group.lastChecked){
-    const ts=document.createElement('div');
-    ts.style.cssText='position:absolute;bottom:5px;left:8px;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.3px;pointer-events:none;z-index:3;';
-    ts.textContent='checked '+fmtTime(group.lastChecked);
-    card.appendChild(ts);
-  }
-  return card;
-};
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
