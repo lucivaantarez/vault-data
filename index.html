@@ -3377,6 +3377,7 @@ function mkCard(group){
     card.appendChild(banTag);
   }
   card.appendChild(body);
+  const qcBtn=document.createElement('button');qcBtn.className='card-qc-btn';qcBtn.textContent='copy';qcBtn.title='Quick copy';
   const chkDiv=document.createElement('div');chkDiv.className='gcard-chk';
   chkDiv.addEventListener('click',e=>{e.stopPropagation();toggleBulkSelect(group.id);});
   card.appendChild(chkDiv);
