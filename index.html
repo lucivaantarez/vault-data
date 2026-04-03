@@ -7,10 +7,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-1.html
+  File Name   : cookie-vault-v5-2.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.1
+  Version     : v5.2
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -823,7 +823,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Cookie Vault v5.1</title>
+<title>Cookie Vault v5.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -1109,12 +1109,13 @@ body.list-view .gcard-body{flex-direction:row;align-items:center;justify-content
 body.list-view .gcard-dot{width:7px!important;height:7px!important;flex-shrink:0;}
 body.list-view .gcard-name{font-size:12px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 body.list-view .gcard-count{font-size:9px;padding:1px 7px;flex-shrink:0;white-space:nowrap;}
-body.list-view .gcard-srv{font-size:9px;padding:1px 7px;flex-shrink:0;max-width:120px;}
+body.list-view .gcard-srv{font-size:9px;padding:1px 7px;flex-shrink:0;max-width:90px;overflow:hidden;text-overflow:ellipsis;}
 body.list-view .gcard-status{margin-top:0;font-size:9px;flex-shrink:0;}
 body.list-view .gcard-alt-badge{font-size:7px;padding:1px 5px;flex-shrink:0;}
-body.list-view .gcard-pin{top:50%;right:34px;transform:translateY(-50%);}
+body.list-view .gcard-pin{top:50%;right:60px;transform:translateY(-50%);}
 body.list-view .gcard-banned-tag{top:50%;transform:translateY(-50%);font-size:8px;padding:1px 4px;}
 body.list-view .card-qc-btn{bottom:unset;top:50%;transform:translateY(-50%);right:5px;}
+body.list-view .gcard-body{padding-right:52px;}
 body.list-view .gcard::before{display:none;}
 .list-view-btn{background:none;border:1px solid var(--bdr);border-radius:7px;padding:6px 9px;
   font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;letter-spacing:1px;
@@ -1308,6 +1309,33 @@ body.list-view .gcard::before{display:none;}
 .cl-type.remove{background:rgba(255,48,96,.1);color:var(--danger);border:1px solid rgba(255,48,96,.2);}
 .cl-type.change{background:rgba(255,170,0,.1);color:var(--warn);border:1px solid rgba(255,170,0,.2);}
 .cl-desc{font-family:var(--mono);font-size:11px;color:var(--txt);line-height:1.5;}
+
+/* ── COOKIE ACTIVITY LOG ── */
+.cklog-modal{width:min(94vw,540px);max-height:82vh;display:flex;flex-direction:column;}
+.cklog-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.cklog-filter{background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 10px;
+  font-family:var(--mono);font-size:9px;color:var(--dim);cursor:pointer;letter-spacing:.5px;transition:all .12s;}
+.cklog-filter:hover{border-color:var(--ac);color:var(--a2);}
+.cklog-filter.on{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.08);}
+.cklog-count{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;}
+.cklog-scroll{overflow-y:auto;flex:1;min-height:0;}
+.cklog-scroll::-webkit-scrollbar{width:3px;}
+.cklog-scroll::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.cklog-empty{text-align:center;padding:40px 0;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1px;}
+.cklog-entry{display:grid;grid-template-columns:52px 58px 1fr;gap:6px;align-items:baseline;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-family:var(--mono);font-size:10px;}
+.cklog-entry:last-child{border-bottom:none;}
+.cklog-ts{color:var(--dim);font-size:9px;white-space:nowrap;}
+.cklog-type{font-size:8px;padding:1px 5px;border-radius:3px;text-align:center;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+.cklog-type.added{background:rgba(0,255,170,.1);color:var(--ok);border:1px solid rgba(0,255,170,.2);}
+.cklog-type.edited{background:rgba(0,212,255,.1);color:var(--a2);border:1px solid rgba(0,212,255,.2);}
+.cklog-type.deleted{background:rgba(255,48,96,.1);color:var(--danger);border:1px solid rgba(255,48,96,.2);}
+.cklog-type.banned{background:rgba(255,48,96,.08);color:var(--danger);border:1px solid rgba(255,48,96,.15);}
+.cklog-type.active{background:rgba(0,255,170,.08);color:var(--ok);border:1px solid rgba(0,255,170,.15);}
+.cklog-type.expired{background:rgba(255,170,0,.1);color:var(--warn);border:1px solid rgba(255,170,0,.2);}
+.cklog-type.facelock{background:rgba(255,107,0,.1);color:#ff6b00;border:1px solid rgba(255,107,0,.2);}
+.cklog-type.copied{background:rgba(123,47,255,.1);color:var(--a3);border:1px solid rgba(123,47,255,.2);}
+.cklog-msg{color:var(--txt);font-size:10px;line-height:1.4;word-break:break-word;}
 /* Update modal */
 .update-modal{width:min(92vw,460px);max-height:80vh;display:flex;flex-direction:column;}
 .update-scroll{overflow-y:auto;flex:1;padding-right:4px;}
@@ -1617,6 +1645,16 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
 .ds-item.active{background:rgba(123,47,255,.12);color:var(--a3);}
 .ds-item-dot{width:7px;height:7px;border-radius:50%;background:var(--a3);flex-shrink:0;}
 .ds-item.active .ds-item-dot{background:var(--a3);box-shadow:0 0 6px var(--a3);}
+.ds-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ds-item-actions{display:none;gap:2px;flex-shrink:0;}
+.ds-item:hover .ds-item-actions{display:flex;}
+.ds-action-btn{background:none;border:none;color:var(--dim);cursor:pointer;padding:2px 5px;
+  border-radius:4px;font-size:12px;transition:all .12s;line-height:1;}
+.ds-action-btn:hover{background:rgba(255,255,255,.1);}
+.ds-action-btn.rename:hover{color:var(--a2);}
+.ds-action-btn.del:hover{color:var(--danger);}
+.ds-rename-input{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--a2);border-radius:5px;
+  padding:2px 7px;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--bright);outline:none;min-width:0;}
 .ds-sep{height:1px;background:var(--bdr);margin:4px 0;}
 .ds-new-btn{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:7px;
   cursor:pointer;transition:all .12s;font-family:var(--sans);font-size:12px;color:var(--dim);
@@ -1755,6 +1793,11 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
           </svg>Log
+        </button>
+        <button class="hdr-meta-btn" id="hdr-cklog-btn" title="Cookie Activity Log">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>Activity
         </button>
       </div>
       <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
@@ -2079,6 +2122,30 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
     <div class="stat-fun" id="stats-fun"></div>
     <div class="m-act" style="margin-top:14px">
       <button class="bsm b-ghost" id="stats-close">close</button>
+    </div>
+  </div>
+</div>
+
+<!-- COOKIE ACTIVITY LOG MODAL -->
+<div class="m-ov" id="cklog-modal">
+  <div class="modal cklog-modal">
+    <h3>Cookie Activity Log</h3>
+    <div class="cklog-toolbar">
+      <button class="cklog-filter on" data-ckfilter="all">All</button>
+      <button class="cklog-filter" data-ckfilter="added">Added</button>
+      <button class="cklog-filter" data-ckfilter="edited">Edited</button>
+      <button class="cklog-filter" data-ckfilter="deleted">Deleted</button>
+      <button class="cklog-filter" data-ckfilter="banned">Banned</button>
+      <button class="cklog-filter" data-ckfilter="active">Active</button>
+      <button class="cklog-filter" data-ckfilter="copied">Copied</button>
+      <span class="cklog-count" id="cklog-count">0 entries</span>
+    </div>
+    <div class="cklog-scroll" id="cklog-scroll"></div>
+    <div class="m-act" style="margin-top:14px;gap:8px;">
+      <button class="bsm b-ghost" id="cklog-close">close</button>
+      <button class="bsm b-ghost" id="cklog-dl-txt" title="Download full log as .txt">download .txt</button>
+      <button class="bsm b-ghost" id="cklog-dl-json" title="Download full log as .json">download .json</button>
+      <button class="bsm b-ghost" id="cklog-clear" style="color:var(--danger);border-color:rgba(255,48,96,.3)">clear log</button>
     </div>
   </div>
 </div>
@@ -2890,8 +2957,58 @@ function renderDataSwitcher(){
   drop.innerHTML='';
   cfgs.forEach(cfg=>{
     const item=document.createElement('div');item.className='ds-item'+(cfg.id===active?' active':'');
-    item.innerHTML=`<div class="ds-item-dot"></div>${esc(cfg.name)}`;
-    item.addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
+    const isDefault=cfg.id==='default';
+    item.innerHTML=`<div class="ds-item-dot"></div><div class="ds-item-name">${esc(cfg.name)}</div>`;
+    // Add rename/delete for non-default configs
+    if(!isDefault){
+      const actions=document.createElement('div');actions.className='ds-item-actions';
+      const renBtn=document.createElement('button');renBtn.className='ds-action-btn rename';renBtn.title='Rename';
+      renBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+      renBtn.addEventListener('click',e=>{
+        e.stopPropagation();
+        // Replace name with inline input
+        const nameEl=item.querySelector('.ds-item-name');
+        const inp=document.createElement('input');inp.className='ds-rename-input';
+        inp.value=cfg.name;inp.maxLength=30;
+        nameEl.replaceWith(inp);actions.style.display='none';
+        inp.focus();inp.select();
+        function commitRename(){
+          const newName=inp.value.trim();
+          if(newName&&newName!==cfg.name){
+            const cfgs2=loadDataConfigs();
+            const c=cfgs2.find(x=>x.id===cfg.id);
+            if(c)c.name=newName;
+            saveDataConfigs(cfgs2);
+            if(cfg.id===active)document.getElementById('data-switch-lbl').textContent=newName;
+            toast(`Renamed to "${newName}"`,'ok');
+          }
+          renderDataSwitcher();
+        }
+        inp.addEventListener('blur',commitRename);
+        inp.addEventListener('keydown',e2=>{
+          if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
+          if(e2.key==='Escape'){inp.value=cfg.name;inp.blur();}
+        });
+      });
+      const delBtn=document.createElement('button');delBtn.className='ds-action-btn del';delBtn.title='Delete';
+      delBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+      delBtn.addEventListener('click',async e=>{
+        e.stopPropagation();
+        const ok=await customConfirm(`Delete config "${cfg.name}"? This will permanently delete all groups in it.`,'Delete');
+        if(!ok)return;
+        const cfgs2=loadDataConfigs().filter(x=>x.id!==cfg.id);
+        saveDataConfigs(cfgs2);
+        localStorage.removeItem('cookie_vault_'+cfg.id);
+        // If deleting active config, switch to default
+        if(cfg.id===active)setActiveConfig('default');
+        else renderDataSwitcher();
+        toast(`Deleted "${cfg.name}"`,'ok');
+      });
+      actions.appendChild(renBtn);actions.appendChild(delBtn);
+      item.appendChild(actions);
+    }
+    item.querySelector('.ds-item-dot').addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
+    item.querySelector('.ds-item-name')?.addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
     drop.appendChild(item);
   });
   const sep=document.createElement('div');sep.className='ds-sep';drop.appendChild(sep);
@@ -3291,9 +3408,10 @@ function render(){
       <div class="sec-meta">${groups.length}g · ${totalC}c</div>
       ${warn}
       <button class="sec-expbtn">export all</button>`;
-    hd.querySelector('.sec-expbtn').addEventListener('click',()=>{
+    hd.querySelector('.sec-expbtn').addEventListener('click',e=>{
+      e.stopPropagation();
       const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
-      openBulk(live[0]?.serverName||label,live);
+      openExpPopup(e.currentTarget,live);
     });
     hd.querySelector('.sec-rename-btn').addEventListener('click',e=>{
       e.stopPropagation();
@@ -3324,9 +3442,9 @@ function render(){
     const grid=mkGrid();groups.forEach(g=>grid.appendChild(mkCard(g)));
     const tile=document.createElement('div');tile.className='exp-tile';
     tile.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>export all</span>`;
-    tile.addEventListener('click',()=>{
+    tile.addEventListener('click',e=>{
       const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
-      openBulk(live[0]?.serverName||label,live);
+      openExpPopup(e.currentTarget,live);
     });
     grid.appendChild(tile);sec.appendChild(grid);vEl.appendChild(sec);
   });
@@ -4494,10 +4612,13 @@ function calcDistribution(){
   // Assign group + server names
   const result=[];
   let srvIdx=1,grpInSrv=0;
+  const totalGroups=groups.length;
+  const padWidth=totalGroups>=10?String(totalGroups).length:0; // pad if 10+ groups
+  function padNum(n){return padWidth>0?String(n).padStart(padWidth,'0'):String(n);}
   groups.forEach((ckSlice,gi)=>{
     if(grpInSrv>=grpsPerSrv){srvIdx++;grpInSrv=0;}
     const srvName=srvPfx?(srvPfx+' '+srvIdx):null;
-    const grpName=grpPfx?(grpPfx+' '+(gi+1)):('Group '+(gi+1));
+    const grpName=grpPfx?(grpPfx+' '+padNum(gi+1)):('Group '+padNum(gi+1));
     result.push({srvName,grpName,cookies:ckSlice});
     grpInSrv++;
   });
@@ -4808,6 +4929,170 @@ mkCard=function(group){
     card.appendChild(ts);
   }
   return card;
+};
+
+// ═══════════════════════════════════════
+// COOKIE ACTIVITY LOG
+// ═══════════════════════════════════════
+const CKLOG_K='cv_cookie_log';
+const CKLOG_MAX=1000;
+const CKLOG_SHOW=100;
+
+function loadCkLog(){
+  try{const r=localStorage.getItem(CKLOG_K);return r?JSON.parse(r):[]}catch{return[];}
+}
+function saveCkLog(log){
+  // Cap at 1000
+  if(log.length>CKLOG_MAX)log=log.slice(0,CKLOG_MAX);
+  try{localStorage.setItem(CKLOG_K,JSON.stringify(log));}catch(e){/* quota */}
+}
+function ckLogEvent(type,msg,cookie){
+  // type: added|edited|deleted|banned|active|expired|facelock|copied
+  const log=loadCkLog();
+  log.unshift({
+    t:Date.now(),
+    type,
+    msg,
+    user:cookie?.username||null,
+    ck:cookie?.cookie?cookie.cookie.substring(0,40)+'…':null
+  });
+  saveCkLog(log);
+}
+
+let ckLogFilter='all';
+function openCkLogModal(){
+  renderCkLog();
+  openMod('cklog-modal');
+}
+function renderCkLog(){
+  const log=loadCkLog();
+  const filtered=ckLogFilter==='all'?log:log.filter(e=>e.type===ckLogFilter);
+  const shown=filtered.slice(0,CKLOG_SHOW);
+  const scroll=document.getElementById('cklog-scroll');
+  const count=document.getElementById('cklog-count');
+  count.textContent=filtered.length+' entries (showing '+Math.min(filtered.length,CKLOG_SHOW)+')';
+  if(!shown.length){
+    scroll.innerHTML='<div class="cklog-empty">No activity yet</div>';
+    return;
+  }
+  scroll.innerHTML='';
+  shown.forEach(e=>{
+    const row=document.createElement('div');row.className='cklog-entry';
+    const d=new Date(e.t);
+    const ts=d.toLocaleDateString('en',{month:'short',day:'numeric'})+' '+d.toTimeString().slice(0,5);
+    const label=e.user?esc(e.user):(e.ck?`<span style="color:var(--dim);font-size:8px">${esc(e.ck)}</span>`:'—');
+    row.innerHTML=`<span class="cklog-ts">${ts}</span><span class="cklog-type ${e.type}">${e.type}</span><span class="cklog-msg">${label} — ${esc(e.msg)}</span>`;
+    scroll.appendChild(row);
+  });
+}
+
+// Filter buttons
+document.querySelectorAll('.cklog-filter').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    ckLogFilter=btn.dataset.ckfilter;
+    document.querySelectorAll('.cklog-filter').forEach(b=>b.classList.toggle('on',b.dataset.ckfilter===ckLogFilter));
+    renderCkLog();
+  });
+});
+
+document.getElementById('hdr-cklog-btn').addEventListener('click',openCkLogModal);
+document.getElementById('cklog-close').addEventListener('click',()=>closeMod('cklog-modal'));
+document.getElementById('cklog-dl-txt').addEventListener('click',()=>{
+  const log=loadCkLog();
+  const lines=log.map(e=>{
+    const d=new Date(e.t).toISOString();
+    return`[${d}] [${e.type.toUpperCase()}] ${e.user||''}  ${e.msg}${e.ck?' | '+e.ck:''}`;
+  });
+  dl(lines.join('\n'),`cookie-log-${Date.now()}.txt`);
+  toast(`Downloaded ${log.length} log entries`,'ok');
+});
+document.getElementById('cklog-dl-json').addEventListener('click',()=>{
+  const log=loadCkLog();
+  dl(JSON.stringify(log,null,2),`cookie-log-${Date.now()}.json`);
+  toast(`Downloaded ${log.length} log entries`,'ok');
+});
+document.getElementById('cklog-clear').addEventListener('click',async()=>{
+  const ok=await customConfirm('Clear the entire cookie activity log? This cannot be undone.','Clear Log');
+  if(!ok)return;
+  localStorage.removeItem(CKLOG_K);
+  renderCkLog();
+  toast('Activity log cleared','ok');
+});
+
+// ── Hook ckLogEvent into vault mutation points ──
+
+// 1. Cookie added (via confirmAdd)
+const _ckOrigConfirmAdd=confirmAdd;
+confirmAdd=async function(){
+  const before=vault.map(g=>({id:g.id,n:g.cookies.length}));
+  await _ckOrigConfirmAdd.apply(this,arguments);
+  vault.forEach(g=>{
+    const prev=before.find(x=>x.id===g.id);
+    const added=prev?g.cookies.length-prev.n:g.cookies.length;
+    if(added>0){
+      g.cookies.slice(-added).forEach(c=>{
+        ckLogEvent('added',`Added to group "${esc(g.name)}"`,c);
+      });
+    }
+  });
+};
+
+// 2. Cookie edited — hook mkCkItem save button
+const _ckOrigMkCkItem=mkCkItem;
+mkCkItem=function(c,idx,groupId,opts){
+  const item=_ckOrigMkCkItem.apply(this,arguments);
+  // find the save button and wrap it
+  const saveBtn=item.querySelector('.ck-save-btn');
+  if(saveBtn){
+    const origClick=saveBtn.onclick;
+    saveBtn.addEventListener('click',()=>{
+      const g=vault.find(x=>x.id===groupId);
+      if(g)ckLogEvent('edited',`Cookie edited in group "${esc(g.name)}"`,c);
+    });
+  }
+  return item;
+};
+
+// 3. Cookie deleted — hook the delete button in mkCkItem
+// Wrapped by watching delGroup calls + per-cookie delete
+const _ckOrigDelGroup=delGroup;
+delGroup=function(id){
+  const g=vault.find(x=>x.id===id);
+  if(g){
+    g.cookies.forEach(c=>ckLogEvent('deleted',`Group "${esc(g.name)}" deleted`,c));
+  }
+  _ckOrigDelGroup.apply(this,arguments);
+};
+
+// 4. Ban status updates from ban checker
+const _ckOrigRunBanCheck=runBanCheck;
+if(typeof runBanCheck==='function'){
+  runBanCheck=async function(){
+    await _ckOrigRunBanCheck.apply(this,arguments);
+  };
+}
+// Hook btLog to capture ban check results
+const _ckOrigBtLog=btLog;
+btLog=function(msg,type){
+  _ckOrigBtLog.apply(this,arguments);
+  if(type==='ok'||type==='ban'||type==='warn'||type==='facelock'){
+    const evtType=type==='ok'?'active':type==='ban'?'banned':type==='warn'?'expired':'facelock';
+    // Extract label from message e.g. "✓ username — active"
+    const m=msg.match(/[✓✗⚠⚡]\s+(.+?)\s+[—–]/);
+    const label=m?m[1]:msg.substring(0,40);
+    ckLogEvent(evtType,`Ban check: ${msg.replace(/[✓✗⚠⚡]\s*/,'').trim()}`,{username:label,cookie:null});
+  }
+};
+
+// 5. Copy events — hook copyText calls from card QC and panel
+const _ckOrigCopyText=copyText;
+copyText=function(text,onSuccess,onFail){
+  _ckOrigCopyText(text,()=>{
+    // Count lines = cookies copied
+    const lines=text.split('\n').filter(Boolean);
+    ckLogEvent('copied',`Copied ${lines.length} cookie${lines.length!==1?'s':''}`,null);
+    if(onSuccess)onSuccess();
+  },onFail);
 };
 
 function openMod(id){document.getElementById(id).classList.add('open');}
