@@ -7,10 +7,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-3.html
+  File Name   : cookie-vault-v5-4.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.3
+  Version     : v5.4
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -1106,7 +1106,7 @@ body.list-view .card-grid{display:flex;flex-direction:column;gap:3px;}
 body.list-view .exp-tile{display:none;}
 body.list-view .gcard{aspect-ratio:unset;min-height:44px;height:auto;border-radius:8px;flex-direction:row;align-items:stretch;overflow:hidden;}
 body.list-view .gcard-bar{width:3px;flex-shrink:0;}
-body.list-view .gcard-body{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:6px 52px 6px 10px;text-align:left;}
+body.list-view .gcard-body{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:6px 44px 6px 10px;text-align:left;flex:1;min-width:0;}
 body.list-view .gcard-dot{width:7px!important;height:7px!important;flex-shrink:0;display:none;}
 body.list-view .gcard-row1{display:flex;align-items:center;gap:8px;width:100%;}
 body.list-view .gcard-name{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
@@ -1116,7 +1116,7 @@ body.list-view .gcard-status{margin-top:0;font-size:9px;flex-shrink:0;}
 body.list-view .gcard-alt-badge{font-size:7px;padding:1px 5px;flex-shrink:0;}
 body.list-view .gcard-pin{top:8px;right:60px;}
 body.list-view .gcard-banned-tag{top:8px;left:8px;font-size:8px;padding:1px 4px;}
-body.list-view .card-qc-btn{bottom:unset;top:50%;transform:translateY(-50%);right:5px;}
+body.list-view .card-qc-btn{display:none;}
 body.list-view .gcard::before{display:none;}
 /* Username pills row */
 .gcard-users-row{display:none;}
@@ -1435,7 +1435,15 @@ body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1
 .gcard.bulk-selected .gcard-chk{border-color:var(--a2);background:var(--a2);}
 .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:11px;color:#000;font-weight:900;line-height:1;}
 .gcard.bulk-selected{border-color:var(--a2)!important;box-shadow:0 0 14px rgba(0,212,255,.3)!important;}
-body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
+/* List view: tick always visible, right side */
+body.list-view .gcard-chk{
+  display:flex;position:static;transform:none;
+  width:28px;height:28px;flex-shrink:0;border-radius:7px;
+  margin-left:auto;margin-right:8px;order:99;
+  border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);
+}
+body.list-view .gcard.bulk-selected .gcard-chk{border-color:var(--a2);background:var(--a2);}
+body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13px;color:#000;font-weight:900;line-height:1;}
 .bulk-bar{position:fixed;bottom:0;left:0;right:0;z-index:400;
   background:rgba(7,11,18,.97);border-top:1px solid var(--bdrb);
   padding:10px 20px;display:flex;align-items:center;gap:10px;
@@ -2099,7 +2107,7 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
       <div id="sync-paste-info" style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:4px;"></div>
     </div>
     <div id="sync-file-panel" style="display:none;">
-      <button class="bsm b-ghost" style="width:100%;" id="sync-file-pick">Choose .json file</button>
+      <button class="bsm b-ghost" style="width:100%;" id="sync-file-pick">Choose .json or .txt file</button>
       <div id="sync-file-info" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;"></div>
     </div>
     <div class="m-act" style="margin-top:14px;">
@@ -5585,7 +5593,11 @@ function checkSwapReminders(){
 // ═══════════════════════════════════════
 // FIX 13: SYNC NOW MODAL
 // ═══════════════════════════════════════
-let _syncFileData=null;
+// ═══════════════════════════════════════
+// FIX: SYNC NOW — username-match + txt support
+// ═══════════════════════════════════════
+let _syncFileData=null; // {type:'json'|'txt', data}
+
 function openSyncNowModal(){
   document.getElementById('sync-tab-paste').classList.add('on');
   document.getElementById('sync-tab-file').classList.remove('on');
@@ -5597,6 +5609,7 @@ function openSyncNowModal(){
   _syncFileData=null;
   openMod('sync-now-modal');
 }
+
 document.getElementById('sync-tab-paste').addEventListener('click',()=>{
   document.getElementById('sync-tab-paste').classList.add('on');
   document.getElementById('sync-tab-file').classList.remove('on');
@@ -5609,54 +5622,149 @@ document.getElementById('sync-tab-file').addEventListener('click',()=>{
   document.getElementById('sync-file-panel').style.display='';
   document.getElementById('sync-paste-panel').style.display='none';
 });
+
 document.getElementById('sync-paste-ta').addEventListener('input',()=>{
   const p=parseInput(document.getElementById('sync-paste-ta').value);
   const info=document.getElementById('sync-paste-info');
-  info.textContent=p.length?p.length+' cookies detected':'';
+  if(!p.length){info.textContent='';return;}
+  const withUser=p.filter(c=>c.username).length;
+  info.textContent=`${p.length} cookies — ${withUser} with username (matched to existing), ${p.length-withUser} cookie-only`;
   info.style.color='var(--ok)';
 });
+
 document.getElementById('sync-file-pick').addEventListener('click',()=>{
-  const fi=document.createElement('input');fi.type='file';fi.accept='.json';
+  const fi=document.createElement('input');fi.type='file';fi.accept='.json,.txt';
   fi.addEventListener('change',()=>{
     const f=fi.files[0];if(!f)return;
-    const r=new FileReader();r.onload=e=>{
-      try{
-        const d=JSON.parse(e.target.result);
-        if(!d.vault||!Array.isArray(d.vault))throw new Error('bad format');
-        _syncFileData=d.vault;
-        document.getElementById('sync-file-info').textContent=`Loaded: ${d.vault.length} groups from "${f.name}"`;
-        document.getElementById('sync-file-info').style.color='var(--ok)';
-      }catch{document.getElementById('sync-file-info').textContent='Invalid vault file';
-        document.getElementById('sync-file-info').style.color='var(--danger)';_syncFileData=null;}
+    const r=new FileReader();r.onload=ev=>{
+      const raw=ev.target.result;
+      const infoEl=document.getElementById('sync-file-info');
+      if(f.name.toLowerCase().endsWith('.txt')){
+        const p=parseInput(raw);
+        if(!p.length){infoEl.textContent='No valid cookies in file';infoEl.style.color='var(--danger)';_syncFileData=null;return;}
+        _syncFileData={type:'txt',cookies:p};
+        const wu=p.filter(c=>c.username).length;
+        infoEl.textContent=`${p.length} cookies from "${f.name}" — ${wu} with username`;
+        infoEl.style.color='var(--ok)';
+      }else{
+        try{
+          const d=JSON.parse(raw);
+          if(!d.vault||!Array.isArray(d.vault))throw new Error('bad format');
+          _syncFileData={type:'json',groups:d.vault};
+          const tc=d.vault.reduce((s,g)=>s+(g.cookies||[]).length,0);
+          infoEl.textContent=`${d.vault.length} groups, ${tc} cookies from "${f.name}"`;
+          infoEl.style.color='var(--ok)';
+        }catch{infoEl.textContent='Invalid vault .json';infoEl.style.color='var(--danger)';_syncFileData=null;}
+      }
     };r.readAsText(f);
   });
   fi.click();
 });
+
+// Core: match incoming cookies into vault by username, update cookie+password in-place
+function applySyncCookies(incomingCookies){
+  let updated=0;
+  const notFound=[];
+  incomingCookies.forEach(ic=>{
+    if(!ic.username){notFound.push(ic);return;}
+    const uLow=ic.username.toLowerCase();
+    let found=false;
+    vault.forEach(g=>{
+      g.cookies.forEach((c,ci)=>{
+        if((c.username||'').toLowerCase()===uLow){
+          // Update cookie and password in-place
+          const changed=c.cookie!==ic.cookie||(ic.password&&c.password!==ic.password);
+          if(changed){
+            c.cookie=ic.cookie;
+            if(ic.password)c.password=ic.password;
+            c.banStatus=undefined; // reset ban status after update
+            logChange(g,`Cookie updated via sync: ${esc(ic.username)}`);
+            updated++;
+          }
+          found=true;
+        }
+      });
+    });
+    if(!found)notFound.push(ic);
+  });
+  return{updated,notFound};
+}
+
 document.getElementById('sync-now-cancel').addEventListener('click',()=>closeMod('sync-now-modal'));
-document.getElementById('sync-now-confirm').addEventListener('click',()=>{
+document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
   const isPaste=document.getElementById('sync-paste-panel').style.display!=='none';
+
   if(isPaste){
+    // Paste u:p:c tab
     const p=parseInput(document.getElementById('sync-paste-ta').value);
     if(!p.length){toast('No valid cookies','err');return;}
-    // Create ungrouped group from pasted cookies
-    const group={
-      id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
-      name:'Synced '+new Date().toLocaleDateString('en',{month:'short',day:'numeric'}),
-      serverName:null,createdAt:Date.now(),pinned:false,banned:false,alternatives:[],
-      cookies:p.map(c=>({...c})),changelog:[]
-    };
-    logChange(group,`Created via sync paste (${p.length} cookies)`);
-    sortedInsert(group);saveVault();closeMod('sync-now-modal');render();
-    toast(`Added ${p.length} cookies`,'ok');
-  }else{
-    if(!_syncFileData){toast('No file loaded','warn');return;}
-    // Merge: add groups that don't exist by ID
-    let added=0;
-    _syncFileData.forEach(g=>{
-      if(!vault.find(x=>x.id===g.id)){vault.push(g);added++;}
-    });
+    const {updated,notFound}=applySyncCookies(p);
+    let msg=`Updated ${updated} cookie${updated!==1?'s':''}`;
+    if(notFound.length){
+      // Ask what to do with unmatched cookies
+      const ok=await customConfirm(
+        `${notFound.length} username${notFound.length!==1?'s':''} not found in vault. Add as new group?`,
+        'Add unmatched'
+      );
+      if(ok){
+        const group={
+          id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+          name:'Synced '+new Date().toLocaleDateString('en',{month:'short',day:'numeric'}),
+          serverName:null,createdAt:Date.now(),pinned:false,banned:false,alternatives:[],
+          cookies:notFound.map(c=>({...c})),changelog:[]
+        };
+        logChange(group,`Created from unmatched sync cookies (${notFound.length})`);
+        sortedInsert(group);
+        msg+=` · ${notFound.length} added as new group`;
+      }
+    }
     saveVault();closeMod('sync-now-modal');render();
-    toast(`Merged ${added} new groups`,'ok');
+    toast(msg,'ok');
+
+  }else{
+    // File tab
+    if(!_syncFileData){toast('No file loaded','warn');return;}
+
+    if(_syncFileData.type==='txt'){
+      // .txt: same username-match logic
+      const {updated,notFound}=applySyncCookies(_syncFileData.cookies);
+      let msg=`Updated ${updated} cookie${updated!==1?'s':''}`;
+      if(notFound.length){
+        const ok=await customConfirm(
+          `${notFound.length} unmatched cookies. Add as new group?`,
+          'Add unmatched'
+        );
+        if(ok){
+          const group={
+            id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+            name:'Synced '+new Date().toLocaleDateString('en',{month:'short',day:'numeric'}),
+            serverName:null,createdAt:Date.now(),pinned:false,banned:false,alternatives:[],
+            cookies:notFound.map(c=>({...c})),changelog:[]
+          };
+          logChange(group,`Created from unmatched sync cookies (${notFound.length})`);
+          sortedInsert(group);
+          msg+=` · ${notFound.length} added as new group`;
+        }
+      }
+      saveVault();closeMod('sync-now-modal');render();
+      toast(msg,'ok');
+
+    }else{
+      // .json: first do username-match updates on all cookies across all incoming groups,
+      // then add any new groups that don't exist by ID
+      const allIncoming=_syncFileData.groups.flatMap(g=>(g.cookies||[]).map(c=>({...c,_srcGroup:g})));
+      const {updated,notFound}=applySyncCookies(allIncoming);
+      // Add groups by ID that don't exist yet
+      let added=0;
+      _syncFileData.groups.forEach(g=>{
+        if(!vault.find(x=>x.id===g.id)){
+          vault.push({...g,changelog:g.changelog||[]});
+          added++;
+        }
+      });
+      saveVault();closeMod('sync-now-modal');render();
+      toast(`Updated ${updated} cookies · ${added} new groups added`,'ok');
+    }
   }
 });
 
