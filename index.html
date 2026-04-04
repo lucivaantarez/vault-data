@@ -7,10 +7,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-2.html
+  File Name   : cookie-vault-v5-3.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.2
+  Version     : v5.3
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -823,7 +823,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Cookie Vault v5.2</title>
+<title>Lana Vie en Rose</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='22' ry='22' fill='%237b2fff'/%3E%3Cellipse cx='50' cy='50' rx='42' ry='14' fill='none' stroke='%2300d4ff' stroke-width='5' transform='rotate(-20,50,50)'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -1103,20 +1104,27 @@ body[data-csize="lg"] .gcard-srv{font-size:clamp(9px,1.2vw,11px);padding:2px cla
 /* ── LIST VIEW ── */
 body.list-view .card-grid{display:flex;flex-direction:column;gap:3px;}
 body.list-view .exp-tile{display:none;}
-body.list-view .gcard{aspect-ratio:unset;height:44px;border-radius:8px;flex-direction:row;align-items:center;overflow:hidden;}
-body.list-view .gcard-bar{width:3px;height:100%;flex-shrink:0;}
-body.list-view .gcard-body{flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;padding:0 10px;text-align:left;}
-body.list-view .gcard-dot{width:7px!important;height:7px!important;flex-shrink:0;}
-body.list-view .gcard-name{font-size:12px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+body.list-view .gcard{aspect-ratio:unset;min-height:44px;height:auto;border-radius:8px;flex-direction:row;align-items:stretch;overflow:hidden;}
+body.list-view .gcard-bar{width:3px;flex-shrink:0;}
+body.list-view .gcard-body{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:6px 52px 6px 10px;text-align:left;}
+body.list-view .gcard-dot{width:7px!important;height:7px!important;flex-shrink:0;display:none;}
+body.list-view .gcard-row1{display:flex;align-items:center;gap:8px;width:100%;}
+body.list-view .gcard-name{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
 body.list-view .gcard-count{font-size:9px;padding:1px 7px;flex-shrink:0;white-space:nowrap;}
 body.list-view .gcard-srv{font-size:9px;padding:1px 7px;flex-shrink:0;max-width:90px;overflow:hidden;text-overflow:ellipsis;}
 body.list-view .gcard-status{margin-top:0;font-size:9px;flex-shrink:0;}
 body.list-view .gcard-alt-badge{font-size:7px;padding:1px 5px;flex-shrink:0;}
-body.list-view .gcard-pin{top:50%;right:60px;transform:translateY(-50%);}
-body.list-view .gcard-banned-tag{top:50%;transform:translateY(-50%);font-size:8px;padding:1px 4px;}
+body.list-view .gcard-pin{top:8px;right:60px;}
+body.list-view .gcard-banned-tag{top:8px;left:8px;font-size:8px;padding:1px 4px;}
 body.list-view .card-qc-btn{bottom:unset;top:50%;transform:translateY(-50%);right:5px;}
-body.list-view .gcard-body{padding-right:52px;}
 body.list-view .gcard::before{display:none;}
+/* Username pills row */
+.gcard-users-row{display:none;}
+body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1px;}
+.gcard-user-pill{font-family:var(--mono);font-size:8px;color:var(--dim);background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:1px 5px;white-space:nowrap;line-height:1.5;}
+.gcard-user-pill.banned-user{text-decoration:line-through;opacity:.5;color:var(--danger);}
+.gcard-user-pill.more{color:var(--dim);border-style:dashed;}
 .list-view-btn{background:none;border:1px solid var(--bdr);border-radius:7px;padding:6px 9px;
   font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;letter-spacing:1px;
   transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
@@ -1124,6 +1132,26 @@ body.list-view .gcard::before{display:none;}
 .list-view-btn.active{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.08);}
 .list-view-btn svg{opacity:.6;}
 .empty-state p{font-family:var(--mono);font-size:12px;letter-spacing:1px;line-height:1.9;}
+
+/* ── SWAP / MOVE / SYNC CSS ── */
+.swap-tabs{display:flex;gap:0;border-bottom:1px solid var(--bdr);}
+.swap-tab{background:none;border:none;border-bottom:2px solid transparent;padding:7px 14px;
+  font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;letter-spacing:.5px;
+  transition:all .12s;text-transform:uppercase;}
+.swap-tab.on{color:var(--a2);border-bottom-color:var(--a2);}
+.swap-reason-btn{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:7px;
+  padding:7px 14px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
+  transition:all .12s;flex:1;}
+.swap-reason-btn.on{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.08);}
+.move-group-opt{background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:7px;
+  padding:9px 12px;cursor:pointer;transition:all .12s;font-family:var(--sans);font-size:12px;
+  font-weight:600;color:var(--txt);text-align:left;width:100%;}
+.move-group-opt:hover{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.06);}
+.swap-alt-opt{background:rgba(123,47,255,.05);border:1px solid rgba(123,47,255,.2);border-radius:7px;
+  padding:8px 12px;cursor:pointer;transition:all .12s;font-family:var(--mono);font-size:11px;color:var(--txt);}
+.swap-alt-opt:hover,.swap-alt-opt.selected{border-color:var(--a2);background:rgba(0,212,255,.08);}
+.swap-alt-opt .alt-label{font-size:10px;color:var(--a3);font-weight:700;margin-bottom:2px;}
+.swap-alt-opt .alt-cookies{font-size:9px;color:var(--dim);}
 
 /* ── QUICK COPY ── */
 #qc-backdrop{display:none;position:fixed;inset:0;z-index:399;}
@@ -1635,9 +1663,9 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
   max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .data-switch-lbl.active{color:var(--a3);}
 .data-switch-chev{color:var(--dim);font-size:10px;}
-.ds-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:rgba(7,11,18,.97);
-  border:1px solid var(--bdrb);border-radius:12px;padding:6px;min-width:220px;
-  box-shadow:0 8px 32px rgba(0,0,0,.6);display:none;z-index:300;animation:qcIn .15s ease;}
+.ds-dropdown{position:fixed;top:auto;right:8px;background:rgba(7,11,18,.97);
+  border:1px solid var(--bdrb);border-radius:12px;padding:6px;min-width:240px;max-width:calc(100vw - 16px);
+  box-shadow:0 8px 32px rgba(0,0,0,.6);display:none;z-index:500;animation:qcIn .15s ease;}
 .ds-dropdown.open{display:block;}
 .ds-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:7px;
   cursor:pointer;transition:all .12s;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--txt);}
@@ -1646,13 +1674,13 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
 .ds-item-dot{width:7px;height:7px;border-radius:50%;background:var(--a3);flex-shrink:0;}
 .ds-item.active .ds-item-dot{background:var(--a3);box-shadow:0 0 6px var(--a3);}
 .ds-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ds-item-actions{display:none;gap:2px;flex-shrink:0;}
-.ds-item:hover .ds-item-actions{display:flex;}
-.ds-action-btn{background:none;border:none;color:var(--dim);cursor:pointer;padding:2px 5px;
-  border-radius:4px;font-size:12px;transition:all .12s;line-height:1;}
-.ds-action-btn:hover{background:rgba(255,255,255,.1);}
-.ds-action-btn.rename:hover{color:var(--a2);}
-.ds-action-btn.del:hover{color:var(--danger);}
+.ds-item-actions{display:flex;gap:2px;flex-shrink:0;opacity:.45;transition:opacity .12s;}
+.ds-item:hover .ds-item-actions{opacity:1;}
+.ds-action-btn{background:none;border:1px solid var(--bdr);color:var(--dim);cursor:pointer;padding:4px 8px;
+  border-radius:5px;font-size:11px;transition:all .12s;line-height:1;display:flex;align-items:center;}
+.ds-action-btn:hover,.ds-action-btn:active{background:rgba(255,255,255,.1);}
+.ds-action-btn.rename{color:var(--a2);border-color:rgba(0,212,255,.3);}
+.ds-action-btn.del{color:var(--danger);border-color:rgba(255,48,96,.3);}
 .ds-rename-input{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--a2);border-radius:5px;
   padding:2px 7px;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--bright);outline:none;min-width:0;}
 .ds-sep{height:1px;background:var(--bdr);margin:4px 0;}
@@ -1680,6 +1708,9 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
 .p-meta-btn:hover{border-color:var(--a2);color:var(--a2);}
 .p-meta-btn.copy{border-color:rgba(0,212,255,.2);color:var(--a2);}
 .p-meta-btn.copy:hover{background:rgba(0,212,255,.1);}
+.p-notes-wrap{padding:10px 12px;border-bottom:1px solid var(--bdr);background:rgba(0,0,0,.08);}
+.p-notes-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+#p-notes-actions{display:flex;}
 
 /* ── IMPORT REVIEW MODAL ── */
 .import-modal{width:min(92vw,460px);max-height:80vh;display:flex;flex-direction:column;}
@@ -1812,10 +1843,15 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
         <button class="col-pill" data-c="4">4</button>
       </div>
       <button class="btn-add" id="hdr-add">+ Add</button>
-      <button class="hdr-meta-btn" id="hdr-sync-btn" title="Sync Vault from file">
+      <button class="hdr-meta-btn" id="hdr-sync-btn" title="Sync Vault">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/>
         </svg>Sync
+      </button>
+      <button class="hdr-meta-btn" id="hdr-refresh-btn" title="Refresh vault">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/>
+        </svg>Refresh
       </button>
       <div class="sync-dot" id="sync-dot" data-state="off" title="GitHub sync status"></div>
       <div class="data-switch" id="data-switch-btn">
@@ -1890,6 +1926,12 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
           <div class="paste-chev">▾</div>
         </div>
         <div class="paste-body">
+          <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;">
+            <button class="btn-primary" id="paste-from-clip-btn" style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);box-shadow:none;font-size:10px;padding:5px 10px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Paste from clipboard
+            </button>
+            <span id="paste-fmt-label" style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.5px;"></span>
+          </div>
           <textarea class="paste-ta" id="paste-ta"
             placeholder="username:password:cookie&#10;username:cookie&#10;cookie only"></textarea>
           <div class="paste-ft">
@@ -1997,6 +2039,74 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     <span style="flex:1">vault.json</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">full backup</span>
   </button>
+</div>
+
+<!-- MOVE COOKIE MODAL -->
+<div class="m-ov" id="move-cookie-modal">
+  <div class="modal" style="width:min(92vw,380px)">
+    <h3>Move Cookie</h3>
+    <p id="move-cookie-desc" style="margin-bottom:12px;font-size:12px;color:var(--dim)"></p>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;">Select destination group</div>
+    <div id="move-cookie-list" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;"></div>
+    <div class="m-act" style="margin-top:14px">
+      <button class="bsm b-ghost" id="move-cookie-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SWAP COOKIE MODAL -->
+<div class="m-ov" id="swap-modal">
+  <div class="modal" style="width:min(94vw,420px)">
+    <h3>Swap Cookie</h3>
+    <p id="swap-modal-desc" style="margin-size:11px;color:var(--dim);margin-bottom:12px;"></p>
+    <div class="swap-tabs">
+      <button class="swap-tab on" id="swap-tab-paste">Paste new</button>
+      <button class="swap-tab" id="swap-tab-alts">From alts</button>
+    </div>
+    <div id="swap-paste-panel" style="margin-top:10px;">
+      <textarea class="finput" id="swap-paste-ta" rows="3" placeholder="username:password:cookie" style="font-family:var(--mono);font-size:11px;resize:none;"></textarea>
+      <div id="swap-paste-info" style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:4px;"></div>
+    </div>
+    <div id="swap-alts-panel" style="display:none;margin-top:10px;">
+      <div id="swap-alts-list" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;"></div>
+    </div>
+    <div style="margin-top:14px;">
+      <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px;text-transform:uppercase;">Reason for swap</div>
+      <div style="display:flex;gap:8px;">
+        <button class="swap-reason-btn on" data-reason="1d">1 day ban</button>
+        <button class="swap-reason-btn" data-reason="7d">7 day ban</button>
+        <button class="swap-reason-btn" data-reason="expired">Expired</button>
+      </div>
+    </div>
+    <div class="m-act" style="margin-top:14px;">
+      <button class="bsm b-ghost" id="swap-cancel">Cancel</button>
+      <button class="bsm b-save" id="swap-confirm">Swap</button>
+    </div>
+  </div>
+</div>
+
+<!-- SYNC NOW POPUP -->
+<div class="m-ov" id="sync-now-modal">
+  <div class="modal" style="width:min(92vw,380px)">
+    <h3>Sync Vault</h3>
+    <p style="margin-bottom:14px;font-size:12px;color:var(--dim)">Paste u:p:c lines or upload a vault .json file to merge into the current vault.</p>
+    <div class="swap-tabs" style="margin-bottom:10px;">
+      <button class="swap-tab on" id="sync-tab-paste">Paste u:p:c</button>
+      <button class="swap-tab" id="sync-tab-file">Upload file</button>
+    </div>
+    <div id="sync-paste-panel">
+      <textarea class="finput" id="sync-paste-ta" rows="5" placeholder="username:password:cookie&#10;one per line" style="font-family:var(--mono);font-size:11px;resize:none;"></textarea>
+      <div id="sync-paste-info" style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:4px;"></div>
+    </div>
+    <div id="sync-file-panel" style="display:none;">
+      <button class="bsm b-ghost" style="width:100%;" id="sync-file-pick">Choose .json file</button>
+      <div id="sync-file-info" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;"></div>
+    </div>
+    <div class="m-act" style="margin-top:14px;">
+      <button class="bsm b-ghost" id="sync-now-cancel">Cancel</button>
+      <button class="bsm b-save" id="sync-now-confirm">Sync</button>
+    </div>
+  </div>
 </div>
 
 <!-- BULK ACTION BAR -->
@@ -2262,6 +2372,19 @@ body.list-view .gcard-chk{top:50%;transform:translateY(-50%);right:38px;}
       </div>
     </div>
     <div class="p-scroll" id="p-scroll">
+      <!-- Notes field -->
+      <div class="p-notes-wrap" id="p-notes-wrap">
+        <div class="p-notes-hd">
+          <span style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;">Notes</span>
+          <button class="p-meta-btn" id="p-notes-edit-btn">Edit</button>
+        </div>
+        <div class="p-notes-val" id="p-notes-val" style="font-family:var(--mono);font-size:11px;color:var(--dim);line-height:1.6;padding:4px 0;min-height:16px;white-space:pre-wrap;word-break:break-word;"></div>
+        <textarea class="finput p-notes-ta" id="p-notes-ta" rows="3" placeholder="Add notes..." style="display:none;font-size:11px;resize:vertical;font-family:var(--mono);line-height:1.6;"></textarea>
+        <div id="p-notes-actions" style="display:none;gap:6px;margin-top:6px;">
+          <button class="bsm b-ghost" id="p-notes-cancel" style="font-size:10px;padding:4px 10px;">cancel</button>
+          <button class="bsm b-save" id="p-notes-save" style="font-size:10px;padding:4px 10px;">save</button>
+        </div>
+      </div>
       <div class="ck-grid" id="p-grid" style="--pc:1"></div>
     </div>
   </div>
@@ -2450,15 +2573,29 @@ document.getElementById('paste-toggle').addEventListener('click',()=>ppanel.clas
 }));
 const ta=document.getElementById('paste-ta'),pi=document.getElementById('paste-info'),ab=document.getElementById('add-btn');
 ta.addEventListener('input',()=>{
-  const p=parseInput(ta.value);
-  if(!ta.value.trim()){pi.innerHTML='Awaiting input...';ab.disabled=true;
-    document.getElementById('distribute-btn').style.display='none';return;}
+  const raw=ta.value.trim();
+  const fmtLabel=document.getElementById('paste-fmt-label');
+  if(!raw){pi.innerHTML='Awaiting input...';ab.disabled=true;
+    document.getElementById('distribute-btn').style.display='none';
+    if(fmtLabel)fmtLabel.textContent='';return;}
+  const lines=raw.split('\n').filter(l=>l.trim());
+  const p=parseInput(raw);
+  const invalid=lines.filter(l=>!parseLine(l)).length;
   if(!p.length){pi.innerHTML='<span style="color:var(--danger)">No valid cookies</span>';ab.disabled=true;
-    document.getElementById('distribute-btn').style.display='none';}
-  else{
-    pi.innerHTML=`<span>${p.length}</span> detected`;ab.disabled=false;
-    // Show distribute button when 6+ cookies pasted
+    document.getElementById('distribute-btn').style.display='none';
+    if(fmtLabel)fmtLabel.textContent='';
+  }else{
+    const invalidTxt=invalid>0?` · <span style="color:var(--danger)">${invalid} invalid</span>`:'';
+    pi.innerHTML=`<span>${p.length} valid</span>${invalidTxt}`;ab.disabled=false;
     document.getElementById('distribute-btn').style.display=p.length>=6?'':'none';
+    // Detect dominant format
+    if(fmtLabel){
+      const hasPwd=p.filter(c=>c.password).length;
+      const hasUser=p.filter(c=>c.username).length;
+      const fmt=hasPwd>p.length/2?'u:p:c':hasUser>p.length/2?'u:c':'cookie only';
+      fmtLabel.textContent='detected: '+fmt;
+      fmtLabel.style.color=fmt==='u:p:c'?'var(--ok)':fmt==='u:c'?'var(--a2)':'var(--dim)';
+    }
   }
 });
 ab.addEventListener('click',()=>{const p=parseInput(ta.value);if(p.length)openAddModal(p);});
@@ -2680,7 +2817,7 @@ document.getElementById('sb-clip').addEventListener('click',()=>{
 // IMPORT button → unified (.json or .txt)
 document.getElementById('sb-imp').addEventListener('click',()=>document.getElementById('import-unified').click());
 // Sync vault → header button
-document.getElementById('hdr-sync-btn').addEventListener('click',()=>document.getElementById('update-f').click());
+document.getElementById('hdr-sync-btn').addEventListener('click',()=>openSyncNowModal());
 document.getElementById('sb-clr').addEventListener('click',async()=>{
   if(!vault.length){toast('Already empty','err');return;}
   const ok=await customConfirm(`Forget everything? This will delete all ${vault.length} groups permanently. This cannot be undone.`,'Forget Everything');
@@ -3021,6 +3158,9 @@ document.getElementById('data-switch-btn').addEventListener('click',e=>{
   e.stopPropagation();
   const drop=document.getElementById('ds-dropdown');
   renderDataSwitcher();
+  const rect=e.currentTarget.getBoundingClientRect();
+  drop.style.top=(rect.bottom+6)+'px';
+  drop.style.right=(window.innerWidth-rect.right)+'px';
   drop.classList.toggle('open');
 });
 document.getElementById('new-data-cancel').addEventListener('click',()=>closeMod('new-data-modal'));
@@ -3481,13 +3621,31 @@ function mkCard(group){
   card.style.setProperty('--cc',col.c);card.style.setProperty('--cr',col.r);
   const bar=document.createElement('div');bar.className='gcard-bar';bar.style.background=col.c;card.appendChild(bar);
   const body=document.createElement('div');body.className='gcard-body';
-  body.innerHTML=`
+  // Row 1: dot + name + count + server + alts
+  const row1=document.createElement('div');row1.className='gcard-row1';
+  row1.innerHTML=`
     <div class="gcard-dot" style="background:${col.c};color:${col.c};width:8px;height:8px"></div>
     <div class="gcard-name">${esc(group.name)}</div>
     <div class="gcard-count">${flavorCount(group.cookies.length)}</div>
     ${getCardStatusHTML(group)}
     ${group.serverName?`<div class="gcard-srv">${esc(group.serverName)}</div>`:''}
     ${(group.alternatives&&group.alternatives.length)?`<div class="gcard-alt-badge">⟁ ${group.alternatives.length} alt${group.alternatives.length!==1?'s':''}</div>`:''}`;
+  body.appendChild(row1);
+  // Row 2: username pills (list view only)
+  const usersRow=document.createElement('div');usersRow.className='gcard-users-row';
+  if(group.cookies&&group.cookies.length){
+    const MAX_PILLS=5;
+    const shown=group.cookies.slice(0,MAX_PILLS);
+    const extra=group.cookies.length-MAX_PILLS;
+    shown.forEach(c=>{
+      if(!c.username)return;
+      const pill=document.createElement('span');pill.className='gcard-user-pill'+(c.banStatus==='banned'?' banned-user':'');
+      pill.textContent=c.username;
+      usersRow.appendChild(pill);
+    });
+    if(extra>0){const more=document.createElement('span');more.className='gcard-user-pill more';more.textContent='+'+extra;usersRow.appendChild(more);}
+  }
+  body.appendChild(usersRow);
   if(group.pinned){const pin=document.createElement('div');pin.className='gcard-pin';pin.textContent='📌';card.appendChild(pin);}
   if(group.banned){
     card.classList.add('banned');
@@ -3501,7 +3659,50 @@ function mkCard(group){
   card.appendChild(chkDiv);
   qcBtn.addEventListener('click',e=>{e.stopPropagation();openQC(group.id,qcBtn);});
   card.appendChild(qcBtn);
-  card.addEventListener('click',e=>{if(e.target===qcBtn||qcBtn.contains(e.target))return;openPanel(group.id);});
+  // Long-press → bulk select
+  let lpTimer=null;
+  card.addEventListener('touchstart',e=>{
+    if(e.target===qcBtn||qcBtn.contains(e.target)||chkDiv.contains(e.target))return;
+    lpTimer=setTimeout(()=>{
+      lpTimer=null;
+      navigator.vibrate&&navigator.vibrate(40);
+      toggleBulkSelect(group.id);
+    },500);
+  },{passive:true});
+  card.addEventListener('touchend',()=>{if(lpTimer){clearTimeout(lpTimer);lpTimer=null;}});
+  card.addEventListener('touchmove',()=>{if(lpTimer){clearTimeout(lpTimer);lpTimer=null;}});
+  // Double-tap → quick rename
+  let tapTimer=null,tapCount=0;
+  card.addEventListener('click',e=>{
+    if(e.target===qcBtn||qcBtn.contains(e.target)||chkDiv.contains(e.target))return;
+    tapCount++;
+    if(tapCount===1){
+      tapTimer=setTimeout(()=>{tapCount=0;openPanel(group.id);},280);}
+    else if(tapCount===2){
+      clearTimeout(tapTimer);tapCount=0;
+      // Quick rename inline on card name
+      const nameEl=card.querySelector('.gcard-name');
+      if(!nameEl)return;
+      const inp=document.createElement('input');
+      inp.style.cssText='background:rgba(0,0,0,.6);border:1px solid var(--a2);border-radius:4px;padding:2px 6px;font-family:var(--sans);font-weight:700;font-size:inherit;color:var(--bright);outline:none;width:100%;';
+      inp.value=group.name;inp.maxLength=40;
+      nameEl.replaceWith(inp);inp.focus();inp.select();
+      function commitRename(){
+        const newName=inp.value.trim();
+        if(newName&&newName!==group.name){
+          group.name=newName;
+          logChange(group,`Renamed to <span>${esc(newName)}</span>`);
+          saveVault();render();toast(`Renamed to "${newName}"`,'ok');
+        }else{inp.replaceWith(nameEl);}
+      }
+      inp.addEventListener('blur',commitRename);
+      inp.addEventListener('keydown',e2=>{
+        if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
+        if(e2.key==='Escape'){inp.replaceWith(nameEl);}
+      });
+      e.stopPropagation();
+    }
+  });
   return card;
 }
 
@@ -3733,20 +3934,39 @@ function mkCkItem(c,i,gid,opts){
   // Delete button (single cookie removal)
   if(!opts.isAlt){
     const delBtn=document.createElement('button');delBtn.className='ck-del-btn';delBtn.textContent='Del';
-    delBtn.addEventListener('click',async e=>{
+    delBtn.addEventListener('click',e=>{
       e.stopPropagation();
       const g=vault.find(x=>x.id===gid);if(!g)return;
-      const ok=await customConfirm(`Remove cookie #${i+1}${c.username?' ('+c.username+')':''}?`,'Remove');
-      if(!ok)return;
-      g.cookies.splice(i,1);
+      const removed=g.cookies.splice(i,1)[0];
       logChange(g,`Removed cookie #${i+1}${c.username?' ('+c.username+')':''}`);
       saveVault();refreshPanel();
-      // update card count
       const card=document.querySelector(`.gcard[data-id="${gid}"]`);
       if(card){const ce=card.querySelector('.gcard-count');if(ce)ce.textContent=flavorCount(g.cookies.length);}
-      toast(`Cookie removed`,'ok');
+      const toastEl=document.getElementById('toast');
+      document.getElementById('toast-msg').textContent='Cookie removed'+(c.username?' ('+c.username+')':'');
+      toastEl.className='show warn';
+      const oldU=toastEl.querySelector('.toast-undo');if(oldU)oldU.remove();
+      const undoB=document.createElement('button');undoB.className='toast-undo';undoB.textContent='undo';
+      undoB.addEventListener('click',()=>{
+        g.cookies.splice(i,0,removed);saveVault();refreshPanel();
+        toastEl.className='';toastEl.innerHTML='<span id="toast-msg"></span>';
+      });
+      toastEl.appendChild(undoB);
+      clearTimeout(window._delUndoT);
+      window._delUndoT=setTimeout(()=>{toastEl.className='';toastEl.innerHTML='<span id="toast-msg"></span>';},5000);
     });
     actions.appendChild(delBtn);
+  }
+  if(!opts.isAlt){
+    // Swap button
+    const swapBtn=document.createElement('button');swapBtn.className='ck-edit-btn';swapBtn.textContent='Swap';
+    swapBtn.style.cssText='border-color:rgba(255,170,0,.3);color:rgba(255,170,0,.8);';
+    swapBtn.addEventListener('click',e=>{e.stopPropagation();openSwapModal(gid,i);});
+    actions.appendChild(swapBtn);
+    // Move button
+    const moveBtn=document.createElement('button');moveBtn.className='ck-edit-btn';moveBtn.textContent='Move';
+    moveBtn.addEventListener('click',e=>{e.stopPropagation();openMoveCookieModal(gid,i);});
+    actions.appendChild(moveBtn);
   }
   hdr.appendChild(actions);wrap.appendChild(hdr);
 
@@ -3756,7 +3976,8 @@ function mkCkItem(c,i,gid,opts){
     {label:'u:p:c',fmt:'user:pass:cookie'},
     {label:'u:c',fmt:'user:cookie'},
     {label:'u',fmt:'username'},
-    {label:'u:p',fmt:'user:pass'},
+    {label:'p',fmt:'user:pass'},
+    {label:'c',fmt:'cookie'},
   ];
   fmtDefs.forEach(({label,fmt})=>{
     const fb=document.createElement('button');fb.className='ck-fmt-btn';fb.textContent=label;
@@ -5093,6 +5314,370 @@ copyText=function(text,onSuccess,onFail){
     ckLogEvent('copied',`Copied ${lines.length} cookie${lines.length!==1?'s':''}`,null);
     if(onSuccess)onSuccess();
   },onFail);
+};
+
+// ═══════════════════════════════════════
+// FIX 14: REFRESH BUTTON
+// ═══════════════════════════════════════
+document.getElementById('hdr-refresh-btn').addEventListener('click',()=>{
+  render();
+  toast('Vault refreshed','ok');
+});
+
+// ═══════════════════════════════════════
+// FIX 11: PASTE FROM CLIPBOARD
+// ═══════════════════════════════════════
+document.getElementById('paste-from-clip-btn').addEventListener('click',async()=>{
+  try{
+    const text=await navigator.clipboard.readText();
+    if(!text.trim()){toast('Clipboard is empty','warn');return;}
+    document.getElementById('paste-ta').value=text;
+    document.getElementById('paste-ta').dispatchEvent(new Event('input'));
+    const panel=document.getElementById('paste-panel');
+    if(!panel.classList.contains('open'))panel.classList.add('open');
+  }catch(e){toast('Clipboard read failed — paste manually','warn');}
+});
+
+// ═══════════════════════════════════════
+// FIX 9: NOTES FIELD
+// ═══════════════════════════════════════
+function refreshPanelNotes(g){
+  const val=document.getElementById('p-notes-val');
+  const ta=document.getElementById('p-notes-ta');
+  const actions=document.getElementById('p-notes-actions');
+  const editBtn=document.getElementById('p-notes-edit-btn');
+  if(!val)return;
+  val.textContent=g.notes||'';
+  val.style.color=g.notes?'var(--txt)':'var(--dim)';
+  if(!g.notes)val.textContent='No notes';
+  ta.style.display='none';
+  actions.style.display='none';
+  editBtn.style.display='';
+}
+document.getElementById('p-notes-edit-btn').addEventListener('click',()=>{
+  const g=vault.find(x=>x.id===panelId);if(!g)return;
+  const val=document.getElementById('p-notes-val');
+  const ta=document.getElementById('p-notes-ta');
+  const actions=document.getElementById('p-notes-actions');
+  val.style.display='none';
+  ta.value=g.notes||'';
+  ta.style.display='';
+  actions.style.display='flex';
+  document.getElementById('p-notes-edit-btn').style.display='none';
+  ta.focus();
+});
+document.getElementById('p-notes-cancel').addEventListener('click',()=>{
+  const g=vault.find(x=>x.id===panelId);if(!g)return;
+  document.getElementById('p-notes-val').style.display='';
+  document.getElementById('p-notes-ta').style.display='none';
+  document.getElementById('p-notes-actions').style.display='none';
+  document.getElementById('p-notes-edit-btn').style.display='';
+  refreshPanelNotes(g);
+});
+document.getElementById('p-notes-save').addEventListener('click',()=>{
+  const g=vault.find(x=>x.id===panelId);if(!g)return;
+  const newNotes=document.getElementById('p-notes-ta').value.trim();
+  g.notes=newNotes||null;
+  saveVault();
+  document.getElementById('p-notes-val').style.display='';
+  document.getElementById('p-notes-ta').style.display='none';
+  document.getElementById('p-notes-actions').style.display='none';
+  document.getElementById('p-notes-edit-btn').style.display='';
+  refreshPanelNotes(g);
+  toast('Notes saved','ok');
+});
+// Patch refreshPanel to also load notes
+const _rp_orig=refreshPanel;
+refreshPanel=function(){
+  _rp_orig();
+  const g=vault.find(x=>x.id===panelId);
+  if(g)refreshPanelNotes(g);
+};
+
+// ═══════════════════════════════════════
+// FIX 12: MOVE COOKIE TO ANOTHER GROUP
+// ═══════════════════════════════════════
+let _moveCookieGid=null,_moveCookieIdx=null;
+function openMoveCookieModal(gid,idx){
+  _moveCookieGid=gid;_moveCookieIdx=idx;
+  const g=vault.find(x=>x.id===gid);if(!g)return;
+  const c=g.cookies[idx];
+  document.getElementById('move-cookie-desc').textContent=
+    `Moving cookie${c.username?' "'+c.username+'"':' #'+(idx+1)} from "${g.name}"`;
+  const list=document.getElementById('move-cookie-list');
+  list.innerHTML='';
+  vault.filter(x=>x.id!==gid).forEach(dest=>{
+    const btn=document.createElement('button');btn.className='move-group-opt';
+    btn.innerHTML=`<span style="color:var(--bright)">${esc(dest.name)}</span>${dest.serverName?`<span style="color:var(--dim);font-size:10px;margin-left:8px">${esc(dest.serverName)}</span>`:''}
+      <span style="color:var(--dim);font-size:10px;float:right">${dest.cookies.length}c</span>`;
+    btn.addEventListener('click',()=>{
+      const src=vault.find(x=>x.id===_moveCookieGid);
+      const dst=vault.find(x=>x.id===dest.id);
+      if(!src||!dst)return;
+      const [moved]=src.cookies.splice(_moveCookieIdx,1);
+      dst.cookies.push(moved);
+      logChange(src,`Cookie${moved.username?' "'+moved.username+'"':''} moved to "${esc(dst.name)}"`);
+      logChange(dst,`Cookie${moved.username?' "'+moved.username+'"':''} moved from "${esc(src.name)}"`);
+      saveVault();refreshPanel();render();
+      closeMod('move-cookie-modal');
+      toast(`Moved to "${dest.name}"`,'ok');
+    });
+    list.appendChild(btn);
+  });
+  openMod('move-cookie-modal');
+}
+document.getElementById('move-cookie-cancel').addEventListener('click',()=>closeMod('move-cookie-modal'));
+
+// ═══════════════════════════════════════
+// FIX 4+5: SWAP COOKIE FEATURE
+// ═══════════════════════════════════════
+const SWAP_REMINDERS_K='cv_swap_reminders';
+let _swapGid=null,_swapIdx=null,_swapSelectedAlt=null;
+
+function loadSwapReminders(){
+  try{return JSON.parse(localStorage.getItem(SWAP_REMINDERS_K)||'[]');}catch{return[];}
+}
+function saveSwapReminders(r){localStorage.setItem(SWAP_REMINDERS_K,JSON.stringify(r));}
+
+function openSwapModal(gid,idx){
+  _swapGid=gid;_swapIdx=idx;_swapSelectedAlt=null;
+  const g=vault.find(x=>x.id===gid);if(!g)return;
+  const c=g.cookies[idx];
+  document.getElementById('swap-modal-desc').textContent=
+    `Replacing cookie${c.username?' "'+c.username+'"':' #'+(idx+1)} in "${g.name}"`;
+  // Reset tabs
+  document.getElementById('swap-tab-paste').classList.add('on');
+  document.getElementById('swap-tab-alts').classList.remove('on');
+  document.getElementById('swap-paste-panel').style.display='';
+  document.getElementById('swap-alts-panel').style.display='none';
+  document.getElementById('swap-paste-ta').value='';
+  document.getElementById('swap-paste-info').textContent='';
+  // Reset reason
+  document.querySelectorAll('.swap-reason-btn').forEach(b=>b.classList.toggle('on',b.dataset.reason==='1d'));
+  // Build alts list
+  const altsList=document.getElementById('swap-alts-list');
+  altsList.innerHTML='';
+  if(g.alternatives&&g.alternatives.length){
+    g.alternatives.forEach((alt,ai)=>{
+      const opt=document.createElement('div');opt.className='swap-alt-opt';
+      opt.innerHTML=`<div class="alt-label">${esc(alt.label||'Alt '+(ai+1))}</div>
+        <div class="alt-cookies">${alt.cookies.map(c=>c.username||'(no user)').join(', ')}</div>`;
+      opt.addEventListener('click',()=>{
+        document.querySelectorAll('.swap-alt-opt').forEach(x=>x.classList.remove('selected'));
+        opt.classList.add('selected');
+        _swapSelectedAlt={altIdx:ai,alt};
+      });
+      altsList.appendChild(opt);
+    });
+  }else{
+    altsList.innerHTML='<div style="font-family:var(--mono);font-size:10px;color:var(--dim);padding:8px 0;">No alt cookies for this group</div>';
+  }
+  openMod('swap-modal');
+}
+
+document.getElementById('swap-tab-paste').addEventListener('click',()=>{
+  document.getElementById('swap-tab-paste').classList.add('on');
+  document.getElementById('swap-tab-alts').classList.remove('on');
+  document.getElementById('swap-paste-panel').style.display='';
+  document.getElementById('swap-alts-panel').style.display='none';
+});
+document.getElementById('swap-tab-alts').addEventListener('click',()=>{
+  document.getElementById('swap-tab-alts').classList.add('on');
+  document.getElementById('swap-tab-paste').classList.remove('on');
+  document.getElementById('swap-alts-panel').style.display='';
+  document.getElementById('swap-paste-panel').style.display='none';
+});
+document.querySelectorAll('.swap-reason-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.swap-reason-btn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+  });
+});
+document.getElementById('swap-paste-ta').addEventListener('input',()=>{
+  const val=document.getElementById('swap-paste-ta').value;
+  const p=parseInput(val);
+  const info=document.getElementById('swap-paste-info');
+  if(!val.trim()){info.textContent='';return;}
+  info.textContent=p.length?p.length+' cookie'+(p.length!==1?'s':'')+ ' detected':'No valid cookies';
+  info.style.color=p.length?'var(--ok)':'var(--danger)';
+});
+document.getElementById('swap-cancel').addEventListener('click',()=>closeMod('swap-modal'));
+document.getElementById('swap-confirm').addEventListener('click',()=>{
+  const g=vault.find(x=>x.id===_swapGid);if(!g)return;
+  const reason=document.querySelector('.swap-reason-btn.on')?.dataset.reason||'1d';
+  const isPasteMode=document.getElementById('swap-paste-panel').style.display!=='none';
+  let newCookie=null;
+
+  if(isPasteMode){
+    const p=parseInput(document.getElementById('swap-paste-ta').value);
+    if(!p.length){toast('No valid cookie pasted','err');return;}
+    newCookie=p[0];
+  }else{
+    if(!_swapSelectedAlt){toast('Select an alt cookie first','warn');return;}
+    // Use first cookie of selected alt set
+    const altSet=_swapSelectedAlt.alt;
+    if(!altSet.cookies.length){toast('Alt set is empty','warn');return;}
+    newCookie={...altSet.cookies[0]};
+    // Remove used cookie from alt set, remove alt set if empty
+    altSet.cookies.splice(0,1);
+    if(!altSet.cookies.length){
+      g.alternatives.splice(_swapSelectedAlt.altIdx,1);
+    }
+  }
+
+  // Archive old cookie into alts with reason tag
+  const old=g.cookies[_swapIdx];
+  const tag=reason==='expired'?'expired':reason==='1d'?'1d ban':'7d ban';
+  const altLabel=`${old.username||'Cookie #'+(_swapIdx+1)} — ${tag} ${new Date().toLocaleDateString('en',{month:'short',day:'numeric'})}`;
+  if(!g.alternatives)g.alternatives=[];
+  g.alternatives.push({
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    label:altLabel,
+    cookies:[{...old}],
+    swapReason:reason,
+    swappedAt:Date.now()
+  });
+
+  // Place new cookie
+  g.cookies[_swapIdx]={...newCookie};
+  logChange(g,`Cookie${old.username?' "'+old.username+'"':''} swapped (${tag}) → ${newCookie.username||'new cookie'}`);
+  saveVault();
+
+  // Schedule reminder for 1d / 7d bans
+  if(reason==='1d'||reason==='7d'){
+    const reminders=loadSwapReminders();
+    const hours=reason==='1d'?24:168; // 7*24
+    reminders.push({
+      id:Date.now().toString(36),
+      username:old.username||null,
+      groupName:g.name,
+      reason,
+      remindAt:Date.now()+hours*3600000,
+      shown:false
+    });
+    saveSwapReminders(reminders);
+  }
+
+  closeMod('swap-modal');
+  refreshPanel();render();
+  toast(`Cookie swapped — ${old.username||''} archived as "${tag}"`,'ok');
+});
+
+// Check swap reminders on PIN unlock — show on PIN screen
+function checkSwapReminders(){
+  const reminders=loadSwapReminders();
+  const due=reminders.filter(r=>!r.shown&&r.remindAt<=Date.now());
+  if(!due.length)return;
+  const banner=document.getElementById('pin-reminder-banner');
+  if(!banner)return;
+  banner.innerHTML='';
+  due.forEach(r=>{
+    const msg=document.createElement('div');
+    msg.style.cssText='font-family:var(--mono);font-size:10px;color:var(--ok);margin-bottom:4px;';
+    msg.textContent=`${r.username||r.groupName} — ${r.reason} ban lifted, ready to swap back`;
+    banner.appendChild(msg);
+    r.shown=true;
+  });
+  banner.style.display='block';
+  saveSwapReminders(reminders);
+}
+
+// ═══════════════════════════════════════
+// FIX 13: SYNC NOW MODAL
+// ═══════════════════════════════════════
+let _syncFileData=null;
+function openSyncNowModal(){
+  document.getElementById('sync-tab-paste').classList.add('on');
+  document.getElementById('sync-tab-file').classList.remove('on');
+  document.getElementById('sync-paste-panel').style.display='';
+  document.getElementById('sync-file-panel').style.display='none';
+  document.getElementById('sync-paste-ta').value='';
+  document.getElementById('sync-paste-info').textContent='';
+  document.getElementById('sync-file-info').textContent='';
+  _syncFileData=null;
+  openMod('sync-now-modal');
+}
+document.getElementById('sync-tab-paste').addEventListener('click',()=>{
+  document.getElementById('sync-tab-paste').classList.add('on');
+  document.getElementById('sync-tab-file').classList.remove('on');
+  document.getElementById('sync-paste-panel').style.display='';
+  document.getElementById('sync-file-panel').style.display='none';
+});
+document.getElementById('sync-tab-file').addEventListener('click',()=>{
+  document.getElementById('sync-tab-file').classList.add('on');
+  document.getElementById('sync-tab-paste').classList.remove('on');
+  document.getElementById('sync-file-panel').style.display='';
+  document.getElementById('sync-paste-panel').style.display='none';
+});
+document.getElementById('sync-paste-ta').addEventListener('input',()=>{
+  const p=parseInput(document.getElementById('sync-paste-ta').value);
+  const info=document.getElementById('sync-paste-info');
+  info.textContent=p.length?p.length+' cookies detected':'';
+  info.style.color='var(--ok)';
+});
+document.getElementById('sync-file-pick').addEventListener('click',()=>{
+  const fi=document.createElement('input');fi.type='file';fi.accept='.json';
+  fi.addEventListener('change',()=>{
+    const f=fi.files[0];if(!f)return;
+    const r=new FileReader();r.onload=e=>{
+      try{
+        const d=JSON.parse(e.target.result);
+        if(!d.vault||!Array.isArray(d.vault))throw new Error('bad format');
+        _syncFileData=d.vault;
+        document.getElementById('sync-file-info').textContent=`Loaded: ${d.vault.length} groups from "${f.name}"`;
+        document.getElementById('sync-file-info').style.color='var(--ok)';
+      }catch{document.getElementById('sync-file-info').textContent='Invalid vault file';
+        document.getElementById('sync-file-info').style.color='var(--danger)';_syncFileData=null;}
+    };r.readAsText(f);
+  });
+  fi.click();
+});
+document.getElementById('sync-now-cancel').addEventListener('click',()=>closeMod('sync-now-modal'));
+document.getElementById('sync-now-confirm').addEventListener('click',()=>{
+  const isPaste=document.getElementById('sync-paste-panel').style.display!=='none';
+  if(isPaste){
+    const p=parseInput(document.getElementById('sync-paste-ta').value);
+    if(!p.length){toast('No valid cookies','err');return;}
+    // Create ungrouped group from pasted cookies
+    const group={
+      id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+      name:'Synced '+new Date().toLocaleDateString('en',{month:'short',day:'numeric'}),
+      serverName:null,createdAt:Date.now(),pinned:false,banned:false,alternatives:[],
+      cookies:p.map(c=>({...c})),changelog:[]
+    };
+    logChange(group,`Created via sync paste (${p.length} cookies)`);
+    sortedInsert(group);saveVault();closeMod('sync-now-modal');render();
+    toast(`Added ${p.length} cookies`,'ok');
+  }else{
+    if(!_syncFileData){toast('No file loaded','warn');return;}
+    // Merge: add groups that don't exist by ID
+    let added=0;
+    _syncFileData.forEach(g=>{
+      if(!vault.find(x=>x.id===g.id)){vault.push(g);added++;}
+    });
+    saveVault();closeMod('sync-now-modal');render();
+    toast(`Merged ${added} new groups`,'ok');
+  }
+});
+
+// ═══════════════════════════════════════
+// SWAP REMINDER: inject banner into PIN screen
+// ═══════════════════════════════════════
+(()=>{
+  const pinBox=document.querySelector('.pin-box');
+  if(pinBox){
+    const banner=document.createElement('div');
+    banner.id='pin-reminder-banner';
+    banner.style.cssText='display:none;background:rgba(0,255,170,.07);border:1px solid rgba(0,255,170,.2);border-radius:8px;padding:8px 12px;margin-bottom:12px;max-width:280px;text-align:left;';
+    pinBox.insertBefore(banner,pinBox.firstChild);
+  }
+})();
+
+// Check reminders when PIN screen is shown (called after successful unlock hidden)
+const _origSubmitPin=submitPin;
+submitPin=function(){
+  _origSubmitPin.apply(this,arguments);
+  setTimeout(checkSwapReminders,300);
 };
 
 function openMod(id){document.getElementById(id).classList.add('open');}
