@@ -7,10 +7,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-4.html
+  File Name   : cookie-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.4
+  Version     : v5.5
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -523,7 +523,6 @@
     Params  : none
     Returns : string[] — array of CF Worker URLs from cv_worker_urls (filtered empty)
 
-  updateBtWorkerStatus()
     Params  : none
     Returns : void
     Behavior: Updates #bt-worker-status text with worker count and color
@@ -1559,109 +1558,38 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 .health-grade.D{background:rgba(255,107,0,.12);color:#ff6b00;border:1px solid rgba(255,107,0,.25);}
 .health-grade.F{background:rgba(255,48,96,.12);color:var(--danger);border:1px solid rgba(255,48,96,.25);}
 
-/* ── BAN CHECKER INLINE ── */
-.ban-terminal-ov{display:none;}
-.ban-terminal{background:rgba(4,8,14,.95);border:1px solid rgba(255,48,96,.2);border-radius:10px;
-  margin-bottom:16px;overflow:hidden;box-shadow:0 0 20px rgba(255,48,96,.04);}
-.bt-hdr{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.12);
-  cursor:pointer;user-select:none;background:rgba(255,48,96,.04);}
-.bt-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--danger);text-transform:uppercase;flex:1;}
-.bt-title::before{content:'> ';opacity:.5;}
-.bt-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;transition:color .12s;}
-.bt-close:hover{color:var(--danger);}
-.bt-controls{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);flex-shrink:0;flex-wrap:wrap;}
-.bt-body{display:none;}
-.bt-body.open{display:flex;flex-direction:column;}
-.bt-ctrl-btn{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;padding:5px 10px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);cursor:pointer;transition:all .12s;white-space:nowrap;}
-.bt-ctrl-btn:hover{border-color:var(--ac);color:var(--a2);}
-.bt-ctrl-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
-.bt-ctrl-btn.primary{background:linear-gradient(135deg,var(--ac),var(--a3));border:none;color:#fff;letter-spacing:1px;}
-.bt-ctrl-btn:disabled{opacity:.3;pointer-events:none;}
-.bt-skip-label{font-family:var(--mono);font-size:9px;color:var(--dim);display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;}
-.bt-skip-label input{accent-color:var(--a2);}
-.bt-progress{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;white-space:nowrap;}
-.bt-log{max-height:200px;overflow-y:auto;padding:10px 16px;font-family:var(--mono);font-size:11px;line-height:1.9;}
-.bt-log::-webkit-scrollbar{width:3px;}
-.bt-log::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
-.bt-line{display:flex;gap:10px;align-items:baseline;}
-.bt-ts{color:var(--dim);font-size:9px;flex-shrink:0;opacity:.6;}
-.bt-msg{flex:1;word-break:break-all;}
-.bt-line.info .bt-msg{color:var(--txt);}
-.bt-line.ok .bt-msg{color:var(--ok);}
-.bt-line.ban .bt-msg{color:var(--danger);}
-.bt-line.warn .bt-msg{color:var(--warn);}
-.bt-line.facelock .bt-msg{color:#ff6b00;}
-.bt-line.err .bt-msg{color:rgba(255,48,96,.6);}
-.bt-line.muted .bt-msg{color:var(--dim);}
-.bt-footer{display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid var(--bdr);flex-shrink:0;}
-.bt-summary{font-family:var(--mono);font-size:9px;color:var(--dim);flex:1;}
-
-/* ── SETTINGS MODAL (GitHub + Workers + PIN Config) ── */
-.vault-settings-modal{width:min(92vw,480px);max-height:80vh;display:flex;flex-direction:column;}
-.vault-settings-scroll{overflow-y:auto;flex:1;padding-right:4px;}
-.vault-settings-scroll::-webkit-scrollbar{width:3px;}
-.vault-settings-scroll::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
-.vsec-title{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--bdr);}
-.vsec{margin-bottom:18px;}
-.vrow{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
-.vrow label{font-family:var(--mono);font-size:9px;color:var(--dim);flex-shrink:0;width:70px;letter-spacing:.5px;}
-.vrow input{flex:1;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:6px 9px;font-family:var(--mono);font-size:10px;color:var(--bright);outline:none;transition:border-color .15s;}
-.vrow input:focus{border-color:var(--ac);}
-.vtoggle{display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;}
-.vtoggle input{accent-color:var(--a2);width:14px;height:14px;cursor:pointer;}
-.vtoggle span{font-family:var(--mono);font-size:10px;color:var(--txt);}
-.vhint{font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.6;margin-bottom:8px;}
-.vhint a{color:var(--a2);text-decoration:none;}
-
-/* ── BAN CHECKER CUSTOM SELECT ── */
-.bt-sel-wrap{position:relative;width:100%;}
-.bt-sel-btn{width:100%;background:rgba(255,48,96,.04);border:1px solid rgba(255,48,96,.15);
-  border-radius:6px;padding:7px 12px;font-family:var(--mono);font-size:10px;color:var(--txt);
-  cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;
-  transition:all .12s;}
-.bt-sel-btn:hover{border-color:rgba(255,48,96,.35);background:rgba(255,48,96,.08);}
-.bt-sel-chev{color:var(--dim);font-size:10px;transition:transform .15s;flex-shrink:0;}
-.bt-sel-btn.open .bt-sel-chev{transform:rotate(180deg);}
-.bt-sel-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
-  background:rgba(7,11,18,.98);border:1px solid rgba(255,48,96,.25);border-radius:8px;
-  overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);max-height:200px;overflow-y:auto;}
-.bt-sel-drop.open{display:block;}
-.bt-sel-opt{padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--txt);
-  cursor:pointer;transition:background .1s;border-bottom:1px solid rgba(26,48,80,.3);}
-.bt-sel-opt:last-child{border-bottom:none;}
-.bt-sel-opt:hover{background:rgba(255,48,96,.1);color:var(--bright);}
-.bt-sel-opt.active{color:var(--danger);background:rgba(255,48,96,.08);}
-/* ── BAN CHECKER MODE TOGGLE ── */
-.bt-mode-bar{display:flex;gap:4px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);
-  background:rgba(0,0,0,.15);}
-.bt-mode-btn{flex:1;padding:6px 10px;font-family:var(--mono);font-size:9px;letter-spacing:1px;
-  border:1px solid rgba(255,48,96,.2);border-radius:6px;background:transparent;
-  color:var(--dim);cursor:pointer;transition:all .12s;text-transform:uppercase;}
-.bt-mode-btn.on{background:rgba(255,48,96,.15);border-color:var(--danger);color:var(--danger);}
-.bt-mode-btn:not(.on):hover{border-color:rgba(255,48,96,.4);color:var(--txt);}
-/* ── BAN PASTE SECTION ── */
-.bt-paste-wrap{padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);display:none;}
-.bt-paste-wrap.open{display:block;}
-.bt-paste-ta{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,48,96,.2);
-  border-radius:6px;padding:10px 12px;font-family:var(--mono);font-size:11px;
-  color:var(--ok);resize:none;min-height:80px;line-height:1.7;outline:none;
-  transition:border-color .15s;caret-color:var(--danger);}
-.bt-paste-ta:focus{border-color:rgba(255,48,96,.4);}
-.bt-paste-ta::placeholder{color:var(--dim);opacity:.4;}
-.bt-paste-info{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:5px;letter-spacing:.5px;}
-.bt-paste-info span{color:var(--ok);}
-/* ── EXPORT POPUP ── */
-.exp-popup{position:fixed;z-index:300;background:rgba(7,11,18,.97);border:1px solid var(--bdrb);
-  border-radius:12px;padding:6px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.6);
-  display:none;animation:qcIn .15s ease;}
-.exp-popup.open{display:block;}
-.exp-pop-btn{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;
-  border-radius:7px;padding:10px 14px;font-family:var(--sans);font-weight:600;font-size:13px;
-  color:var(--txt);cursor:pointer;transition:all .12s;text-align:left;}
-.exp-pop-btn:hover{background:rgba(15,111,255,.1);color:var(--bright);}
-.exp-pop-btn svg{flex-shrink:0;opacity:.7;}
-.exp-pop-sep{height:1px;background:var(--bdr);margin:4px 0;}
-
+/* ── COOKIE EXTRACTOR ── */
+.cx-panel{background:rgba(4,8,14,.95);border:1px solid rgba(0,212,255,.2);border-radius:10px;
+  margin-bottom:16px;overflow:hidden;box-shadow:0 0 20px rgba(0,212,255,.04);}
+.cx-hdr{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(0,212,255,.1);
+  cursor:pointer;user-select:none;background:rgba(0,212,255,.04);}
+.cx-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--a2);text-transform:uppercase;flex:1;}
+.cx-title::before{content:'⟁ ';opacity:.6;}
+.cx-match-count{font-family:var(--mono);font-size:9px;color:var(--dim);margin-right:4px;}
+.cx-chev{font-family:var(--mono);font-size:10px;color:var(--dim);transition:transform .2s;}
+.cx-body{padding:12px 14px;display:none;flex-direction:column;gap:8px;}
+.cx-ta{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(0,212,255,.2);border-radius:7px;
+  padding:10px 12px;font-family:var(--mono);font-size:11px;color:var(--txt);outline:none;
+  resize:vertical;min-height:80px;line-height:1.6;transition:border-color .15s;}
+.cx-ta:focus{border-color:var(--a2);}
+.cx-ta::placeholder{color:var(--dim);opacity:.4;}
+.cx-info{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.5px;min-height:14px;}
+.cx-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.cx-results{display:flex;flex-direction:column;gap:4px;max-height:400px;overflow-y:auto;}
+.cx-results::-webkit-scrollbar{width:3px;}
+.cx-results::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.cx-result-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;
+  border:1px solid var(--bdr);background:rgba(255,255,255,.02);transition:background .12s;}
+.cx-result-row.matched{border-color:rgba(0,212,255,.2);background:rgba(0,212,255,.04);}
+.cx-result-row.unmatched{opacity:.4;}
+.cx-result-user{font-family:var(--mono);font-size:11px;color:var(--bright);flex-shrink:0;min-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cx-result-meta{font-family:var(--mono);font-size:9px;color:var(--dim);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cx-result-group{font-family:var(--mono);font-size:9px;color:var(--a3);background:rgba(123,47,255,.1);
+  border:1px solid rgba(123,47,255,.2);border-radius:3px;padding:1px 6px;white-space:nowrap;flex-shrink:0;}
+.cx-result-copy{background:none;border:1px solid var(--bdr);border-radius:5px;padding:3px 8px;
+  font-family:var(--mono);font-size:8px;color:var(--dim);cursor:pointer;transition:all .12s;flex-shrink:0;}
+.cx-result-copy:hover{border-color:var(--a2);color:var(--a2);}
+.cx-no-match{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;padding:16px 0;letter-spacing:1px;}
 /* ── SWITCH DATA ── */
 .data-switch{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);
   border:1px solid var(--bdr);border-radius:8px;padding:5px 10px;cursor:pointer;
@@ -1783,13 +1711,6 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         <div class="vrow"><label>Gist ID</label><input type="text" id="vs-gh-gist" placeholder="abc123def456..." autocomplete="off"></div>
         <div class="vhint">Create a secret Gist at gist.github.com, then generate a PAT at github.com/settings/tokens with the "gist" scope. Vault auto-syncs 3s after any change.</div>
         <button class="bt-ctrl-btn" id="vs-gh-test" style="margin-top:4px">test connection</button>
-      </div>
-      <div class="vsec">
-        <div class="vsec-title">⚡ Cloudflare Ban Checker Workers</div>
-        <div class="vhint">Enter up to 3 CF Worker URLs. Requests are distributed round-robin. Worker must accept POST {cookie, username} and return {status, duration?}.</div>
-        <div class="vrow"><label>Worker 1</label><input type="text" id="vs-w1" placeholder="https://your-worker.workers.dev"></div>
-        <div class="vrow"><label>Worker 2</label><input type="text" id="vs-w2" placeholder="optional"></div>
-        <div class="vrow"><label>Worker 3</label><input type="text" id="vs-w3" placeholder="optional"></div>
       </div>
     </div>
     <div class="m-act" style="margin-top:14px">
@@ -1953,49 +1874,28 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         </div>
       </div>
 
-      <!-- BAN CHECKER INLINE SECTION -->
-      <div class="ban-terminal" id="ban-terminal">
-        <div class="bt-hdr" id="bt-toggle">
-          <div class="bt-title">Ban Checker</div>
-          <div id="bt-worker-status" style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;margin-right:8px;">No workers configured</div>
-          <span style="font-family:var(--mono);font-size:10px;color:var(--dim);" id="bt-chev">▾</span>
+      <!-- COOKIE EXTRACTOR -->
+      <div class="cx-panel" id="cx-panel">
+        <div class="cx-hdr" id="cx-toggle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <div class="cx-title">Cookie Extractor</div>
+          <div id="cx-match-count" class="cx-match-count"></div>
+          <span class="cx-chev" id="cx-chev">▾</span>
         </div>
-        <div class="bt-body" id="bt-body">
-          <!-- MODE TOGGLE -->
-          <div class="bt-mode-bar">
-            <button class="bt-mode-btn on" id="bt-mode-group">&#8862; Group Mode</button>
-            <button class="bt-mode-btn" id="bt-mode-paste">&#8999; Paste Mode</button>
+        <div class="cx-body" id="cx-body">
+          <textarea class="cx-ta" id="cx-ta" placeholder="Paste usernames — one per line, or username:anything:anything&#10;gam3sNoahstudioyt:Failed_Recovery:Captcha_Required&#10;Aria3ll4playzrrbx492:..."></textarea>
+          <div class="cx-info" id="cx-info"></div>
+          <div class="cx-actions">
+            <button class="btn-primary" id="cx-search-btn" style="font-size:11px;padding:7px 14px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Extract
+            </button>
+            <button class="bsm b-ghost" id="cx-copy-all-btn" style="display:none;font-size:11px;">Copy all matched (u:p:c)</button>
+            <button class="bsm b-ghost" id="cx-clear-btn" style="font-size:11px;">Clear</button>
           </div>
-          <!-- PASTE AREA (paste mode only) -->
-          <div class="bt-paste-wrap" id="bt-paste-wrap">
-            <textarea class="bt-paste-ta" id="bt-paste-ta"
-              placeholder="username:password:cookie&#10;username:cookie&#10;cookie only (one per line)"></textarea>
-            <div class="bt-paste-info" id="bt-paste-info">Awaiting input...</div>
-          </div>
-          <!-- GROUP SELECT (group mode only) -->
-          <div style="padding:6px 14px;border-bottom:1px solid rgba(255,48,96,.1);" id="bt-group-wrap">
-            <div class="bt-sel-wrap">
-              <button class="bt-sel-btn" id="bt-sel-btn">
-                <span id="bt-sel-label">All Groups</span>
-                <span class="bt-sel-chev">&#9662;</span>
-              </button>
-              <div class="bt-sel-drop" id="bt-sel-drop"></div>
-            </div>
-          </div>
-          <div class="bt-controls">
-            <button class="bt-ctrl-btn primary" id="bt-run">&#9654; Run Check</button>
-            <button class="bt-ctrl-btn" id="bt-stop" disabled>&#9632; Stop</button>
-            <label class="bt-skip-label"><input type="checkbox" id="bt-skip-banned" checked> Skip Banned</label>
-            <div class="bt-progress" id="bt-progress"></div>
-          </div>
-          <div class="bt-log" id="bt-log"></div>
-          <div class="bt-footer">
-            <div class="bt-summary" id="bt-summary">Ready — configure CF Worker URLs in Vault Settings</div>
-            <button class="bt-ctrl-btn" id="bt-export-failed" style="display:none">Export Failed (u:p:c)</button>
-            <button class="bt-ctrl-btn" id="bt-clear-log">Clear</button>
-          </div>
+          <div class="cx-results" id="cx-results"></div>
         </div>
       </div>
+
       <div class="filter-bar" id="filter-bar">
         <button class="filter-pill on" data-filter="all">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>All
@@ -2352,7 +2252,6 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <button class="p-btn" id="p-exp">Export .txt</button>
       <button class="p-btn" id="p-pin-btn">Pin</button>
       <button class="p-btn p-ban-btn" id="p-ban-btn">Ban</button>
-      <button class="p-btn" id="p-ban-check-grp" style="color:var(--danger);border-color:rgba(255,48,96,.3);">Check Bans</button>
       <button class="p-btn red" id="p-del">Remove</button>
       <div class="p-cols">
         <button class="p-cpill on" data-pc="1">1</button>
@@ -2460,11 +2359,7 @@ const REAL_PIN='180801';
 const GH_PAT_K='cv_gh_pat',GH_GIST_K='cv_gh_gist',GH_EN_K='cv_gh_enabled';
 let pinBuffer='',pinFails=0,pinLocked=false,pinLockUntil=0,decoyMode=false;
 let ghPendingSync=false,ghDebounceTimer=null;
-let banCheckRunning=false,banCheckAbort=false,banWorkerIdx=0,banFailedCookies=[];
 let activeFilter='all';
-let btSelectedGroup='all';
-let btPasteMode=false;
-let currentRequestController=null; // AbortController for live ban-check fetch
 
 function getColor(name){
   if(!name)return PALETTE[0];
@@ -3048,32 +2943,7 @@ document.getElementById('p-pslink-copy').addEventListener('click',()=>{
   copyText(g.privateServer,()=>toast('Server link copied','ok'),()=>toast('Copy failed','err'));
 });
 
-// PER-GROUP BAN CHECK button
-document.getElementById('p-ban-check-grp').addEventListener('click',()=>{
-  const g=vault.find(x=>x.id===panelId);if(!g)return;
-  // Pre-select this group in ban checker
-  btSelectedGroup=g.id;
-  btPasteMode=false;
-  const lbl=document.getElementById('bt-sel-label');
-  if(lbl)lbl.textContent=g.name+(g.serverName?' ('+g.serverName+')':'');
-  document.getElementById('bt-mode-group').classList.add('on');
-  document.getElementById('bt-mode-paste').classList.remove('on');
-  document.getElementById('bt-paste-wrap').classList.remove('open');
-  document.getElementById('bt-group-wrap').style.display='';
-  // Open ban terminal and scroll to it
-  const body=document.getElementById('bt-body');if(body)body.classList.add('open');
-  const chev=document.getElementById('bt-chev');if(chev)chev.textContent='▴';
-  closePanel();
-  setTimeout(()=>document.getElementById('ban-terminal').scrollIntoView({behavior:'smooth'}),200);
-});
 
-// BAN TERMINAL toggle
-document.getElementById('bt-toggle').addEventListener('click',()=>{
-  const body=document.getElementById('bt-body');
-  const chev=document.getElementById('bt-chev');
-  body.classList.toggle('open');
-  chev.textContent=body.classList.contains('open')?'▴':'▾';
-});
 
 // SWITCH DATA feature
 function loadDataConfigs(){
@@ -3210,39 +3080,11 @@ document.getElementById('ds-import-f').addEventListener('change',function(){
   document.getElementById('data-switch-lbl').textContent=cfg.name;
 })();
 
-// BAN CHECKER GROUP SELECT populate
-function populateBanGroupSelect(){
-  const drop=document.getElementById('bt-sel-drop');if(!drop)return;
-  drop.innerHTML='';
-  const allOpt=document.createElement('div');
-  allOpt.className='bt-sel-opt'+(btSelectedGroup==='all'?' active':'');
-  allOpt.textContent='All Groups';
-  allOpt.addEventListener('click',()=>setBtGroup('all','All Groups'));
-  drop.appendChild(allOpt);
-  vault.forEach(g=>{
-    const opt=document.createElement('div');
-    opt.className='bt-sel-opt'+(btSelectedGroup===g.id?' active':'');
-    opt.textContent=g.name+(g.serverName?' ('+g.serverName+')':'');
-    opt.addEventListener('click',()=>setBtGroup(g.id,g.name+(g.serverName?' ('+g.serverName+')':'')));
-    drop.appendChild(opt);
-  });
-}
-function setBtGroup(id,label){
-  btSelectedGroup=id;
-  const lbl=document.getElementById('bt-sel-label');
-  const btn=document.getElementById('bt-sel-btn');
-  const drop=document.getElementById('bt-sel-drop');
-  if(lbl)lbl.textContent=label;
-  if(btn)btn.classList.remove('open');
-  if(drop)drop.classList.remove('open');
-}
 
 checkBackupReminder();
 render();
-populateBanGroupSelect();
 initPin();
 setSyncDot(ghEnabled()?'ok':'off');
-updateBtWorkerStatus();
 
 // ═══════════════════════════════════════
 // TITLE / RENAME
@@ -3605,7 +3447,6 @@ function render(){
   animStats(vault.length,vault.reduce((s,g)=>s+g.cookies.length,0),srvMap.size);
   updateHealthScore();
   setTimeout(applyFilter,20);
-  if(typeof populateBanGroupSelect==='function')populateBanGroupSelect();
 }
 
 function mkGrid(){const g=document.createElement('div');g.className='card-grid';g.style.setProperty('--cols',cols);return g;}
@@ -4473,9 +4314,6 @@ function openVaultSettings(){
   document.getElementById('vs-gh-pat').value=localStorage.getItem(GH_PAT_K)||'';
   document.getElementById('vs-gh-gist').value=localStorage.getItem(GH_GIST_K)||'';
   document.getElementById('vs-gh-enabled').checked=localStorage.getItem(GH_EN_K)==='1';
-  document.getElementById('vs-w1').value=(getWorkerUrls()[0])||'';
-  document.getElementById('vs-w2').value=(getWorkerUrls()[1])||'';
-  document.getElementById('vs-w3').value=(getWorkerUrls()[2])||'';
   document.getElementById('vs-decoy-pin').value=localStorage.getItem('cv_decoy_pin')||'';
   openMod('vault-settings-modal');
 }
@@ -4483,20 +4321,14 @@ function saveVaultSettings(){
   const pat=document.getElementById('vs-gh-pat').value.trim();
   const gist=document.getElementById('vs-gh-gist').value.trim();
   const en=document.getElementById('vs-gh-enabled').checked;
-  const w1=document.getElementById('vs-w1').value.trim();
-  const w2=document.getElementById('vs-w2').value.trim();
-  const w3=document.getElementById('vs-w3').value.trim();
   const decoy=document.getElementById('vs-decoy-pin').value.trim();
   if(pat)localStorage.setItem(GH_PAT_K,pat);else localStorage.removeItem(GH_PAT_K);
   if(gist)localStorage.setItem(GH_GIST_K,gist);else localStorage.removeItem(GH_GIST_K);
   localStorage.setItem(GH_EN_K,en?'1':'0');
-  const urls=[w1,w2,w3].filter(Boolean);
-  localStorage.setItem('cv_worker_urls',JSON.stringify(urls));
   if(decoy&&!/^\d{4,8}$/.test(decoy)){toast('Decoy PIN must be 4–8 digits','err');return;}
   if(decoy===REAL_PIN){toast('Decoy PIN cannot match real PIN','err');return;}
   if(decoy)localStorage.setItem('cv_decoy_pin',decoy);else localStorage.removeItem('cv_decoy_pin');
   setSyncDot(ghEnabled()?'ok':'off');
-  updateBtWorkerStatus();
   closeMod('vault-settings-modal');
   toast('Settings saved','ok');
 }
@@ -4579,232 +4411,6 @@ function updateHealthScore(){
 // health-badge click → toast breakdown (wired below in Feature 11)
 
 // ═══════════════════════════════════════
-// BAN CHECKER TERMINAL
-// ═══════════════════════════════════════
-
-function getWorkerUrls(){
-  try{return JSON.parse(localStorage.getItem('cv_worker_urls')||'[]').filter(Boolean);}
-  catch{return[];}
-}
-
-function updateBtWorkerStatus(){
-  const urls=getWorkerUrls();
-  const el=document.getElementById('bt-worker-status');
-  if(!el)return;
-  if(!urls.length)el.textContent='no workers configured';
-  else el.textContent=urls.length+' worker'+(urls.length>1?'s':'')+' ready';
-  el.style.color=urls.length?'var(--ok)':'var(--dim)';
-}
-
-function openBanTerminal(){
-  // Always reset button state when opening — prevents stuck bt-run from prior failed runs
-  banCheckAbort=false;
-  banCheckRunning=false;
-  if(currentRequestController){currentRequestController.abort();currentRequestController=null;}
-  document.getElementById('bt-run').disabled=false;
-  document.getElementById('bt-stop').disabled=true;
-  const body=document.getElementById('bt-body');
-  const chev=document.getElementById('bt-chev');
-  if(body)body.classList.add('open');
-  if(chev)chev.textContent='▴';
-  updateBtWorkerStatus();
-}
-
-function closeBanTerminal(){
-  if(banCheckRunning){banCheckAbort=true;}
-  const body=document.getElementById('bt-body');
-  const chev=document.getElementById('bt-chev');
-  if(body)body.classList.remove('open');
-  if(chev)chev.textContent='▾';
-}
-
-function btLog(msg,type='info'){
-  const log=document.getElementById('bt-log');
-  const line=document.createElement('div');line.className='bt-line '+type;
-  const ts=new Date().toTimeString().slice(0,8);
-  line.innerHTML=`<span class="bt-ts">${ts}</span><span class="bt-msg">${msg}</span>`;
-  log.appendChild(line);
-  log.scrollTop=log.scrollHeight;
-}
-
-function btSetProgress(cur,total){
-  document.getElementById('bt-progress').textContent=total?`${cur}/${total}`:'';
-}
-
-async function callWorker(url,cookie,username){
-  currentRequestController=new AbortController();
-  const timeoutId=setTimeout(()=>currentRequestController.abort(),10000);
-  try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({cookie,username:username||''}),signal:currentRequestController.signal});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return r.json();
-  }finally{
-    clearTimeout(timeoutId);
-    currentRequestController=null;
-  }
-}
-
-async function runBanCheck(){
-  const urls=getWorkerUrls();
-  if(!urls.length){toast('No CF Worker URLs configured. Open Vault Settings.','err');return;}
-  const skipBanned=document.getElementById('bt-skip-banned').checked;
-  const log=document.getElementById('bt-log');
-  log.innerHTML='';
-  banFailedCookies=[];banCheckAbort=false;banCheckRunning=true;banWorkerIdx=0;
-  document.getElementById('bt-run').disabled=true;
-  document.getElementById('bt-stop').disabled=false;
-  document.getElementById('bt-export-failed').style.display='none';
-  document.getElementById('bt-summary').textContent='running…';
-
-  // Determine what to check: paste mode vs group selection
-  let toCheck=[];
-  if(btPasteMode){
-    const val=document.getElementById('bt-paste-ta').value;
-    const parsed=parseInput(val);
-    if(!parsed.length){
-      toast('No valid cookies in paste area','err');
-      banCheckRunning=false;
-      document.getElementById('bt-run').disabled=false;
-      document.getElementById('bt-stop').disabled=true;
-      return;
-    }
-    toCheck=[{name:'Pasted cookies',serverName:null,cookies:parsed,id:'__paste__'}];
-  }else{
-    // Group mode: use btSelectedGroup ('all' = all vault groups, else specific group id)
-    const baseGroups=btSelectedGroup==='all'?vault:[vault.find(g=>g.id===btSelectedGroup)].filter(Boolean);
-    toCheck=baseGroups.filter(g=>!(skipBanned&&g.banned));
-  }
-
-  if(!toCheck.length){
-    toast('No groups to check','warn');
-    banCheckRunning=false;
-    document.getElementById('bt-run').disabled=false;
-    document.getElementById('bt-stop').disabled=true;
-    return;
-  }
-
-  let total=toCheck.reduce((s,g)=>s+g.cookies.length,0);
-  let done=0,active=0,banned=0,expired=0,facelock=0,errors=0;
-  btLog(`Starting check — ${toCheck.length} group${toCheck.length!==1?'s':''}, ${total} cookies, ${urls.length} worker(s)`,'info');
-  btSetProgress(0,total);
-
-  try{
-    for(const g of toCheck){
-      if(banCheckAbort)break;
-      btLog(`── ${g.name}${g.serverName?' ('+g.serverName+')':''}`, 'muted');
-      for(const c of g.cookies){
-        if(banCheckAbort)break;
-        const url=urls[banWorkerIdx%urls.length];banWorkerIdx++;
-        const label=(c.username||c.cookie.substring(0,20)+'…');
-        try{
-          const res=await callWorker(url,c.cookie,c.username);
-          const status=(res.status||'').toLowerCase();
-          if(status==='active'){active++;btLog(`✓ ${label} — active`,'ok');}
-          else if(status==='banned'){banned++;c.banStatus='banned';banFailedCookies.push(c);
-            btLog(`✗ ${label} — BANNED${res.duration?' ('+res.duration+')':''}`,'ban');}
-          else if(status==='expired'){expired++;banFailedCookies.push(c);
-            btLog(`⚠ ${label} — expired`,'warn');}
-          else if(status==='facelock'){facelock++;banFailedCookies.push(c);
-            btLog(`⚡ ${label} — FACELOCK`,'facelock');}
-          else{errors++;btLog(`? ${label} — unknown: ${JSON.stringify(res)}`,'err');}
-        }catch(e){
-          if(banCheckAbort)break; // stop pressed — don't log as error
-          errors++;
-          banWorkerIdx++; // rotate past failed worker
-          btLog(`! ${label} — worker error (${e.message})`,'err');
-        }
-        done++;btSetProgress(done,total);
-        await new Promise(r=>setTimeout(r,120));
-      }
-    }
-  }finally{
-    // Always runs — buttons can never stay stuck
-    banCheckRunning=false;
-    document.getElementById('bt-run').disabled=false;
-    document.getElementById('bt-stop').disabled=true;
-    const summary=`done — active:${active} banned:${banned} expired:${expired} facelock:${facelock} errors:${errors}`;
-    document.getElementById('bt-summary').textContent=summary;
-    btLog('─────────────────────────────────────────────','muted');
-    btLog(summary,'info');
-    if(banFailedCookies.length){
-      document.getElementById('bt-export-failed').style.display='';
-      btLog(`${banFailedCookies.length} cookies flagged — click "export failed" to download`,'warn');
-    }
-    if(banCheckAbort)btLog('check aborted by user','muted');
-    // Feature 12: stamp lastChecked on checked groups and save
-    if(!btPasteMode){
-      const baseGroups=btSelectedGroup==='all'?vault:[vault.find(g=>g.id===btSelectedGroup)].filter(Boolean);
-      baseGroups.forEach(g=>{g.lastChecked=Date.now();});
-      saveVault();render();
-    }
-  }
-}
-
-// BAN CHECKER: mode toggle
-document.getElementById('bt-mode-group').addEventListener('click',()=>{
-  btPasteMode=false;
-  document.getElementById('bt-mode-group').classList.add('on');
-  document.getElementById('bt-mode-paste').classList.remove('on');
-  document.getElementById('bt-paste-wrap').classList.remove('open');
-  document.getElementById('bt-group-wrap').style.display='';
-});
-document.getElementById('bt-mode-paste').addEventListener('click',()=>{
-  btPasteMode=true;
-  document.getElementById('bt-mode-paste').classList.add('on');
-  document.getElementById('bt-mode-group').classList.remove('on');
-  document.getElementById('bt-paste-wrap').classList.add('open');
-  document.getElementById('bt-group-wrap').style.display='none';
-  setTimeout(()=>document.getElementById('bt-paste-ta').focus(),80);
-});
-// Paste counter
-document.getElementById('bt-paste-ta').addEventListener('input',()=>{
-  const val=document.getElementById('bt-paste-ta').value;
-  const info=document.getElementById('bt-paste-info');
-  if(!val.trim()){info.innerHTML='Awaiting input...';return;}
-  const parsed=parseInput(val);
-  if(!parsed.length){info.innerHTML='<span style="color:var(--danger)">No valid cookies</span>';return;}
-  info.innerHTML='<span>'+parsed.length+'</span> cookie'+(parsed.length!==1?'s':'')+' detected';
-});
-// Custom group select toggle
-document.getElementById('bt-sel-btn').addEventListener('click',e=>{
-  e.stopPropagation();
-  const btn=document.getElementById('bt-sel-btn');
-  const drop=document.getElementById('bt-sel-drop');
-  const isOpen=drop.classList.contains('open');
-  if(!isOpen)populateBanGroupSelect(); // refresh options
-  btn.classList.toggle('open',!isOpen);
-  drop.classList.toggle('open',!isOpen);
-});
-// Close custom select on outside click
-document.addEventListener('click',e=>{
-  const btn=document.getElementById('bt-sel-btn');
-  const drop=document.getElementById('bt-sel-drop');
-  if(btn&&drop&&!btn.contains(e.target)&&!drop.contains(e.target)){
-    btn.classList.remove('open');drop.classList.remove('open');
-  }
-});
-// ban-back and bt-close removed (terminal is now inline, not floating)
-document.getElementById('bt-run').addEventListener('click',runBanCheck);
-document.getElementById('bt-stop').addEventListener('click',()=>{
-  banCheckAbort=true;
-  if(currentRequestController)currentRequestController.abort();
-  document.getElementById('bt-stop').disabled=true;
-  btLog('stopping — aborting current request…','warn');
-});
-document.getElementById('bt-clear-log').addEventListener('click',()=>{
-  document.getElementById('bt-log').innerHTML='';
-  document.getElementById('bt-summary').textContent='ready';
-  document.getElementById('bt-export-failed').style.display='none';
-  document.getElementById('bt-progress').textContent='';
-  banFailedCookies=[];
-});
-document.getElementById('bt-export-failed').addEventListener('click',()=>{
-  const lines=banFailedCookies.map(c=>fmtLine(c,'user:pass:cookie')).filter(Boolean);
-  dl(lines.join('\n'),`ban-failed-${Date.now()}.txt`);
-  toast(`Exported ${lines.length} failed cookies`,'ok');
-});
-
 
 // ═══════════════════════════════════════
 // SORT / DISTRIBUTE PASTE
@@ -5293,26 +4899,6 @@ delGroup=function(id){
   _ckOrigDelGroup.apply(this,arguments);
 };
 
-// 4. Ban status updates from ban checker
-const _ckOrigRunBanCheck=runBanCheck;
-if(typeof runBanCheck==='function'){
-  runBanCheck=async function(){
-    await _ckOrigRunBanCheck.apply(this,arguments);
-  };
-}
-// Hook btLog to capture ban check results
-const _ckOrigBtLog=btLog;
-btLog=function(msg,type){
-  _ckOrigBtLog.apply(this,arguments);
-  if(type==='ok'||type==='ban'||type==='warn'||type==='facelock'){
-    const evtType=type==='ok'?'active':type==='ban'?'banned':type==='warn'?'expired':'facelock';
-    // Extract label from message e.g. "✓ username — active"
-    const m=msg.match(/[✓✗⚠⚡]\s+(.+?)\s+[—–]/);
-    const label=m?m[1]:msg.substring(0,40);
-    ckLogEvent(evtType,`Ban check: ${msg.replace(/[✓✗⚠⚡]\s*/,'').trim()}`,{username:label,cookie:null});
-  }
-};
-
 // 5. Copy events — hook copyText calls from card QC and panel
 const _ckOrigCopyText=copyText;
 copyText=function(text,onSuccess,onFail){
@@ -5787,6 +5373,138 @@ submitPin=function(){
   _origSubmitPin.apply(this,arguments);
   setTimeout(checkSwapReminders,300);
 };
+
+// ═══════════════════════════════════════
+// COOKIE EXTRACTOR
+// ═══════════════════════════════════════
+
+// Toggle panel open/close
+document.getElementById('cx-toggle').addEventListener('click',()=>{
+  const body=document.getElementById('cx-body');
+  const chev=document.getElementById('cx-chev');
+  const open=body.style.display==='flex';
+  body.style.display=open?'none':'flex';
+  chev.style.transform=open?'':'rotate(180deg)';
+});
+
+// Parse input: extract username from "username:anything:anything" or plain "username"
+function parseCxInput(raw){
+  return raw.split('\n')
+    .map(l=>l.trim())
+    .filter(Boolean)
+    .map(l=>l.split(':')[0].trim())
+    .filter(Boolean);
+}
+
+// Get cookies from currently active server filter
+function getCxScopeGroups(){
+  if(activeSrv==='all')return vault;
+  return vault.filter(g=>(g.serverName||'').trim().toLowerCase()===activeSrv);
+}
+
+// Live count while typing
+document.getElementById('cx-ta').addEventListener('input',()=>{
+  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  const info=document.getElementById('cx-info');
+  if(!usernames.length){info.textContent='';return;}
+  const scope=getCxScopeGroups();
+  const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
+  const matched=usernames.filter(u=>allCookies.some(c=>(c.username||'').toLowerCase()===u.toLowerCase()));
+  const srv=activeSrv==='all'?'all groups':`server "${activeSrv}"`;
+  info.textContent=`${matched.length}/${usernames.length} found in ${srv}`;
+  info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
+  document.getElementById('cx-match-count').textContent=matched.length?`${matched.length}/${usernames.length}`:'';
+});
+
+// Extract button
+document.getElementById('cx-search-btn').addEventListener('click',()=>{
+  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  if(!usernames.length){toast('No usernames to search','warn');return;}
+  const scope=getCxScopeGroups();
+  const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
+  const results=[];
+  usernames.forEach(u=>{
+    const uLow=u.toLowerCase();
+    const match=allCookies.find(c=>(c.username||'').toLowerCase()===uLow);
+    results.push({username:u,cookie:match||null,group:match?match._group:null});
+  });
+  renderCxResults(results);
+  const matched=results.filter(r=>r.cookie);
+  document.getElementById('cx-copy-all-btn').style.display=matched.length?'':'none';
+  document.getElementById('cx-copy-all-btn').dataset.matched=JSON.stringify(
+    matched.map(r=>fmtLine(r.cookie,'user:pass:cookie'))
+  );
+  const info=document.getElementById('cx-info');
+  info.textContent=`${matched.length}/${results.length} matched`;
+  info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
+  document.getElementById('cx-match-count').textContent=`${matched.length}/${results.length}`;
+});
+
+function renderCxResults(results){
+  const container=document.getElementById('cx-results');
+  container.innerHTML='';
+  if(!results.length){
+    container.innerHTML='<div class="cx-no-match">No results</div>';return;
+  }
+  const matched=results.filter(r=>r.cookie).length;
+  if(!matched){
+    container.innerHTML='<div class="cx-no-match">No matches found in current server</div>';
+  }
+  results.forEach(r=>{
+    const row=document.createElement('div');
+    row.className='cx-result-row '+(r.cookie?'matched':'unmatched');
+    const userEl=document.createElement('div');userEl.className='cx-result-user';
+    userEl.textContent=r.username;
+    row.appendChild(userEl);
+    if(r.cookie){
+      const meta=document.createElement('div');meta.className='cx-result-meta';
+      meta.textContent=r.cookie.cookie?r.cookie.cookie.substring(0,30)+'…':'no cookie';
+      row.appendChild(meta);
+      if(r.group){
+        const grpTag=document.createElement('div');grpTag.className='cx-result-group';
+        grpTag.textContent=r.group.name;
+        row.appendChild(grpTag);
+      }
+      const copyBtn=document.createElement('button');copyBtn.className='cx-result-copy';
+      copyBtn.textContent='copy u:p:c';
+      copyBtn.addEventListener('click',e=>{
+        e.stopPropagation();
+        const text=fmtLine(r.cookie,'user:pass:cookie');
+        copyText(text,()=>{copyBtn.textContent='✓ copied';setTimeout(()=>copyBtn.textContent='copy u:p:c',1400);},
+          ()=>toast('Copy failed','err'));
+      });
+      row.appendChild(copyBtn);
+    }else{
+      const notFound=document.createElement('div');notFound.className='cx-result-meta';
+      notFound.textContent='not in vault';
+      row.appendChild(notFound);
+    }
+    container.appendChild(row);
+  });
+}
+
+// Copy all matched
+document.getElementById('cx-copy-all-btn').addEventListener('click',()=>{
+  const scope=getCxScopeGroups();
+  const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
+  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  const lines=[];
+  usernames.forEach(u=>{
+    const match=allCookies.find(c=>(c.username||'').toLowerCase()===u.toLowerCase());
+    if(match){const t=fmtLine(match,'user:pass:cookie');if(t)lines.push(t);}
+  });
+  if(!lines.length){toast('No matched cookies to copy','warn');return;}
+  copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
+});
+
+// Clear
+document.getElementById('cx-clear-btn').addEventListener('click',()=>{
+  document.getElementById('cx-ta').value='';
+  document.getElementById('cx-results').innerHTML='';
+  document.getElementById('cx-info').textContent='';
+  document.getElementById('cx-match-count').textContent='';
+  document.getElementById('cx-copy-all-btn').style.display='none';
+});
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
