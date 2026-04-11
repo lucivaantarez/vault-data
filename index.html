@@ -1,16 +1,16 @@
 <!--
 ╔══════════════════════════════════════════════════════════════════════════════════╗
-║                         COOKIE VAULT — MASTER DOCUMENTATION                    ║
+║                         SATURNITY VAULT — MASTER DOCUMENTATION                    ║
 ║                    AI-READABLE ARCHITECTURE & BEHAVIORAL SPEC                  ║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-5.html
+  File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.5
+  Version     : v1.0
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -153,7 +153,7 @@
   }
 
   localStorage Keys:
-    'cookie_vault_v1'    → JSON(Group[])
+    'saturnity_vault_v1'    → JSON(Group[])
     'cv_cols'            → string(1–4)
     'cv_sort'            → 'az'|'za'|'newest'|'most'
     'cv_settings'        → JSON(Settings)
@@ -573,7 +573,7 @@
   defSettings()  — defaults object; firstCreated only meaningful on first-ever load.
   saveSettings() — JSON to cv_settings, no error handling (small data).
   saveVault()    — decoyMode guard → localStorage write → scheduleGhSync(). QuotaExceededError toast.
-  loadVault()    — parse cv_cookie_vault_v1, silent on error.
+  loadVault()    — parse cv_saturnity_vault_v1, silent on error.
   updateStreak() — daily open counter; open-based, not usage-based.
   setVaultTitle() / openRenameVault() / checkBackupReminder() — unchanged.
   customConfirm(msg, label) — Promise<boolean>, must be awaited, single dialog at a time.
@@ -822,8 +822,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Lana Vie en Rose</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='22' ry='22' fill='%237b2fff'/%3E%3Cellipse cx='50' cy='50' rx='42' ry='14' fill='none' stroke='%2300d4ff' stroke-width='5' transform='rotate(-20,50,50)'/%3E%3C/svg%3E">
+<title>Saturnity Vault</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='18' fill='%237b2fff'/%3E%3Cellipse cx='50' cy='50' rx='40' ry='11' fill='none' stroke='%2300d4ff' stroke-width='4.5' transform='rotate(-25 50 50)'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%239b4fff'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -1028,6 +1028,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sec-expbtn{background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 9px;
   font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);cursor:pointer;transition:all .12s;}
 .sec-expbtn:hover{border-color:var(--a3);color:var(--a3);}
+.sec-copybtn{background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 7px;
+  color:var(--dim);cursor:pointer;transition:all .12s;display:inline-flex;align-items:center;}
+.sec-copybtn:hover{border-color:var(--ok);color:var(--ok);}
 .sec-warn{font-family:var(--mono);font-size:9px;color:var(--warn);background:rgba(255,170,0,.08);
   border:1px solid rgba(255,170,0,.2);border-radius:5px;padding:2px 7px;letter-spacing:1px;}
 .card-grid{display:grid;grid-template-columns:repeat(var(--cols,2),1fr);gap:10px;}
@@ -1120,6 +1123,10 @@ body.list-view .gcard::before{display:none;}
 /* Username pills row */
 .gcard-users-row{display:none;}
 body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1px;}
+.gcard-rename-btn{display:none;background:none;border:1px solid rgba(255,255,255,.1);border-radius:4px;
+  padding:2px 5px;color:var(--dim);cursor:pointer;flex-shrink:0;transition:all .12s;line-height:1;}
+body.list-view .gcard-rename-btn{display:flex;align-items:center;}
+body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
 .gcard-user-pill{font-family:var(--mono);font-size:8px;color:var(--dim);background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:1px 5px;white-space:nowrap;line-height:1.5;}
 .gcard-user-pill.banned-user{text-decoration:line-through;opacity:.5;color:var(--danger);}
@@ -1151,6 +1158,59 @@ body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1
 .swap-alt-opt:hover,.swap-alt-opt.selected{border-color:var(--a2);background:rgba(0,212,255,.08);}
 .swap-alt-opt .alt-label{font-size:10px;color:var(--a3);font-weight:700;margin-bottom:2px;}
 .swap-alt-opt .alt-cookies{font-size:9px;color:var(--dim);}
+
+/* ── EXPORT POPUP ── */
+.exp-popup{position:fixed;z-index:500;background:rgba(7,11,18,.98);border:1px solid var(--bdrb);
+  border-radius:12px;padding:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.7);
+  display:none;animation:qcIn .15s ease;}
+.exp-popup.open{display:block;}
+.exp-pop-label{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;
+  padding:6px 12px 4px;text-transform:uppercase;border-bottom:1px solid var(--bdr);margin-bottom:4px;}
+.exp-pop-btn{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;
+  border-radius:7px;padding:9px 12px;cursor:pointer;transition:all .12s;text-align:left;}
+.exp-pop-btn:hover{background:rgba(15,111,255,.1);}
+.exp-pop-btn svg{flex-shrink:0;opacity:.8;}
+.exp-pop-btn-main{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--bright);flex-shrink:0;min-width:60px;}
+.exp-pop-btn-sub{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;}
+.exp-pop-sep{height:1px;background:var(--bdr);margin:4px 6px;}
+
+/* ── SIDEBAR COMMANDS ── */
+.sb-dock{padding:10px;border-top:1px solid var(--bdr);flex-shrink:0;}
+.sb-dock-label{font-family:var(--sans);font-weight:700;font-size:10px;color:var(--dim);letter-spacing:2px;
+  text-transform:uppercase;padding:0 4px 8px;opacity:.5;}
+.sb-dock-grid{display:flex;flex-direction:column;gap:4px;}
+.dock-cmd{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;
+  border:1px solid var(--bdr);background:rgba(255,255,255,.02);cursor:pointer;
+  transition:all .12s;position:relative;overflow:hidden;}
+.dock-cmd:hover{border-color:var(--cc,var(--ac));background:rgba(var(--cr,15,111,255),.08);}
+.dock-cmd svg{flex-shrink:0;opacity:.6;transition:opacity .15s;}
+.dock-cmd:hover svg{opacity:1;}
+.dock-cmd-txt{font-family:var(--sans);font-weight:600;font-size:12px;color:var(--dim);letter-spacing:.3px;}
+.dock-cmd:hover .dock-cmd-txt{color:var(--bright);}
+.dock-cmd.danger:hover{border-color:var(--danger);background:rgba(255,48,96,.08);}
+.dock-cmd.danger:hover svg{color:var(--danger);}
+.dock-cmd.danger:hover .dock-cmd-txt{color:var(--danger);}
+
+/* ── VAULT SETTINGS MODAL ── */
+.vault-settings-modal{width:min(92vw,420px);max-height:82vh;display:flex;flex-direction:column;}
+.vault-settings-scroll{overflow-y:auto;flex:1;padding-right:4px;}
+.vault-settings-scroll::-webkit-scrollbar{width:3px;}
+.vault-settings-scroll::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.vsec{background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.vsec:last-child{margin-bottom:0;}
+.vsec-title{font-family:var(--sans);font-weight:700;font-size:12px;color:var(--bright);margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;}
+.vtoggle{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:13px;
+  color:var(--txt);margin-bottom:10px;cursor:pointer;}
+.vtoggle input{width:16px;height:16px;accent-color:var(--a2);cursor:pointer;}
+.vrow{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.vrow:last-child{margin-bottom:0;}
+.vrow label{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
+.vrow input{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:7px;
+  padding:8px 10px;font-family:var(--mono);font-size:11px;color:var(--bright);outline:none;
+  transition:border-color .15s;}
+.vrow input:focus{border-color:var(--a2);}
+.vhint{font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.6;margin-top:6px;opacity:.7;}
 
 /* ── QUICK COPY ── */
 #qc-backdrop{display:none;position:fixed;inset:0;z-index:399;}
@@ -1409,7 +1469,18 @@ body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px;}
-@media(max-width:600px){:root{--sw:0px;}.sidebar{display:none;}.hdr-stats{display:none;}}
+@media(max-width:600px){
+  :root{--sw:0px;}
+  .sidebar{display:none;}
+  .hdr-stats{display:none;}
+  .hdr-search{flex:1;max-width:none;min-width:0;}
+  .hdr-search input{min-width:0;width:100%;}
+  .hdr-right{gap:4px;flex-shrink:0;max-width:none;}
+  .hdr-meta{display:none;}
+  .list-view-btn,.sort-btn,.card-size-btn,.col-pills{display:none!important;}
+  .data-switch{display:flex!important;flex-shrink:0;}
+  .hdr-title{display:none;}
+}
 
 /* ── BAN TAG ── */
 .gcard-banned-tag{position:absolute;top:7px;left:8px;z-index:5;pointer-events:none;
@@ -1724,8 +1795,10 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 <div id="app">
   <header class="hdr">
     <div class="hdr-icon" title="Vault Stats" id="stats-btn">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
-        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="8" fill="#7b2fff"/>
+        <ellipse cx="20" cy="20" rx="17" ry="5" fill="none" stroke="#00d4ff" stroke-width="2" transform="rotate(-25 20 20)"/>
+        <circle cx="20" cy="20" r="3.5" fill="#9b4fff"/>
       </svg>
     </div>
     <div class="hdr-title" id="vault-title"></div>
@@ -1758,6 +1831,11 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
           </svg>Activity
+        </button>
+        <button class="hdr-meta-btn" id="hdr-alts-btn" title="All Alternative Cookies">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+          </svg>Alts
         </button>
       </div>
       <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
@@ -1925,27 +2003,27 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 
 <!-- EXPORT POPUP -->
 <div class="exp-popup" id="exp-popup">
-  <div style="font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;padding:6px 14px 2px;text-transform:uppercase;">Export Format</div>
+  <div class="exp-pop-label">Export Format</div>
   <button class="exp-pop-btn" data-expfmt="user:pass:cookie">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">u:p:c</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">user:pass:cookie</span>
+    <span class="exp-pop-btn-main">u:p:c</span><span class="exp-pop-btn-sub">user:pass:cookie</span>
   </button>
   <button class="exp-pop-btn" data-expfmt="user:cookie">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">u:c</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">user:cookie</span>
+    <span class="exp-pop-btn-main">u:c</span><span class="exp-pop-btn-sub">user:cookie</span>
   </button>
   <button class="exp-pop-btn" data-expfmt="cookie">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">cookie only</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">raw cookie</span>
+    <span class="exp-pop-btn-main">cookie</span><span class="exp-pop-btn-sub">raw only</span>
   </button>
   <button class="exp-pop-btn" data-expfmt="username">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">username only</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">u</span>
+    <span class="exp-pop-btn-main">u</span><span class="exp-pop-btn-sub">username only</span>
   </button>
   <div class="exp-pop-sep"></div>
   <button class="exp-pop-btn" data-expfmt="json">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    <span style="flex:1">vault.json</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">full backup</span>
+    <span class="exp-pop-btn-main">vault.json</span><span class="exp-pop-btn-sub">full backup</span>
   </button>
 </div>
 
@@ -1983,6 +2061,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <div style="display:flex;gap:8px;">
         <button class="swap-reason-btn on" data-reason="1d">1 day ban</button>
         <button class="swap-reason-btn" data-reason="7d">7 day ban</button>
+        <button class="swap-reason-btn" data-reason="perm">Permanent</button>
         <button class="swap-reason-btn" data-reason="expired">Expired</button>
       </div>
     </div>
@@ -2168,11 +2247,23 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
   </div>
 </div>
 
+<!-- GLOBAL ALTS MODAL -->
+<div class="m-ov" id="alts-modal">
+  <div class="modal" style="width:min(96vw,560px);max-height:85vh;display:flex;flex-direction:column;">
+    <h3>All Alternative Cookies</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:12px;">All alt sets across the vault — tap Swap to move an alt into its group as the main cookie.</p>
+    <div id="alts-modal-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+    <div class="m-act" style="margin-top:14px;">
+      <button class="bsm b-ghost" id="alts-modal-close">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- APP CHANGELOG MODAL -->
 <div class="m-ov" id="cl-modal">
   <div class="modal changelog-modal">
     <h3>App Changelog</h3>
-    <p style="margin-bottom:14px">Version history of Cookie Vault</p>
+    <p style="margin-bottom:14px">Version history of Saturnity Vault</p>
     <div class="changelog-scroll" id="cl-scroll"></div>
     <div class="m-act" style="margin-top:14px">
       <button class="bsm b-ghost" id="cl-close">close</button>
@@ -2197,7 +2288,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
   <div class="modal" style="width:min(90vw,340px)">
     <h3>Rename Vault</h3>
     <p style="margin-bottom:12px">Choose a new name for your vault.</p>
-    <input class="finput" id="rename-in" maxlength="40" placeholder="Cookie Vault" style="margin-bottom:0">
+    <input class="finput" id="rename-in" maxlength="40" placeholder="Saturnity Vault" style="margin-bottom:0">
     <div class="m-act">
       <button class="bsm b-ghost" id="rename-cancel">cancel</button>
       <button class="bsm b-save" id="rename-ok">rename</button>
@@ -2318,16 +2409,16 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
-const SK='cookie_vault_v1',CK='cv_cols',SORT_K='cv_sort',SET_K='cv_settings';
+const SK='saturnity_vault_v1',CK='cv_cols',SORT_K='cv_sort',SET_K='cv_settings';
 const COOKIE_PFX='_|WARNING:-DO-NOT-SHARE-THIS.';
 const DS_K='cv_data_configs',DS_ACTIVE_K='cv_active_config';
 // Active config storage key — resolved before any vault read
-let SK_ACTIVE=(()=>{const id=localStorage.getItem('cv_active_config')||'default';return'cookie_vault_'+id;})();
+let SK_ACTIVE=(()=>{const id=localStorage.getItem('cv_active_config')||'default';return'saturnity_vault_'+id;})();
 // Data migration: if default config is empty but old key has data, migrate it
 (()=>{
   try{
-    const newKey='cookie_vault_default';
-    const oldKey='cookie_vault_v1';
+    const newKey='saturnity_vault_default';
+    const oldKey='saturnity_vault_v1';
     if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){
       localStorage.setItem(newKey,localStorage.getItem(oldKey));
     }
@@ -2372,7 +2463,7 @@ function loadSettings(){
   try{const r=localStorage.getItem(SET_K);return r?{...defSettings(),...JSON.parse(r)}:defSettings();}
   catch{return defSettings();}
 }
-function defSettings(){return{vaultName:'Cookie Vault',firstCreated:Date.now(),lastOpen:null,lastBackup:null,cardSize:'md',streak:0};}
+function defSettings(){return{vaultName:'Saturnity Vault',firstCreated:Date.now(),lastOpen:null,lastBackup:null,cardSize:'md',streak:0};}
 function saveSettings(){localStorage.setItem(SET_K,JSON.stringify(settings));}
 function saveVault(){
   if(decoyMode)return; // decoy mode: never persist
@@ -2688,13 +2779,13 @@ document.querySelectorAll('.exp-pop-btn[data-expfmt]').forEach(btn=>{
     const src=expPopupTarget||(sortVault(vault));
     if(fmt==='json'){
       const expVault=expPopupTarget?expPopupTarget:vault;
-      dl(JSON.stringify({version:1,exported:Date.now(),vault:expVault},null,2),`cookie-vault-${Date.now()}.json`);
+      dl(JSON.stringify({version:1,exported:Date.now(),vault:expVault},null,2),`saturnity-vault-${Date.now()}.json`);
       settings.lastBackup=Date.now();saveSettings();
       document.getElementById('backup-banner').classList.remove('show');
       toast('Vault exported as .json','ok');
     }else{
       const lines=src.flatMap(g=>g.cookies.map(c=>fmtLine(c,fmt))).filter(Boolean);
-      dl(lines.join('\n'),`cookie-vault-${Date.now()}.txt`);
+      dl(lines.join('\n'),`saturnity-vault-${Date.now()}.txt`);
       settings.lastBackup=Date.now();saveSettings();
       document.getElementById('backup-banner').classList.remove('show');
       toast(`Exported ${lines.length} lines (${fmt})`,'ok');
@@ -2955,7 +3046,7 @@ function getActiveConfigId(){return localStorage.getItem(DS_ACTIVE_K)||'default'
 function setActiveConfig(id){
   localStorage.setItem(DS_ACTIVE_K,id);
   // swap vault storage key
-  SK_ACTIVE='cookie_vault_'+id;
+  SK_ACTIVE='saturnity_vault_'+id;
   vault=loadVaultForConfig(id);
   saveVault();render();
   const cfg=loadDataConfigs().find(c=>c.id===id);
@@ -2963,7 +3054,7 @@ function setActiveConfig(id){
   renderDataSwitcher();
 }
 function loadVaultForConfig(id){
-  try{const r=localStorage.getItem('cookie_vault_'+id);return r?JSON.parse(r):[]}catch{return[];}
+  try{const r=localStorage.getItem('saturnity_vault_'+id);return r?JSON.parse(r):[]}catch{return[];}
 }
 function renderDataSwitcher(){
   const cfgs=loadDataConfigs();
@@ -2974,54 +3065,53 @@ function renderDataSwitcher(){
     const item=document.createElement('div');item.className='ds-item'+(cfg.id===active?' active':'');
     const isDefault=cfg.id==='default';
     item.innerHTML=`<div class="ds-item-dot"></div><div class="ds-item-name">${esc(cfg.name)}</div>`;
-    // Add rename/delete for non-default configs
-    if(!isDefault){
-      const actions=document.createElement('div');actions.className='ds-item-actions';
-      const renBtn=document.createElement('button');renBtn.className='ds-action-btn rename';renBtn.title='Rename';
-      renBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-      renBtn.addEventListener('click',e=>{
-        e.stopPropagation();
-        // Replace name with inline input
-        const nameEl=item.querySelector('.ds-item-name');
-        const inp=document.createElement('input');inp.className='ds-rename-input';
-        inp.value=cfg.name;inp.maxLength=30;
-        nameEl.replaceWith(inp);actions.style.display='none';
-        inp.focus();inp.select();
-        function commitRename(){
-          const newName=inp.value.trim();
-          if(newName&&newName!==cfg.name){
-            const cfgs2=loadDataConfigs();
-            const c=cfgs2.find(x=>x.id===cfg.id);
-            if(c)c.name=newName;
-            saveDataConfigs(cfgs2);
-            if(cfg.id===active)document.getElementById('data-switch-lbl').textContent=newName;
-            toast(`Renamed to "${newName}"`,'ok');
-          }
-          renderDataSwitcher();
+    // Rename for all, delete for non-default only
+    const actions=document.createElement('div');actions.className='ds-item-actions';
+    const renBtn=document.createElement('button');renBtn.className='ds-action-btn rename';renBtn.title='Rename';
+    renBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+    renBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const nameEl=item.querySelector('.ds-item-name');
+      const inp=document.createElement('input');inp.className='ds-rename-input';
+      inp.value=cfg.name;inp.maxLength=30;
+      nameEl.replaceWith(inp);actions.style.display='none';
+      inp.focus();inp.select();
+      function commitRename(){
+        const newName=inp.value.trim();
+        if(newName&&newName!==cfg.name){
+          const cfgs2=loadDataConfigs();
+          const cc=cfgs2.find(x=>x.id===cfg.id);
+          if(cc)cc.name=newName;
+          saveDataConfigs(cfgs2);
+          if(cfg.id===active)document.getElementById('data-switch-lbl').textContent=newName;
+          toast(`Renamed to "${newName}"`,'ok');
         }
-        inp.addEventListener('blur',commitRename);
-        inp.addEventListener('keydown',e2=>{
-          if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
-          if(e2.key==='Escape'){inp.value=cfg.name;inp.blur();}
-        });
+        renderDataSwitcher();
+      }
+      inp.addEventListener('blur',commitRename);
+      inp.addEventListener('keydown',e2=>{
+        if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
+        if(e2.key==='Escape'){inp.value=cfg.name;inp.blur();}
       });
+    });
+    actions.appendChild(renBtn);
+    if(!isDefault){
       const delBtn=document.createElement('button');delBtn.className='ds-action-btn del';delBtn.title='Delete';
       delBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
       delBtn.addEventListener('click',async e=>{
         e.stopPropagation();
-        const ok=await customConfirm(`Delete config "${cfg.name}"? This will permanently delete all groups in it.`,'Delete');
+        const ok=await customConfirm(`Delete config "${cfg.name}"? This permanently deletes all groups in it.`,'Delete');
         if(!ok)return;
         const cfgs2=loadDataConfigs().filter(x=>x.id!==cfg.id);
         saveDataConfigs(cfgs2);
-        localStorage.removeItem('cookie_vault_'+cfg.id);
-        // If deleting active config, switch to default
+        localStorage.removeItem('saturnity_vault_'+cfg.id);
         if(cfg.id===active)setActiveConfig('default');
         else renderDataSwitcher();
         toast(`Deleted "${cfg.name}"`,'ok');
       });
-      actions.appendChild(renBtn);actions.appendChild(delBtn);
-      item.appendChild(actions);
+      actions.appendChild(delBtn);
     }
+    item.appendChild(actions);
     item.querySelector('.ds-item-dot').addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
     item.querySelector('.ds-item-name')?.addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
     drop.appendChild(item);
@@ -3064,7 +3154,7 @@ document.getElementById('ds-import-f').addEventListener('change',function(){
       const cfgs=loadDataConfigs();
       const id='cfg_'+Date.now().toString(36);
       cfgs.push({id,name});saveDataConfigs(cfgs);
-      localStorage.setItem('cookie_vault_'+id,JSON.stringify(d.vault));
+      localStorage.setItem('saturnity_vault_'+id,JSON.stringify(d.vault));
       closeMod('new-data-modal');
       setActiveConfig(id);
       toast(`Loaded "${name}" (${d.vault.length} groups)`,'ok');
@@ -3090,14 +3180,14 @@ setSyncDot(ghEnabled()?'ok':'off');
 // TITLE / RENAME
 // ═══════════════════════════════════════
 function setVaultTitle(){
-  const n=settings.vaultName||'Cookie Vault';
+  const n=settings.vaultName||'Saturnity Vault';
   const parts=n.split(' ');
   const el=document.getElementById('vault-title');
   if(parts.length>=2)el.innerHTML=esc(parts[0])+' <span>'+esc(parts.slice(1).join(' '))+'</span>';
   else el.innerHTML='<span>'+esc(n)+'</span>';
 }
 function openRenameVault(){
-  document.getElementById('rename-in').value=settings.vaultName||'Cookie Vault';
+  document.getElementById('rename-in').value=settings.vaultName||'Saturnity Vault';
   openMod('rename-modal');
   setTimeout(()=>{const inp=document.getElementById('rename-in');inp.focus();inp.select();},120);
 }
@@ -3397,7 +3487,21 @@ function render(){
       </div>
       <div class="sec-meta">${groups.length}g · ${totalC}c</div>
       ${warn}
-      <button class="sec-expbtn">export all</button>`;
+      <button class="sec-copybtn" title="Copy all as u:p:c">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+      <button class="sec-expbtn">export</button>`;
+    hd.querySelector('.sec-copybtn').addEventListener('click',e=>{
+      e.stopPropagation();
+      const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
+      const lines=live.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
+      const btn=hd.querySelector('.sec-copybtn');
+      copyText(lines.join('\n'),()=>{
+        btn.style.color='var(--ok)';
+        setTimeout(()=>btn.style.color='',1400);
+        toast(`Copied ${lines.length} cookies`,'ok');
+      },()=>toast('Copy failed','err'));
+    });
     hd.querySelector('.sec-expbtn').addEventListener('click',e=>{
       e.stopPropagation();
       const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
@@ -3470,7 +3574,7 @@ function mkCard(group){
   card.style.setProperty('--cc',col.c);card.style.setProperty('--cr',col.r);
   const bar=document.createElement('div');bar.className='gcard-bar';bar.style.background=col.c;card.appendChild(bar);
   const body=document.createElement('div');body.className='gcard-body';
-  // Row 1: dot + name + count + server + alts
+  // Row 1: dot + name + count + server + alts + rename btn (list view only)
   const row1=document.createElement('div');row1.className='gcard-row1';
   row1.innerHTML=`
     <div class="gcard-dot" style="background:${col.c};color:${col.c};width:8px;height:8px"></div>
@@ -3479,6 +3583,31 @@ function mkCard(group){
     ${getCardStatusHTML(group)}
     ${group.serverName?`<div class="gcard-srv">${esc(group.serverName)}</div>`:''}
     ${(group.alternatives&&group.alternatives.length)?`<div class="gcard-alt-badge">⟁ ${group.alternatives.length} alt${group.alternatives.length!==1?'s':''}</div>`:''}`;
+  // Inline rename button (list view only)
+  const renameInlineBtn=document.createElement('button');
+  renameInlineBtn.className='gcard-rename-btn';renameInlineBtn.title='Rename';
+  renameInlineBtn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+  renameInlineBtn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const nameEl=row1.querySelector('.gcard-name');
+    const inp=document.createElement('input');
+    inp.style.cssText='background:rgba(0,0,0,.6);border:1px solid var(--a2);border-radius:4px;padding:2px 6px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--bright);outline:none;max-width:160px;';
+    inp.value=group.name;inp.maxLength=40;
+    nameEl.replaceWith(inp);inp.focus();inp.select();
+    function commitRename(){
+      const newName=inp.value.trim();
+      if(newName&&newName!==group.name){
+        group.name=newName;logChange(group,`Renamed to <span>${esc(newName)}</span>`);
+        saveVault();render();toast(`Renamed to "${newName}"`,'ok');
+      }else{inp.replaceWith(nameEl);}
+    }
+    inp.addEventListener('blur',commitRename);
+    inp.addEventListener('keydown',e2=>{
+      if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
+      if(e2.key==='Escape'){inp.replaceWith(nameEl);}
+    });
+  });
+  row1.appendChild(renameInlineBtn);
   body.appendChild(row1);
   // Row 2: username pills (list view only)
   const usersRow=document.createElement('div');usersRow.className='gcard-users-row';
@@ -3824,6 +3953,7 @@ function mkCkItem(c,i,gid,opts){
   const fmtDefs=[
     {label:'u:p:c',fmt:'user:pass:cookie'},
     {label:'u:c',fmt:'user:cookie'},
+    {label:'u:p',fmt:'user:pass'},
     {label:'u',fmt:'username'},
     {label:'p',fmt:'user:pass'},
     {label:'c',fmt:'cookie'},
@@ -4162,7 +4292,7 @@ function toast(msg,type=''){
 function initPin(){
   const scr=document.getElementById('pin-screen');
   const vn=document.getElementById('pin-vault-name');
-  const n=settings.vaultName||'Cookie Vault';
+  const n=settings.vaultName||'Saturnity Vault';
   const parts=n.split(' ');
   vn.innerHTML=parts.length>=2?esc(parts[0])+' <span>'+esc(parts.slice(1).join(' '))+'</span>':'<span>'+esc(n)+'</span>';
   document.getElementById('pin-pad').addEventListener('click',e=>{
@@ -4281,7 +4411,7 @@ async function doGhSync(){
   try{
     const pat=localStorage.getItem(GH_PAT_K);
     const gist=localStorage.getItem(GH_GIST_K);
-    const body=JSON.stringify({files:{'cookie-vault.json':{content:JSON.stringify({version:1,exported:Date.now(),vault},null,2)}}});
+    const body=JSON.stringify({files:{'saturnity-vault.json':{content:JSON.stringify({version:1,exported:Date.now(),vault},null,2)}}});
     const r=await fetch('https://api.github.com/gists/'+gist,{method:'PATCH',headers:{'Authorization':'token '+pat,'Content-Type':'application/json'},body});
     if(!r.ok)throw new Error('HTTP '+r.status);
     setSyncDot('ok');
@@ -4438,22 +4568,65 @@ function calcDistribution(){
   const grpsPerSrv=Math.max(1,Math.min(18,parseInt(document.getElementById('sort-groups-per-srv').value)||18));
   const cookies=sortPending;
 
-  // Chunk cookies into groups (top-to-bottom order preserved)
+  // Find existing max group number for this prefix (to continue numbering)
+  let startGrpNum=1;
+  if(grpPfx){
+    const pfxLow=grpPfx.toLowerCase();
+    vault.forEach(g=>{
+      const nLow=g.name.toLowerCase();
+      if(nLow.startsWith(pfxLow)){
+        const rest=g.name.slice(grpPfx.length).trim();
+        const n=parseInt(rest);
+        if(!isNaN(n)&&n>=startGrpNum)startGrpNum=n+1;
+      }
+    });
+  }
+
+  // Find existing max server number for this prefix
+  let startSrvNum=1;
+  if(srvPfx){
+    const pfxLow=srvPfx.toLowerCase();
+    vault.forEach(g=>{
+      if(!g.serverName)return;
+      const sLow=g.serverName.toLowerCase();
+      if(sLow.startsWith(pfxLow)){
+        const rest=g.serverName.slice(srvPfx.length).trim();
+        const n=parseInt(rest);
+        if(!isNaN(n)&&n>=startSrvNum)startSrvNum=n+1;
+      }
+    });
+    // If exact match exists (single server, no number), keep using it
+    const exactMatch=vault.find(g=>(g.serverName||'').toLowerCase()===srvPfx.toLowerCase());
+    if(exactMatch)startSrvNum=1; // will reuse server name without number
+  }
+
+  // Chunk cookies into groups
   const groups=[];
   for(let i=0;i<cookies.length;i+=cookiesPerGrp){
     groups.push(cookies.slice(i,i+cookiesPerGrp));
   }
 
-  // Assign group + server names
-  const result=[];
-  let srvIdx=1,grpInSrv=0;
   const totalGroups=groups.length;
-  const padWidth=totalGroups>=10?String(totalGroups).length:0; // pad if 10+ groups
+  const totalNum=startGrpNum+totalGroups-1;
+  const padWidth=totalNum>=10?String(totalNum).length:0;
   function padNum(n){return padWidth>0?String(n).padStart(padWidth,'0'):String(n);}
+
+  const result=[];
+  let srvIdx=startSrvNum,grpInSrv=0;
+  // Count existing groups in starting server to determine initial grpInSrv offset
+  if(srvPfx){
+    const firstSrvName=srvPfx+(startSrvNum>1?' '+startSrvNum:'');
+    const existing=vault.filter(g=>(g.serverName||'').toLowerCase()===firstSrvName.toLowerCase()).length;
+    grpInSrv=existing%grpsPerSrv;
+    if(existing>=grpsPerSrv){srvIdx++;grpInSrv=0;}
+  }
+
   groups.forEach((ckSlice,gi)=>{
     if(grpInSrv>=grpsPerSrv){srvIdx++;grpInSrv=0;}
-    const srvName=srvPfx?(srvPfx+' '+srvIdx):null;
-    const grpName=grpPfx?(grpPfx+' '+padNum(gi+1)):('Group '+padNum(gi+1));
+    // Single server: use prefix alone (no number suffix) unless multiple servers needed
+    const needsNumber=srvIdx>1;
+    const srvName=srvPfx?(needsNumber?srvPfx+' '+srvIdx:srvPfx):null;
+    const grpName=grpPfx?(grpPfx+' '+padNum(startGrpNum+gi)):('Group '+padNum(startGrpNum+gi));
     result.push({srvName,grpName,cookies:ckSlice});
     grpInSrv++;
   });
@@ -4571,7 +4744,11 @@ document.getElementById('bulk-bar-export').addEventListener('click',e=>{
 
 document.getElementById('bulk-bar-copy').addEventListener('click',()=>{
   if(!bulkSelected.size)return;
-  const lines=getBulkGroups().flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
+  // Sort by visual DOM order top-to-bottom
+  const cards=[...document.querySelectorAll('.gcard')];
+  const orderedIds=cards.map(c=>c.dataset.id).filter(id=>bulkSelected.has(id));
+  const orderedGroups=orderedIds.map(id=>vault.find(g=>g.id===id)).filter(Boolean);
+  const lines=orderedGroups.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
   copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
   clearBulkSelect();
 });
@@ -4670,17 +4847,7 @@ function sortedInsert(group){
 const _origApplyFilter=applyFilter;
 applyFilter=function(){
   _origApplyFilter();
-  const q=document.getElementById('search-in').value.trim().toLowerCase();
-  if(!q)return; // no lifting needed when empty — _origApplyFilter already handled it
-  // Lift non-dimmed (matching) cards to top of each .card-grid
-  document.querySelectorAll('.card-grid').forEach(grid=>{
-    const expTile=grid.querySelector('.exp-tile');
-    const all=[...grid.querySelectorAll('.gcard')];
-    const matching=all.filter(c=>!c.classList.contains('dim'));
-    const rest=all.filter(c=>c.classList.contains('dim'));
-    matching.forEach(c=>grid.insertBefore(c,expTile||null));
-    rest.forEach(c=>grid.insertBefore(c,expTile||null));
-  });
+  // No DOM reordering — just dim/undim. Reordering caused visual glitches.
 };
 
 // ═══════════════════════════════════════
@@ -4769,7 +4936,7 @@ mkCard=function(group){
 // ═══════════════════════════════════════
 // COOKIE ACTIVITY LOG
 // ═══════════════════════════════════════
-const CKLOG_K='cv_cookie_log';
+const CKLOG_K='sv_cookie_log';
 const CKLOG_MAX=1000;
 const CKLOG_SHOW=100;
 
@@ -4838,12 +5005,12 @@ document.getElementById('cklog-dl-txt').addEventListener('click',()=>{
     const d=new Date(e.t).toISOString();
     return`[${d}] [${e.type.toUpperCase()}] ${e.user||''}  ${e.msg}${e.ck?' | '+e.ck:''}`;
   });
-  dl(lines.join('\n'),`cookie-log-${Date.now()}.txt`);
+  dl(lines.join('\n'),`saturnity-log-${Date.now()}.txt`);
   toast(`Downloaded ${log.length} log entries`,'ok');
 });
 document.getElementById('cklog-dl-json').addEventListener('click',()=>{
   const log=loadCkLog();
-  dl(JSON.stringify(log,null,2),`cookie-log-${Date.now()}.json`);
+  dl(JSON.stringify(log,null,2),`saturnity-log-${Date.now()}.json`);
   toast(`Downloaded ${log.length} log entries`,'ok');
 });
 document.getElementById('cklog-clear').addEventListener('click',async()=>{
@@ -4899,16 +5066,7 @@ delGroup=function(id){
   _ckOrigDelGroup.apply(this,arguments);
 };
 
-// 5. Copy events — hook copyText calls from card QC and panel
-const _ckOrigCopyText=copyText;
-copyText=function(text,onSuccess,onFail){
-  _ckOrigCopyText(text,()=>{
-    // Count lines = cookies copied
-    const lines=text.split('\n').filter(Boolean);
-    ckLogEvent('copied',`Copied ${lines.length} cookie${lines.length!==1?'s':''}`,null);
-    if(onSuccess)onSuccess();
-  },onFail);
-};
+// Copy events — no longer logged (spam)
 
 // ═══════════════════════════════════════
 // FIX 14: REFRESH BUTTON
@@ -5258,13 +5416,13 @@ function applySyncCookies(incomingCookies){
     vault.forEach(g=>{
       g.cookies.forEach((c,ci)=>{
         if((c.username||'').toLowerCase()===uLow){
-          // Update cookie and password in-place
           const changed=c.cookie!==ic.cookie||(ic.password&&c.password!==ic.password);
           if(changed){
             c.cookie=ic.cookie;
             if(ic.password)c.password=ic.password;
-            c.banStatus=undefined; // reset ban status after update
+            c.banStatus=undefined;
             logChange(g,`Cookie updated via sync: ${esc(ic.username)}`);
+            ckLogEvent('edited',`Synced — cookie updated in "${esc(g.name)}"`,ic);
             updated++;
           }
           found=true;
@@ -5505,6 +5663,168 @@ document.getElementById('cx-clear-btn').addEventListener('click',()=>{
   document.getElementById('cx-match-count').textContent='';
   document.getElementById('cx-copy-all-btn').style.display='none';
 });
+
+// ═══════════════════════════════════════
+// BUG 8B: GLOBAL ALTS VIEW
+// ═══════════════════════════════════════
+document.getElementById('hdr-alts-btn').addEventListener('click',openAltsModal);
+document.getElementById('alts-modal-close').addEventListener('click',()=>closeMod('alts-modal'));
+
+function openAltsModal(){
+  const list=document.getElementById('alts-modal-list');
+  list.innerHTML='';
+  let totalSets=0;
+  vault.forEach(g=>{
+    if(!g.alternatives||!g.alternatives.length)return;
+    g.alternatives.forEach((alt,ai)=>{
+      totalSets++;
+      const row=document.createElement('div');
+      row.style.cssText='background:rgba(123,47,255,.04);border:1px solid rgba(123,47,255,.18);border-radius:9px;padding:10px 12px;';
+      const hd=document.createElement('div');
+      hd.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:6px;';
+      hd.innerHTML=`
+        <span style="font-family:var(--sans);font-weight:700;font-size:12px;color:var(--a3);flex:1;">${esc(alt.label||'Alt '+(ai+1))}</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--dim);">${alt.cookies.length} cookie${alt.cookies.length!==1?'s':''}</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--dim);background:rgba(0,0,0,.3);border:1px solid var(--bdr);border-radius:4px;padding:1px 6px;">from: ${esc(g.name)}</span>`;
+      // Swap button — swap first cookie of this alt into the group as main
+      if(!alt.cookies.length){row.appendChild(hd);list.appendChild(row);return;}
+      const swapBtn=document.createElement('button');
+      swapBtn.style.cssText='background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);border-radius:6px;padding:4px 10px;font-family:var(--mono);font-size:9px;color:var(--a2);cursor:pointer;';
+      swapBtn.textContent='Swap to main';
+      swapBtn.addEventListener('click',async()=>{
+        const cookieCount=g.cookies.length;
+        if(!cookieCount){toast('Group has no main cookies to swap','warn');return;}
+        // Pick which main cookie to swap out
+        const idx=0; // swap first main cookie by default
+        const oldMain=g.cookies[idx];
+        const newMain={...alt.cookies[0]};
+        // Archive old main back to this alt
+        alt.cookies.splice(0,1,oldMain);
+        g.cookies[idx]={...newMain};
+        logChange(g,`Alt "${esc(alt.label||'Alt '+(ai+1))}" swapped to main`);
+        saveVault();openAltsModal();render();
+        if(panelId===g.id)refreshPanel();
+        toast(`Swapped "${alt.label||'Alt '+(ai+1)}" into ${g.name}`,'ok');
+      });
+      hd.appendChild(swapBtn);
+      row.appendChild(hd);
+      // Show first cookie username
+      const users=alt.cookies.map(c=>c.username||'(no user)').join(', ');
+      const meta=document.createElement('div');
+      meta.style.cssText='font-family:var(--mono);font-size:9px;color:var(--dim);';
+      meta.textContent=users;
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  });
+  if(!totalSets){
+    list.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:var(--dim);text-align:center;padding:30px 0;letter-spacing:1px;">No alternative cookies in vault</div>';
+  }
+  openMod('alts-modal');
+}
+
+// ═══════════════════════════════════════
+// BUG 8A: FIX ALTS DISAPPEARING — ensure alternatives always initialized
+// ═══════════════════════════════════════
+// Patch loadVault to always ensure alternatives array exists
+const _svOrigLoadVault=loadVault;
+loadVault=function(){
+  const v=_svOrigLoadVault.apply(this,arguments);
+  v.forEach(g=>{if(!g.alternatives)g.alternatives=[];});
+  return v;
+};
+
+// ═══════════════════════════════════════
+// BUG 12: PER-COOKIE BAN METADATA + REMINDERS
+// ═══════════════════════════════════════
+// Store ban start time + reason on the cookie object itself when swapping
+// Patch the swap confirm handler to add banMeta to the archived cookie
+
+const _svOrigSwapConfirm=document.getElementById('swap-confirm').onclick;
+// We override via addEventListener since it was set that way
+// Instead patch the swap logic at the archive step — find and wrap swap-confirm handler
+
+// Check swap reminders: look at each cookie's banMeta and fire if time elapsed
+function checkCookieBanReminders(){
+  const banner=document.getElementById('pin-reminder-banner');
+  if(!banner)return;
+  const now=Date.now();
+  const msgs=[];
+  vault.forEach(g=>{
+    (g.alternatives||[]).forEach(alt=>{
+      (alt.cookies||[]).forEach(c=>{
+        if(!c.banMeta)return;
+        const {reason,startedAt,remindAt,reminded}=c.banMeta;
+        if(reminded)return;
+        if(reason==='perm'||reason==='expired')return; // no reminder for these
+        if(remindAt&&now>=remindAt){
+          msgs.push(`${c.username||'Cookie'} in "${g.name}" — ${reason==='1d'?'1-day':'7-day'} ban should be lifted`);
+          c.banMeta.reminded=true;
+        }
+      });
+    });
+  });
+  if(msgs.length){
+    banner.innerHTML='';
+    msgs.forEach(m=>{
+      const d=document.createElement('div');
+      d.style.cssText='font-family:var(--mono);font-size:10px;color:var(--ok);margin-bottom:4px;';
+      d.textContent='🔓 '+m;
+      banner.appendChild(d);
+    });
+    banner.style.display='block';
+    saveVault(); // save the reminded=true flags
+  }
+}
+
+// Patch swap-confirm to store banMeta on archived cookie
+// Find the existing listener by wrapping the button
+const _swapConfirmBtn=document.getElementById('swap-confirm');
+const _origSwapListeners=[];
+// Since we can't easily remove the existing listener, we store banMeta before the existing handler fires
+// by adding a listener BEFORE (capture phase) on the button
+_swapConfirmBtn.addEventListener('click',()=>{
+  const reason=document.querySelector('.swap-reason-btn.on')?.dataset.reason||'1d';
+  const g=vault.find(x=>x.id===_swapGid);
+  if(!g)return;
+  const c=g.cookies[_swapIdx];
+  if(!c)return;
+  // Tag the cookie that's about to be archived with banMeta
+  const hours=reason==='1d'?24:reason==='7d'?168:null;
+  c._pendingBanMeta={
+    reason,
+    startedAt:Date.now(),
+    remindAt:hours?Date.now()+hours*3600000:null,
+    reminded:false
+  };
+},true); // capture phase — fires before the existing click handler
+
+// Patch the archive step in swap: after archiving, apply banMeta
+const _origSwapConfirmHandler=document.getElementById('swap-confirm');
+// We already have the swap logic inline — patch via observation of vault mutations
+// Simplest: after any swap, scan alts for _pendingBanMeta and apply
+const _realSaveVault=saveVault;
+saveVault=function(){
+  // Apply any pending ban meta to newly archived cookies
+  vault.forEach(g=>{
+    (g.alternatives||[]).forEach(alt=>{
+      (alt.cookies||[]).forEach(c=>{
+        if(c._pendingBanMeta){
+          c.banMeta={...c._pendingBanMeta};
+          delete c._pendingBanMeta;
+        }
+      });
+    });
+  });
+  _realSaveVault.apply(this,arguments);
+};
+
+// Check reminders on PIN unlock
+const _origSubmitPin2=submitPin;
+submitPin=function(){
+  _origSubmitPin2.apply(this,arguments);
+  setTimeout(()=>{checkSwapReminders();checkCookieBanReminders();},300);
+};
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
