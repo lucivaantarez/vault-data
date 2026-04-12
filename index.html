@@ -1,16 +1,16 @@
 <!--
 ╔══════════════════════════════════════════════════════════════════════════════════╗
-║                         COOKIE VAULT — MASTER DOCUMENTATION                    ║
+║                         SATURNITY VAULT — MASTER DOCUMENTATION                    ║
 ║                    AI-READABLE ARCHITECTURE & BEHAVIORAL SPEC                  ║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  1. IDENTITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  File Name   : cookie-vault-v5-4.html
+  File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v5.4
+  Version     : v1.1
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -153,7 +153,7 @@
   }
 
   localStorage Keys:
-    'cookie_vault_v1'    → JSON(Group[])
+    'saturnity_vault_v1'    → JSON(Group[])
     'cv_cols'            → string(1–4)
     'cv_sort'            → 'az'|'za'|'newest'|'most'
     'cv_settings'        → JSON(Settings)
@@ -523,7 +523,6 @@
     Params  : none
     Returns : string[] — array of CF Worker URLs from cv_worker_urls (filtered empty)
 
-  updateBtWorkerStatus()
     Params  : none
     Returns : void
     Behavior: Updates #bt-worker-status text with worker count and color
@@ -574,7 +573,7 @@
   defSettings()  — defaults object; firstCreated only meaningful on first-ever load.
   saveSettings() — JSON to cv_settings, no error handling (small data).
   saveVault()    — decoyMode guard → localStorage write → scheduleGhSync(). QuotaExceededError toast.
-  loadVault()    — parse cv_cookie_vault_v1, silent on error.
+  loadVault()    — parse cv_saturnity_vault_v1, silent on error.
   updateStreak() — daily open counter; open-based, not usage-based.
   setVaultTitle() / openRenameVault() / checkBackupReminder() — unchanged.
   customConfirm(msg, label) — Promise<boolean>, must be awaited, single dialog at a time.
@@ -823,8 +822,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Lana Vie en Rose</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='22' ry='22' fill='%237b2fff'/%3E%3Cellipse cx='50' cy='50' rx='42' ry='14' fill='none' stroke='%2300d4ff' stroke-width='5' transform='rotate(-20,50,50)'/%3E%3C/svg%3E">
+<title>Saturnity Vault</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='18' fill='%237b2fff'/%3E%3Cellipse cx='50' cy='50' rx='40' ry='11' fill='none' stroke='%2300d4ff' stroke-width='4.5' transform='rotate(-25 50 50)'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%239b4fff'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -1029,6 +1028,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sec-expbtn{background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 9px;
   font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);cursor:pointer;transition:all .12s;}
 .sec-expbtn:hover{border-color:var(--a3);color:var(--a3);}
+.sec-copybtn{background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 7px;
+  color:var(--dim);cursor:pointer;transition:all .12s;display:inline-flex;align-items:center;}
+.sec-copybtn:hover{border-color:var(--ok);color:var(--ok);}
 .sec-warn{font-family:var(--mono);font-size:9px;color:var(--warn);background:rgba(255,170,0,.08);
   border:1px solid rgba(255,170,0,.2);border-radius:5px;padding:2px 7px;letter-spacing:1px;}
 .card-grid{display:grid;grid-template-columns:repeat(var(--cols,2),1fr);gap:10px;}
@@ -1121,6 +1123,10 @@ body.list-view .gcard::before{display:none;}
 /* Username pills row */
 .gcard-users-row{display:none;}
 body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1px;}
+.gcard-rename-btn{display:none;background:none;border:1px solid rgba(255,255,255,.1);border-radius:4px;
+  padding:2px 5px;color:var(--dim);cursor:pointer;flex-shrink:0;transition:all .12s;line-height:1;}
+body.list-view .gcard-rename-btn{display:flex;align-items:center;}
+body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
 .gcard-user-pill{font-family:var(--mono);font-size:8px;color:var(--dim);background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.08);border-radius:3px;padding:1px 5px;white-space:nowrap;line-height:1.5;}
 .gcard-user-pill.banned-user{text-decoration:line-through;opacity:.5;color:var(--danger);}
@@ -1152,6 +1158,59 @@ body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1
 .swap-alt-opt:hover,.swap-alt-opt.selected{border-color:var(--a2);background:rgba(0,212,255,.08);}
 .swap-alt-opt .alt-label{font-size:10px;color:var(--a3);font-weight:700;margin-bottom:2px;}
 .swap-alt-opt .alt-cookies{font-size:9px;color:var(--dim);}
+
+/* ── EXPORT POPUP ── */
+.exp-popup{position:fixed;z-index:500;background:rgba(7,11,18,.98);border:1px solid var(--bdrb);
+  border-radius:12px;padding:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.7);
+  display:none;animation:qcIn .15s ease;}
+.exp-popup.open{display:block;}
+.exp-pop-label{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;
+  padding:6px 12px 4px;text-transform:uppercase;border-bottom:1px solid var(--bdr);margin-bottom:4px;}
+.exp-pop-btn{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;
+  border-radius:7px;padding:9px 12px;cursor:pointer;transition:all .12s;text-align:left;}
+.exp-pop-btn:hover{background:rgba(15,111,255,.1);}
+.exp-pop-btn svg{flex-shrink:0;opacity:.8;}
+.exp-pop-btn-main{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--bright);flex-shrink:0;min-width:60px;}
+.exp-pop-btn-sub{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;}
+.exp-pop-sep{height:1px;background:var(--bdr);margin:4px 6px;}
+
+/* ── SIDEBAR COMMANDS ── */
+.sb-dock{padding:10px;border-top:1px solid var(--bdr);flex-shrink:0;}
+.sb-dock-label{font-family:var(--sans);font-weight:700;font-size:10px;color:var(--dim);letter-spacing:2px;
+  text-transform:uppercase;padding:0 4px 8px;opacity:.5;}
+.sb-dock-grid{display:flex;flex-direction:column;gap:4px;}
+.dock-cmd{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;
+  border:1px solid var(--bdr);background:rgba(255,255,255,.02);cursor:pointer;
+  transition:all .12s;position:relative;overflow:hidden;}
+.dock-cmd:hover{border-color:var(--cc,var(--ac));background:rgba(var(--cr,15,111,255),.08);}
+.dock-cmd svg{flex-shrink:0;opacity:.6;transition:opacity .15s;}
+.dock-cmd:hover svg{opacity:1;}
+.dock-cmd-txt{font-family:var(--sans);font-weight:600;font-size:12px;color:var(--dim);letter-spacing:.3px;}
+.dock-cmd:hover .dock-cmd-txt{color:var(--bright);}
+.dock-cmd.danger:hover{border-color:var(--danger);background:rgba(255,48,96,.08);}
+.dock-cmd.danger:hover svg{color:var(--danger);}
+.dock-cmd.danger:hover .dock-cmd-txt{color:var(--danger);}
+
+/* ── VAULT SETTINGS MODAL ── */
+.vault-settings-modal{width:min(92vw,420px);max-height:82vh;display:flex;flex-direction:column;}
+.vault-settings-scroll{overflow-y:auto;flex:1;padding-right:4px;}
+.vault-settings-scroll::-webkit-scrollbar{width:3px;}
+.vault-settings-scroll::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.vsec{background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.vsec:last-child{margin-bottom:0;}
+.vsec-title{font-family:var(--sans);font-weight:700;font-size:12px;color:var(--bright);margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;}
+.vtoggle{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:13px;
+  color:var(--txt);margin-bottom:10px;cursor:pointer;}
+.vtoggle input{width:16px;height:16px;accent-color:var(--a2);cursor:pointer;}
+.vrow{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.vrow:last-child{margin-bottom:0;}
+.vrow label{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
+.vrow input{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:7px;
+  padding:8px 10px;font-family:var(--mono);font-size:11px;color:var(--bright);outline:none;
+  transition:border-color .15s;}
+.vrow input:focus{border-color:var(--a2);}
+.vhint{font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.6;margin-top:6px;opacity:.7;}
 
 /* ── QUICK COPY ── */
 #qc-backdrop{display:none;position:fixed;inset:0;z-index:399;}
@@ -1410,7 +1469,37 @@ body.list-view .gcard-users-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:1
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px;}
-@media(max-width:600px){:root{--sw:0px;}.sidebar{display:none;}.hdr-stats{display:none;}}
+.hdr-desktop-btns{display:flex;align-items:center;gap:6px;}
+.hdr-overflow{display:none;position:relative;flex-shrink:0;}
+.hdr-overflow-trigger{background:rgba(255,255,255,.06);border:1px solid var(--bdr);border-radius:8px;
+  width:34px;height:34px;font-size:18px;color:var(--dim);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all .12s;line-height:1;}
+.hdr-overflow-trigger:hover,.hdr-overflow-trigger.open{border-color:var(--ac);color:var(--a2);}
+.hdr-overflow-menu{position:fixed;top:52px;right:8px;background:rgba(7,11,18,.98);
+  border:1px solid var(--bdrb);border-radius:12px;padding:6px;min-width:190px;
+  box-shadow:0 8px 32px rgba(0,0,0,.7);display:none;z-index:600;animation:qcIn .15s ease;}
+.hdr-overflow-menu.open{display:block;}
+.hdr-om-item{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;
+  border-radius:7px;padding:10px 12px;font-family:var(--mono);font-size:11px;color:var(--dim);
+  cursor:pointer;transition:all .12s;text-align:left;letter-spacing:.5px;}
+.hdr-om-item:hover,.hdr-om-item.active-item{background:rgba(15,111,255,.1);color:var(--bright);}
+.hdr-om-item svg{flex-shrink:0;opacity:.7;}
+.hdr-om-col{background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:5px;
+  width:32px;height:28px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
+  transition:all .12s;display:flex;align-items:center;justify-content:center;}
+.hdr-om-col.on{background:rgba(15,111,255,.3);border-color:var(--ac);color:var(--a2);}
+@media(max-width:700px){
+  :root{--sw:0px;}
+  .sidebar{display:none;}
+  .hdr-stats{display:none;}
+  .hdr-title{display:none;}
+  .hdr-desktop-btns{display:none!important;}
+  .hdr-overflow{display:block;}
+  .hdr-search{flex:1;max-width:none;min-width:0;}
+  .hdr-search input{min-width:0;width:100%;}
+  .hdr-right{gap:6px;}
+  .data-switch{display:flex!important;flex-shrink:0;}
+}
 
 /* ── BAN TAG ── */
 .gcard-banned-tag{position:absolute;top:7px;left:8px;z-index:5;pointer-events:none;
@@ -1559,109 +1648,38 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 .health-grade.D{background:rgba(255,107,0,.12);color:#ff6b00;border:1px solid rgba(255,107,0,.25);}
 .health-grade.F{background:rgba(255,48,96,.12);color:var(--danger);border:1px solid rgba(255,48,96,.25);}
 
-/* ── BAN CHECKER INLINE ── */
-.ban-terminal-ov{display:none;}
-.ban-terminal{background:rgba(4,8,14,.95);border:1px solid rgba(255,48,96,.2);border-radius:10px;
-  margin-bottom:16px;overflow:hidden;box-shadow:0 0 20px rgba(255,48,96,.04);}
-.bt-hdr{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.12);
-  cursor:pointer;user-select:none;background:rgba(255,48,96,.04);}
-.bt-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--danger);text-transform:uppercase;flex:1;}
-.bt-title::before{content:'> ';opacity:.5;}
-.bt-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;transition:color .12s;}
-.bt-close:hover{color:var(--danger);}
-.bt-controls{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);flex-shrink:0;flex-wrap:wrap;}
-.bt-body{display:none;}
-.bt-body.open{display:flex;flex-direction:column;}
-.bt-ctrl-btn{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;padding:5px 10px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);cursor:pointer;transition:all .12s;white-space:nowrap;}
-.bt-ctrl-btn:hover{border-color:var(--ac);color:var(--a2);}
-.bt-ctrl-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
-.bt-ctrl-btn.primary{background:linear-gradient(135deg,var(--ac),var(--a3));border:none;color:#fff;letter-spacing:1px;}
-.bt-ctrl-btn:disabled{opacity:.3;pointer-events:none;}
-.bt-skip-label{font-family:var(--mono);font-size:9px;color:var(--dim);display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;}
-.bt-skip-label input{accent-color:var(--a2);}
-.bt-progress{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;white-space:nowrap;}
-.bt-log{max-height:200px;overflow-y:auto;padding:10px 16px;font-family:var(--mono);font-size:11px;line-height:1.9;}
-.bt-log::-webkit-scrollbar{width:3px;}
-.bt-log::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
-.bt-line{display:flex;gap:10px;align-items:baseline;}
-.bt-ts{color:var(--dim);font-size:9px;flex-shrink:0;opacity:.6;}
-.bt-msg{flex:1;word-break:break-all;}
-.bt-line.info .bt-msg{color:var(--txt);}
-.bt-line.ok .bt-msg{color:var(--ok);}
-.bt-line.ban .bt-msg{color:var(--danger);}
-.bt-line.warn .bt-msg{color:var(--warn);}
-.bt-line.facelock .bt-msg{color:#ff6b00;}
-.bt-line.err .bt-msg{color:rgba(255,48,96,.6);}
-.bt-line.muted .bt-msg{color:var(--dim);}
-.bt-footer{display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid var(--bdr);flex-shrink:0;}
-.bt-summary{font-family:var(--mono);font-size:9px;color:var(--dim);flex:1;}
-
-/* ── SETTINGS MODAL (GitHub + Workers + PIN Config) ── */
-.vault-settings-modal{width:min(92vw,480px);max-height:80vh;display:flex;flex-direction:column;}
-.vault-settings-scroll{overflow-y:auto;flex:1;padding-right:4px;}
-.vault-settings-scroll::-webkit-scrollbar{width:3px;}
-.vault-settings-scroll::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
-.vsec-title{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--bdr);}
-.vsec{margin-bottom:18px;}
-.vrow{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
-.vrow label{font-family:var(--mono);font-size:9px;color:var(--dim);flex-shrink:0;width:70px;letter-spacing:.5px;}
-.vrow input{flex:1;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:6px 9px;font-family:var(--mono);font-size:10px;color:var(--bright);outline:none;transition:border-color .15s;}
-.vrow input:focus{border-color:var(--ac);}
-.vtoggle{display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;}
-.vtoggle input{accent-color:var(--a2);width:14px;height:14px;cursor:pointer;}
-.vtoggle span{font-family:var(--mono);font-size:10px;color:var(--txt);}
-.vhint{font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.6;margin-bottom:8px;}
-.vhint a{color:var(--a2);text-decoration:none;}
-
-/* ── BAN CHECKER CUSTOM SELECT ── */
-.bt-sel-wrap{position:relative;width:100%;}
-.bt-sel-btn{width:100%;background:rgba(255,48,96,.04);border:1px solid rgba(255,48,96,.15);
-  border-radius:6px;padding:7px 12px;font-family:var(--mono);font-size:10px;color:var(--txt);
-  cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;
-  transition:all .12s;}
-.bt-sel-btn:hover{border-color:rgba(255,48,96,.35);background:rgba(255,48,96,.08);}
-.bt-sel-chev{color:var(--dim);font-size:10px;transition:transform .15s;flex-shrink:0;}
-.bt-sel-btn.open .bt-sel-chev{transform:rotate(180deg);}
-.bt-sel-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
-  background:rgba(7,11,18,.98);border:1px solid rgba(255,48,96,.25);border-radius:8px;
-  overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);max-height:200px;overflow-y:auto;}
-.bt-sel-drop.open{display:block;}
-.bt-sel-opt{padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--txt);
-  cursor:pointer;transition:background .1s;border-bottom:1px solid rgba(26,48,80,.3);}
-.bt-sel-opt:last-child{border-bottom:none;}
-.bt-sel-opt:hover{background:rgba(255,48,96,.1);color:var(--bright);}
-.bt-sel-opt.active{color:var(--danger);background:rgba(255,48,96,.08);}
-/* ── BAN CHECKER MODE TOGGLE ── */
-.bt-mode-bar{display:flex;gap:4px;padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);
-  background:rgba(0,0,0,.15);}
-.bt-mode-btn{flex:1;padding:6px 10px;font-family:var(--mono);font-size:9px;letter-spacing:1px;
-  border:1px solid rgba(255,48,96,.2);border-radius:6px;background:transparent;
-  color:var(--dim);cursor:pointer;transition:all .12s;text-transform:uppercase;}
-.bt-mode-btn.on{background:rgba(255,48,96,.15);border-color:var(--danger);color:var(--danger);}
-.bt-mode-btn:not(.on):hover{border-color:rgba(255,48,96,.4);color:var(--txt);}
-/* ── BAN PASTE SECTION ── */
-.bt-paste-wrap{padding:8px 14px;border-bottom:1px solid rgba(255,48,96,.1);display:none;}
-.bt-paste-wrap.open{display:block;}
-.bt-paste-ta{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,48,96,.2);
-  border-radius:6px;padding:10px 12px;font-family:var(--mono);font-size:11px;
-  color:var(--ok);resize:none;min-height:80px;line-height:1.7;outline:none;
-  transition:border-color .15s;caret-color:var(--danger);}
-.bt-paste-ta:focus{border-color:rgba(255,48,96,.4);}
-.bt-paste-ta::placeholder{color:var(--dim);opacity:.4;}
-.bt-paste-info{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:5px;letter-spacing:.5px;}
-.bt-paste-info span{color:var(--ok);}
-/* ── EXPORT POPUP ── */
-.exp-popup{position:fixed;z-index:300;background:rgba(7,11,18,.97);border:1px solid var(--bdrb);
-  border-radius:12px;padding:6px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.6);
-  display:none;animation:qcIn .15s ease;}
-.exp-popup.open{display:block;}
-.exp-pop-btn{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;
-  border-radius:7px;padding:10px 14px;font-family:var(--sans);font-weight:600;font-size:13px;
-  color:var(--txt);cursor:pointer;transition:all .12s;text-align:left;}
-.exp-pop-btn:hover{background:rgba(15,111,255,.1);color:var(--bright);}
-.exp-pop-btn svg{flex-shrink:0;opacity:.7;}
-.exp-pop-sep{height:1px;background:var(--bdr);margin:4px 0;}
-
+/* ── COOKIE EXTRACTOR ── */
+.cx-panel{background:rgba(4,8,14,.95);border:1px solid rgba(0,212,255,.2);border-radius:10px;
+  margin-bottom:16px;overflow:hidden;box-shadow:0 0 20px rgba(0,212,255,.04);}
+.cx-hdr{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(0,212,255,.1);
+  cursor:pointer;user-select:none;background:rgba(0,212,255,.04);}
+.cx-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--a2);text-transform:uppercase;flex:1;}
+.cx-title::before{content:'⟁ ';opacity:.6;}
+.cx-match-count{font-family:var(--mono);font-size:9px;color:var(--dim);margin-right:4px;}
+.cx-chev{font-family:var(--mono);font-size:10px;color:var(--dim);transition:transform .2s;}
+.cx-body{padding:12px 14px;display:none;flex-direction:column;gap:8px;}
+.cx-ta{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(0,212,255,.2);border-radius:7px;
+  padding:10px 12px;font-family:var(--mono);font-size:11px;color:var(--txt);outline:none;
+  resize:vertical;min-height:80px;line-height:1.6;transition:border-color .15s;}
+.cx-ta:focus{border-color:var(--a2);}
+.cx-ta::placeholder{color:var(--dim);opacity:.4;}
+.cx-info{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.5px;min-height:14px;}
+.cx-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.cx-results{display:flex;flex-direction:column;gap:4px;max-height:400px;overflow-y:auto;}
+.cx-results::-webkit-scrollbar{width:3px;}
+.cx-results::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.cx-result-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;
+  border:1px solid var(--bdr);background:rgba(255,255,255,.02);transition:background .12s;}
+.cx-result-row.matched{border-color:rgba(0,212,255,.2);background:rgba(0,212,255,.04);}
+.cx-result-row.unmatched{opacity:.4;}
+.cx-result-user{font-family:var(--mono);font-size:11px;color:var(--bright);flex-shrink:0;min-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cx-result-meta{font-family:var(--mono);font-size:9px;color:var(--dim);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cx-result-group{font-family:var(--mono);font-size:9px;color:var(--a3);background:rgba(123,47,255,.1);
+  border:1px solid rgba(123,47,255,.2);border-radius:3px;padding:1px 6px;white-space:nowrap;flex-shrink:0;}
+.cx-result-copy{background:none;border:1px solid var(--bdr);border-radius:5px;padding:3px 8px;
+  font-family:var(--mono);font-size:8px;color:var(--dim);cursor:pointer;transition:all .12s;flex-shrink:0;}
+.cx-result-copy:hover{border-color:var(--a2);color:var(--a2);}
+.cx-no-match{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:center;padding:16px 0;letter-spacing:1px;}
 /* ── SWITCH DATA ── */
 .data-switch{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);
   border:1px solid var(--bdr);border-radius:8px;padding:5px 10px;cursor:pointer;
@@ -1784,13 +1802,6 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         <div class="vhint">Create a secret Gist at gist.github.com, then generate a PAT at github.com/settings/tokens with the "gist" scope. Vault auto-syncs 3s after any change.</div>
         <button class="bt-ctrl-btn" id="vs-gh-test" style="margin-top:4px">test connection</button>
       </div>
-      <div class="vsec">
-        <div class="vsec-title">⚡ Cloudflare Ban Checker Workers</div>
-        <div class="vhint">Enter up to 3 CF Worker URLs. Requests are distributed round-robin. Worker must accept POST {cookie, username} and return {status, duration?}.</div>
-        <div class="vrow"><label>Worker 1</label><input type="text" id="vs-w1" placeholder="https://your-worker.workers.dev"></div>
-        <div class="vrow"><label>Worker 2</label><input type="text" id="vs-w2" placeholder="optional"></div>
-        <div class="vrow"><label>Worker 3</label><input type="text" id="vs-w3" placeholder="optional"></div>
-      </div>
     </div>
     <div class="m-act" style="margin-top:14px">
       <button class="bsm b-ghost" id="vs-cancel">cancel</button>
@@ -1803,8 +1814,10 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 <div id="app">
   <header class="hdr">
     <div class="hdr-icon" title="Vault Stats" id="stats-btn">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
-        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="8" fill="#7b2fff"/>
+        <ellipse cx="20" cy="20" rx="17" ry="5" fill="none" stroke="#00d4ff" stroke-width="2" transform="rotate(-25 20 20)"/>
+        <circle cx="20" cy="20" r="3.5" fill="#9b4fff"/>
       </svg>
     </div>
     <div class="hdr-title" id="vault-title"></div>
@@ -1821,46 +1834,60 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <button class="srch-clear" id="srch-clear" title="Clear search">✕</button>
     </div>
     <div class="hdr-right">
-      <div class="hdr-meta">
-        <button class="hdr-meta-btn" id="hdr-stats-btn" title="Vault Stats">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-          </svg>Stats
+      <div class="hdr-desktop-btns">
+        <div class="hdr-meta">
+          <button class="hdr-meta-btn" id="hdr-stats-btn" title="Vault Stats">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats
+          </button>
+          <button class="hdr-meta-btn" id="hdr-cl-btn" title="Changelog">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Log
+          </button>
+          <button class="hdr-meta-btn" id="hdr-cklog-btn" title="Activity Log">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity
+          </button>
+          <button class="hdr-meta-btn" id="hdr-alts-btn" title="All Alts">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>Alts
+          </button>
+        </div>
+        <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List
         </button>
-        <button class="hdr-meta-btn" id="hdr-cl-btn" title="Changelog">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-          </svg>Log
+        <button class="sort-btn" id="sort-btn">A→Z</button>
+        <button class="card-size-btn" id="size-btn">M</button>
+        <div class="col-pills">
+          <button class="col-pill" data-c="1">1</button>
+          <button class="col-pill on" data-c="2">2</button>
+          <button class="col-pill" data-c="3">3</button>
+          <button class="col-pill" data-c="4">4</button>
+        </div>
+        <button class="hdr-meta-btn" id="hdr-sync-btn" title="Sync Vault">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>Sync
         </button>
-        <button class="hdr-meta-btn" id="hdr-cklog-btn" title="Cookie Activity Log">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-          </svg>Activity
+        <button class="hdr-meta-btn" id="hdr-refresh-btn" title="Refresh vault">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/></svg>Refresh
         </button>
       </div>
-      <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List
-      </button>
-      <button class="sort-btn" id="sort-btn">A→Z</button>
-      <button class="card-size-btn" id="size-btn">M</button>
-      <div class="col-pills">
-        <button class="col-pill" data-c="1">1</button>
-        <button class="col-pill on" data-c="2">2</button>
-        <button class="col-pill" data-c="3">3</button>
-        <button class="col-pill" data-c="4">4</button>
+      <div class="hdr-overflow">
+        <button class="hdr-overflow-trigger" id="hdr-overflow-trigger" title="More">&#8943;</button>
+        <div class="hdr-overflow-menu" id="hdr-overflow-menu">
+          <button class="hdr-om-item" data-om="stats"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats</button>
+          <button class="hdr-om-item" data-om="log"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Changelog</button>
+          <button class="hdr-om-item" data-om="activity"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity Log</button>
+          <button class="hdr-om-item" data-om="alts"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>All Alts</button>
+          <button class="hdr-om-item" data-om="listview" id="om-listview-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>List View</button>
+          <button class="hdr-om-item" data-om="sync"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>Sync</button>
+          <button class="hdr-om-item" data-om="refresh"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/></svg>Refresh</button>
+          <div style="height:1px;background:var(--bdr);margin:4px 0;"></div>
+          <div style="padding:4px 12px 6px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;">COLUMNS</div>
+          <div style="display:flex;gap:4px;padding:0 8px 6px;">
+            <button class="hdr-om-col" data-c="1">1</button>
+            <button class="hdr-om-col" data-c="2">2</button>
+            <button class="hdr-om-col" data-c="3">3</button>
+            <button class="hdr-om-col" data-c="4">4</button>
+          </div>
+        </div>
       </div>
       <button class="btn-add" id="hdr-add">+ Add</button>
-      <button class="hdr-meta-btn" id="hdr-sync-btn" title="Sync Vault">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/>
-        </svg>Sync
-      </button>
-      <button class="hdr-meta-btn" id="hdr-refresh-btn" title="Refresh vault">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/>
-        </svg>Refresh
-      </button>
       <div class="sync-dot" id="sync-dot" data-state="off" title="GitHub sync status"></div>
       <div class="data-switch" id="data-switch-btn">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--a3)" stroke-width="2">
@@ -1953,49 +1980,28 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         </div>
       </div>
 
-      <!-- BAN CHECKER INLINE SECTION -->
-      <div class="ban-terminal" id="ban-terminal">
-        <div class="bt-hdr" id="bt-toggle">
-          <div class="bt-title">Ban Checker</div>
-          <div id="bt-worker-status" style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;margin-right:8px;">No workers configured</div>
-          <span style="font-family:var(--mono);font-size:10px;color:var(--dim);" id="bt-chev">▾</span>
+      <!-- COOKIE EXTRACTOR -->
+      <div class="cx-panel" id="cx-panel">
+        <div class="cx-hdr" id="cx-toggle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <div class="cx-title">Cookie Extractor</div>
+          <div id="cx-match-count" class="cx-match-count"></div>
+          <span class="cx-chev" id="cx-chev">▾</span>
         </div>
-        <div class="bt-body" id="bt-body">
-          <!-- MODE TOGGLE -->
-          <div class="bt-mode-bar">
-            <button class="bt-mode-btn on" id="bt-mode-group">&#8862; Group Mode</button>
-            <button class="bt-mode-btn" id="bt-mode-paste">&#8999; Paste Mode</button>
+        <div class="cx-body" id="cx-body">
+          <textarea class="cx-ta" id="cx-ta" placeholder="Paste usernames — one per line, or username:anything:anything&#10;gam3sNoahstudioyt:Failed_Recovery:Captcha_Required&#10;Aria3ll4playzrrbx492:..."></textarea>
+          <div class="cx-info" id="cx-info"></div>
+          <div class="cx-actions">
+            <button class="btn-primary" id="cx-search-btn" style="font-size:11px;padding:7px 14px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Extract
+            </button>
+            <button class="bsm b-ghost" id="cx-copy-all-btn" style="display:none;font-size:11px;">Copy all matched (u:p:c)</button>
+            <button class="bsm b-ghost" id="cx-clear-btn" style="font-size:11px;">Clear</button>
           </div>
-          <!-- PASTE AREA (paste mode only) -->
-          <div class="bt-paste-wrap" id="bt-paste-wrap">
-            <textarea class="bt-paste-ta" id="bt-paste-ta"
-              placeholder="username:password:cookie&#10;username:cookie&#10;cookie only (one per line)"></textarea>
-            <div class="bt-paste-info" id="bt-paste-info">Awaiting input...</div>
-          </div>
-          <!-- GROUP SELECT (group mode only) -->
-          <div style="padding:6px 14px;border-bottom:1px solid rgba(255,48,96,.1);" id="bt-group-wrap">
-            <div class="bt-sel-wrap">
-              <button class="bt-sel-btn" id="bt-sel-btn">
-                <span id="bt-sel-label">All Groups</span>
-                <span class="bt-sel-chev">&#9662;</span>
-              </button>
-              <div class="bt-sel-drop" id="bt-sel-drop"></div>
-            </div>
-          </div>
-          <div class="bt-controls">
-            <button class="bt-ctrl-btn primary" id="bt-run">&#9654; Run Check</button>
-            <button class="bt-ctrl-btn" id="bt-stop" disabled>&#9632; Stop</button>
-            <label class="bt-skip-label"><input type="checkbox" id="bt-skip-banned" checked> Skip Banned</label>
-            <div class="bt-progress" id="bt-progress"></div>
-          </div>
-          <div class="bt-log" id="bt-log"></div>
-          <div class="bt-footer">
-            <div class="bt-summary" id="bt-summary">Ready — configure CF Worker URLs in Vault Settings</div>
-            <button class="bt-ctrl-btn" id="bt-export-failed" style="display:none">Export Failed (u:p:c)</button>
-            <button class="bt-ctrl-btn" id="bt-clear-log">Clear</button>
-          </div>
+          <div class="cx-results" id="cx-results"></div>
         </div>
       </div>
+
       <div class="filter-bar" id="filter-bar">
         <button class="filter-pill on" data-filter="all">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>All
@@ -2025,27 +2031,27 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 
 <!-- EXPORT POPUP -->
 <div class="exp-popup" id="exp-popup">
-  <div style="font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:2px;padding:6px 14px 2px;text-transform:uppercase;">Export Format</div>
+  <div class="exp-pop-label">Export Format</div>
   <button class="exp-pop-btn" data-expfmt="user:pass:cookie">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">u:p:c</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">user:pass:cookie</span>
+    <span class="exp-pop-btn-main">u:p:c</span><span class="exp-pop-btn-sub">user:pass:cookie</span>
   </button>
   <button class="exp-pop-btn" data-expfmt="user:cookie">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">u:c</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">user:cookie</span>
+    <span class="exp-pop-btn-main">u:c</span><span class="exp-pop-btn-sub">user:cookie</span>
   </button>
   <button class="exp-pop-btn" data-expfmt="cookie">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">cookie only</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">raw cookie</span>
+    <span class="exp-pop-btn-main">cookie</span><span class="exp-pop-btn-sub">raw only</span>
   </button>
   <button class="exp-pop-btn" data-expfmt="username">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span style="flex:1">username only</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">u</span>
+    <span class="exp-pop-btn-main">u</span><span class="exp-pop-btn-sub">username only</span>
   </button>
   <div class="exp-pop-sep"></div>
   <button class="exp-pop-btn" data-expfmt="json">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    <span style="flex:1">vault.json</span><span style="font-family:var(--mono);font-size:9px;color:var(--dim)">full backup</span>
+    <span class="exp-pop-btn-main">vault.json</span><span class="exp-pop-btn-sub">full backup</span>
   </button>
 </div>
 
@@ -2083,6 +2089,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <div style="display:flex;gap:8px;">
         <button class="swap-reason-btn on" data-reason="1d">1 day ban</button>
         <button class="swap-reason-btn" data-reason="7d">7 day ban</button>
+        <button class="swap-reason-btn" data-reason="perm">Permanent</button>
         <button class="swap-reason-btn" data-reason="expired">Expired</button>
       </div>
     </div>
@@ -2176,7 +2183,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
       <div>
         <div class="flbl">Max groups per server</div>
-        <input class="finput" id="sort-groups-per-srv" type="number" min="1" max="18" value="18">
+        <input class="finput" id="sort-groups-per-srv" type="number" min="1" value="18">
       </div>
       <div>
         <div class="flbl">Cookies per group</div>
@@ -2268,11 +2275,23 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
   </div>
 </div>
 
+<!-- GLOBAL ALTS MODAL -->
+<div class="m-ov" id="alts-modal">
+  <div class="modal" style="width:min(96vw,560px);max-height:85vh;display:flex;flex-direction:column;">
+    <h3>All Alternative Cookies</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:12px;">All alt sets across the vault — tap Swap to move an alt into its group as the main cookie.</p>
+    <div id="alts-modal-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+    <div class="m-act" style="margin-top:14px;">
+      <button class="bsm b-ghost" id="alts-modal-close">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- APP CHANGELOG MODAL -->
 <div class="m-ov" id="cl-modal">
   <div class="modal changelog-modal">
     <h3>App Changelog</h3>
-    <p style="margin-bottom:14px">Version history of Cookie Vault</p>
+    <p style="margin-bottom:14px">Version history of Saturnity Vault</p>
     <div class="changelog-scroll" id="cl-scroll"></div>
     <div class="m-act" style="margin-top:14px">
       <button class="bsm b-ghost" id="cl-close">close</button>
@@ -2297,7 +2316,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
   <div class="modal" style="width:min(90vw,340px)">
     <h3>Rename Vault</h3>
     <p style="margin-bottom:12px">Choose a new name for your vault.</p>
-    <input class="finput" id="rename-in" maxlength="40" placeholder="Cookie Vault" style="margin-bottom:0">
+    <input class="finput" id="rename-in" maxlength="40" placeholder="Saturnity Vault" style="margin-bottom:0">
     <div class="m-act">
       <button class="bsm b-ghost" id="rename-cancel">cancel</button>
       <button class="bsm b-save" id="rename-ok">rename</button>
@@ -2352,7 +2371,6 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <button class="p-btn" id="p-exp">Export .txt</button>
       <button class="p-btn" id="p-pin-btn">Pin</button>
       <button class="p-btn p-ban-btn" id="p-ban-btn">Ban</button>
-      <button class="p-btn" id="p-ban-check-grp" style="color:var(--danger);border-color:rgba(255,48,96,.3);">Check Bans</button>
       <button class="p-btn red" id="p-del">Remove</button>
       <div class="p-cols">
         <button class="p-cpill on" data-pc="1">1</button>
@@ -2419,19 +2437,31 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
-const SK='cookie_vault_v1',CK='cv_cols',SORT_K='cv_sort',SET_K='cv_settings';
+const SK='saturnity_vault_v1',CK='cv_cols',SORT_K='cv_sort',SET_K='cv_settings';
 const COOKIE_PFX='_|WARNING:-DO-NOT-SHARE-THIS.';
 const DS_K='cv_data_configs',DS_ACTIVE_K='cv_active_config';
 // Active config storage key — resolved before any vault read
-let SK_ACTIVE=(()=>{const id=localStorage.getItem('cv_active_config')||'default';return'cookie_vault_'+id;})();
-// Data migration: if default config is empty but old key has data, migrate it
+let SK_ACTIVE=(()=>{const id=localStorage.getItem('cv_active_config')||'default';return'saturnity_vault_'+id;})();
+// ── DATA MIGRATION ─────────────────────────────────────────────────────────
+// Migrates cookie_vault_* keys (pre-rebrand) → saturnity_vault_* keys
 (()=>{
   try{
-    const newKey='cookie_vault_default';
-    const oldKey='cookie_vault_v1';
-    if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){
-      localStorage.setItem(newKey,localStorage.getItem(oldKey));
+    const keysToMigrate=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith('cookie_vault_'))keysToMigrate.push(k);
     }
+    keysToMigrate.forEach(oldKey=>{
+      const newKey=oldKey.replace('cookie_vault_','saturnity_vault_');
+      if(!localStorage.getItem(newKey)){
+        const val=localStorage.getItem(oldKey);
+        if(val)localStorage.setItem(newKey,val);
+      }
+    });
+    // Secondary: saturnity_vault_v1 → saturnity_vault_default
+    const sv1=localStorage.getItem('saturnity_vault_v1');
+    const svd=localStorage.getItem('saturnity_vault_default');
+    if(sv1&&!svd)localStorage.setItem('saturnity_vault_default',sv1);
   }catch(e){}
 })();
 const PALETTE=[
@@ -2460,11 +2490,7 @@ const REAL_PIN='180801';
 const GH_PAT_K='cv_gh_pat',GH_GIST_K='cv_gh_gist',GH_EN_K='cv_gh_enabled';
 let pinBuffer='',pinFails=0,pinLocked=false,pinLockUntil=0,decoyMode=false;
 let ghPendingSync=false,ghDebounceTimer=null;
-let banCheckRunning=false,banCheckAbort=false,banWorkerIdx=0,banFailedCookies=[];
 let activeFilter='all';
-let btSelectedGroup='all';
-let btPasteMode=false;
-let currentRequestController=null; // AbortController for live ban-check fetch
 
 function getColor(name){
   if(!name)return PALETTE[0];
@@ -2477,7 +2503,7 @@ function loadSettings(){
   try{const r=localStorage.getItem(SET_K);return r?{...defSettings(),...JSON.parse(r)}:defSettings();}
   catch{return defSettings();}
 }
-function defSettings(){return{vaultName:'Cookie Vault',firstCreated:Date.now(),lastOpen:null,lastBackup:null,cardSize:'md',streak:0};}
+function defSettings(){return{vaultName:'Saturnity Vault',firstCreated:Date.now(),lastOpen:null,lastBackup:null,cardSize:'md',streak:0};}
 function saveSettings(){localStorage.setItem(SET_K,JSON.stringify(settings));}
 function saveVault(){
   if(decoyMode)return; // decoy mode: never persist
@@ -2793,13 +2819,13 @@ document.querySelectorAll('.exp-pop-btn[data-expfmt]').forEach(btn=>{
     const src=expPopupTarget||(sortVault(vault));
     if(fmt==='json'){
       const expVault=expPopupTarget?expPopupTarget:vault;
-      dl(JSON.stringify({version:1,exported:Date.now(),vault:expVault},null,2),`cookie-vault-${Date.now()}.json`);
+      dl(JSON.stringify({version:1,exported:Date.now(),vault:expVault},null,2),`saturnity-vault-${Date.now()}.json`);
       settings.lastBackup=Date.now();saveSettings();
       document.getElementById('backup-banner').classList.remove('show');
       toast('Vault exported as .json','ok');
     }else{
       const lines=src.flatMap(g=>g.cookies.map(c=>fmtLine(c,fmt))).filter(Boolean);
-      dl(lines.join('\n'),`cookie-vault-${Date.now()}.txt`);
+      dl(lines.join('\n'),`saturnity-vault-${Date.now()}.txt`);
       settings.lastBackup=Date.now();saveSettings();
       document.getElementById('backup-banner').classList.remove('show');
       toast(`Exported ${lines.length} lines (${fmt})`,'ok');
@@ -3048,32 +3074,7 @@ document.getElementById('p-pslink-copy').addEventListener('click',()=>{
   copyText(g.privateServer,()=>toast('Server link copied','ok'),()=>toast('Copy failed','err'));
 });
 
-// PER-GROUP BAN CHECK button
-document.getElementById('p-ban-check-grp').addEventListener('click',()=>{
-  const g=vault.find(x=>x.id===panelId);if(!g)return;
-  // Pre-select this group in ban checker
-  btSelectedGroup=g.id;
-  btPasteMode=false;
-  const lbl=document.getElementById('bt-sel-label');
-  if(lbl)lbl.textContent=g.name+(g.serverName?' ('+g.serverName+')':'');
-  document.getElementById('bt-mode-group').classList.add('on');
-  document.getElementById('bt-mode-paste').classList.remove('on');
-  document.getElementById('bt-paste-wrap').classList.remove('open');
-  document.getElementById('bt-group-wrap').style.display='';
-  // Open ban terminal and scroll to it
-  const body=document.getElementById('bt-body');if(body)body.classList.add('open');
-  const chev=document.getElementById('bt-chev');if(chev)chev.textContent='▴';
-  closePanel();
-  setTimeout(()=>document.getElementById('ban-terminal').scrollIntoView({behavior:'smooth'}),200);
-});
 
-// BAN TERMINAL toggle
-document.getElementById('bt-toggle').addEventListener('click',()=>{
-  const body=document.getElementById('bt-body');
-  const chev=document.getElementById('bt-chev');
-  body.classList.toggle('open');
-  chev.textContent=body.classList.contains('open')?'▴':'▾';
-});
 
 // SWITCH DATA feature
 function loadDataConfigs(){
@@ -3085,7 +3086,7 @@ function getActiveConfigId(){return localStorage.getItem(DS_ACTIVE_K)||'default'
 function setActiveConfig(id){
   localStorage.setItem(DS_ACTIVE_K,id);
   // swap vault storage key
-  SK_ACTIVE='cookie_vault_'+id;
+  SK_ACTIVE='saturnity_vault_'+id;
   vault=loadVaultForConfig(id);
   saveVault();render();
   const cfg=loadDataConfigs().find(c=>c.id===id);
@@ -3093,7 +3094,7 @@ function setActiveConfig(id){
   renderDataSwitcher();
 }
 function loadVaultForConfig(id){
-  try{const r=localStorage.getItem('cookie_vault_'+id);return r?JSON.parse(r):[]}catch{return[];}
+  try{const r=localStorage.getItem('saturnity_vault_'+id);return r?JSON.parse(r):[]}catch{return[];}
 }
 function renderDataSwitcher(){
   const cfgs=loadDataConfigs();
@@ -3104,54 +3105,53 @@ function renderDataSwitcher(){
     const item=document.createElement('div');item.className='ds-item'+(cfg.id===active?' active':'');
     const isDefault=cfg.id==='default';
     item.innerHTML=`<div class="ds-item-dot"></div><div class="ds-item-name">${esc(cfg.name)}</div>`;
-    // Add rename/delete for non-default configs
-    if(!isDefault){
-      const actions=document.createElement('div');actions.className='ds-item-actions';
-      const renBtn=document.createElement('button');renBtn.className='ds-action-btn rename';renBtn.title='Rename';
-      renBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-      renBtn.addEventListener('click',e=>{
-        e.stopPropagation();
-        // Replace name with inline input
-        const nameEl=item.querySelector('.ds-item-name');
-        const inp=document.createElement('input');inp.className='ds-rename-input';
-        inp.value=cfg.name;inp.maxLength=30;
-        nameEl.replaceWith(inp);actions.style.display='none';
-        inp.focus();inp.select();
-        function commitRename(){
-          const newName=inp.value.trim();
-          if(newName&&newName!==cfg.name){
-            const cfgs2=loadDataConfigs();
-            const c=cfgs2.find(x=>x.id===cfg.id);
-            if(c)c.name=newName;
-            saveDataConfigs(cfgs2);
-            if(cfg.id===active)document.getElementById('data-switch-lbl').textContent=newName;
-            toast(`Renamed to "${newName}"`,'ok');
-          }
-          renderDataSwitcher();
+    // Rename for all, delete for non-default only
+    const actions=document.createElement('div');actions.className='ds-item-actions';
+    const renBtn=document.createElement('button');renBtn.className='ds-action-btn rename';renBtn.title='Rename';
+    renBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+    renBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const nameEl=item.querySelector('.ds-item-name');
+      const inp=document.createElement('input');inp.className='ds-rename-input';
+      inp.value=cfg.name;inp.maxLength=30;
+      nameEl.replaceWith(inp);actions.style.display='none';
+      inp.focus();inp.select();
+      function commitRename(){
+        const newName=inp.value.trim();
+        if(newName&&newName!==cfg.name){
+          const cfgs2=loadDataConfigs();
+          const cc=cfgs2.find(x=>x.id===cfg.id);
+          if(cc)cc.name=newName;
+          saveDataConfigs(cfgs2);
+          if(cfg.id===active)document.getElementById('data-switch-lbl').textContent=newName;
+          toast(`Renamed to "${newName}"`,'ok');
         }
-        inp.addEventListener('blur',commitRename);
-        inp.addEventListener('keydown',e2=>{
-          if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
-          if(e2.key==='Escape'){inp.value=cfg.name;inp.blur();}
-        });
+        renderDataSwitcher();
+      }
+      inp.addEventListener('blur',commitRename);
+      inp.addEventListener('keydown',e2=>{
+        if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
+        if(e2.key==='Escape'){inp.value=cfg.name;inp.blur();}
       });
+    });
+    actions.appendChild(renBtn);
+    if(!isDefault){
       const delBtn=document.createElement('button');delBtn.className='ds-action-btn del';delBtn.title='Delete';
       delBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
       delBtn.addEventListener('click',async e=>{
         e.stopPropagation();
-        const ok=await customConfirm(`Delete config "${cfg.name}"? This will permanently delete all groups in it.`,'Delete');
+        const ok=await customConfirm(`Delete config "${cfg.name}"? This permanently deletes all groups in it.`,'Delete');
         if(!ok)return;
         const cfgs2=loadDataConfigs().filter(x=>x.id!==cfg.id);
         saveDataConfigs(cfgs2);
-        localStorage.removeItem('cookie_vault_'+cfg.id);
-        // If deleting active config, switch to default
+        localStorage.removeItem('saturnity_vault_'+cfg.id);
         if(cfg.id===active)setActiveConfig('default');
         else renderDataSwitcher();
         toast(`Deleted "${cfg.name}"`,'ok');
       });
-      actions.appendChild(renBtn);actions.appendChild(delBtn);
-      item.appendChild(actions);
+      actions.appendChild(delBtn);
     }
+    item.appendChild(actions);
     item.querySelector('.ds-item-dot').addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
     item.querySelector('.ds-item-name')?.addEventListener('click',e=>{e.stopPropagation();setActiveConfig(cfg.id);drop.classList.remove('open');});
     drop.appendChild(item);
@@ -3194,7 +3194,7 @@ document.getElementById('ds-import-f').addEventListener('change',function(){
       const cfgs=loadDataConfigs();
       const id='cfg_'+Date.now().toString(36);
       cfgs.push({id,name});saveDataConfigs(cfgs);
-      localStorage.setItem('cookie_vault_'+id,JSON.stringify(d.vault));
+      localStorage.setItem('saturnity_vault_'+id,JSON.stringify(d.vault));
       closeMod('new-data-modal');
       setActiveConfig(id);
       toast(`Loaded "${name}" (${d.vault.length} groups)`,'ok');
@@ -3210,52 +3210,24 @@ document.getElementById('ds-import-f').addEventListener('change',function(){
   document.getElementById('data-switch-lbl').textContent=cfg.name;
 })();
 
-// BAN CHECKER GROUP SELECT populate
-function populateBanGroupSelect(){
-  const drop=document.getElementById('bt-sel-drop');if(!drop)return;
-  drop.innerHTML='';
-  const allOpt=document.createElement('div');
-  allOpt.className='bt-sel-opt'+(btSelectedGroup==='all'?' active':'');
-  allOpt.textContent='All Groups';
-  allOpt.addEventListener('click',()=>setBtGroup('all','All Groups'));
-  drop.appendChild(allOpt);
-  vault.forEach(g=>{
-    const opt=document.createElement('div');
-    opt.className='bt-sel-opt'+(btSelectedGroup===g.id?' active':'');
-    opt.textContent=g.name+(g.serverName?' ('+g.serverName+')':'');
-    opt.addEventListener('click',()=>setBtGroup(g.id,g.name+(g.serverName?' ('+g.serverName+')':'')));
-    drop.appendChild(opt);
-  });
-}
-function setBtGroup(id,label){
-  btSelectedGroup=id;
-  const lbl=document.getElementById('bt-sel-label');
-  const btn=document.getElementById('bt-sel-btn');
-  const drop=document.getElementById('bt-sel-drop');
-  if(lbl)lbl.textContent=label;
-  if(btn)btn.classList.remove('open');
-  if(drop)drop.classList.remove('open');
-}
 
 checkBackupReminder();
 render();
-populateBanGroupSelect();
 initPin();
 setSyncDot(ghEnabled()?'ok':'off');
-updateBtWorkerStatus();
 
 // ═══════════════════════════════════════
 // TITLE / RENAME
 // ═══════════════════════════════════════
 function setVaultTitle(){
-  const n=settings.vaultName||'Cookie Vault';
+  const n=settings.vaultName||'Saturnity Vault';
   const parts=n.split(' ');
   const el=document.getElementById('vault-title');
   if(parts.length>=2)el.innerHTML=esc(parts[0])+' <span>'+esc(parts.slice(1).join(' '))+'</span>';
   else el.innerHTML='<span>'+esc(n)+'</span>';
 }
 function openRenameVault(){
-  document.getElementById('rename-in').value=settings.vaultName||'Cookie Vault';
+  document.getElementById('rename-in').value=settings.vaultName||'Saturnity Vault';
   openMod('rename-modal');
   setTimeout(()=>{const inp=document.getElementById('rename-in');inp.focus();inp.select();},120);
 }
@@ -3555,7 +3527,21 @@ function render(){
       </div>
       <div class="sec-meta">${groups.length}g · ${totalC}c</div>
       ${warn}
-      <button class="sec-expbtn">export all</button>`;
+      <button class="sec-copybtn" title="Copy all as u:p:c">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+      <button class="sec-expbtn">export</button>`;
+    hd.querySelector('.sec-copybtn').addEventListener('click',e=>{
+      e.stopPropagation();
+      const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
+      const lines=live.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
+      const btn=hd.querySelector('.sec-copybtn');
+      copyText(lines.join('\n'),()=>{
+        btn.style.color='var(--ok)';
+        setTimeout(()=>btn.style.color='',1400);
+        toast(`Copied ${lines.length} cookies`,'ok');
+      },()=>toast('Copy failed','err'));
+    });
     hd.querySelector('.sec-expbtn').addEventListener('click',e=>{
       e.stopPropagation();
       const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
@@ -3605,7 +3591,6 @@ function render(){
   animStats(vault.length,vault.reduce((s,g)=>s+g.cookies.length,0),srvMap.size);
   updateHealthScore();
   setTimeout(applyFilter,20);
-  if(typeof populateBanGroupSelect==='function')populateBanGroupSelect();
 }
 
 function mkGrid(){const g=document.createElement('div');g.className='card-grid';g.style.setProperty('--cols',cols);return g;}
@@ -3629,7 +3614,7 @@ function mkCard(group){
   card.style.setProperty('--cc',col.c);card.style.setProperty('--cr',col.r);
   const bar=document.createElement('div');bar.className='gcard-bar';bar.style.background=col.c;card.appendChild(bar);
   const body=document.createElement('div');body.className='gcard-body';
-  // Row 1: dot + name + count + server + alts
+  // Row 1: dot + name + count + server + alts + rename btn (list view only)
   const row1=document.createElement('div');row1.className='gcard-row1';
   row1.innerHTML=`
     <div class="gcard-dot" style="background:${col.c};color:${col.c};width:8px;height:8px"></div>
@@ -3638,6 +3623,31 @@ function mkCard(group){
     ${getCardStatusHTML(group)}
     ${group.serverName?`<div class="gcard-srv">${esc(group.serverName)}</div>`:''}
     ${(group.alternatives&&group.alternatives.length)?`<div class="gcard-alt-badge">⟁ ${group.alternatives.length} alt${group.alternatives.length!==1?'s':''}</div>`:''}`;
+  // Inline rename button (list view only)
+  const renameInlineBtn=document.createElement('button');
+  renameInlineBtn.className='gcard-rename-btn';renameInlineBtn.title='Rename';
+  renameInlineBtn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+  renameInlineBtn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const nameEl=row1.querySelector('.gcard-name');
+    const inp=document.createElement('input');
+    inp.style.cssText='background:rgba(0,0,0,.6);border:1px solid var(--a2);border-radius:4px;padding:2px 6px;font-family:var(--sans);font-weight:700;font-size:12px;color:var(--bright);outline:none;max-width:160px;';
+    inp.value=group.name;inp.maxLength=40;
+    nameEl.replaceWith(inp);inp.focus();inp.select();
+    function commitRename(){
+      const newName=inp.value.trim();
+      if(newName&&newName!==group.name){
+        group.name=newName;logChange(group,`Renamed to <span>${esc(newName)}</span>`);
+        saveVault();render();toast(`Renamed to "${newName}"`,'ok');
+      }else{inp.replaceWith(nameEl);}
+    }
+    inp.addEventListener('blur',commitRename);
+    inp.addEventListener('keydown',e2=>{
+      if(e2.key==='Enter'){e2.preventDefault();inp.blur();}
+      if(e2.key==='Escape'){inp.replaceWith(nameEl);}
+    });
+  });
+  row1.appendChild(renameInlineBtn);
   body.appendChild(row1);
   // Row 2: username pills (list view only)
   const usersRow=document.createElement('div');usersRow.className='gcard-users-row';
@@ -3983,6 +3993,7 @@ function mkCkItem(c,i,gid,opts){
   const fmtDefs=[
     {label:'u:p:c',fmt:'user:pass:cookie'},
     {label:'u:c',fmt:'user:cookie'},
+    {label:'u:p',fmt:'user:pass'},
     {label:'u',fmt:'username'},
     {label:'p',fmt:'user:pass'},
     {label:'c',fmt:'cookie'},
@@ -4321,7 +4332,7 @@ function toast(msg,type=''){
 function initPin(){
   const scr=document.getElementById('pin-screen');
   const vn=document.getElementById('pin-vault-name');
-  const n=settings.vaultName||'Cookie Vault';
+  const n=settings.vaultName||'Saturnity Vault';
   const parts=n.split(' ');
   vn.innerHTML=parts.length>=2?esc(parts[0])+' <span>'+esc(parts.slice(1).join(' '))+'</span>':'<span>'+esc(n)+'</span>';
   document.getElementById('pin-pad').addEventListener('click',e=>{
@@ -4440,7 +4451,7 @@ async function doGhSync(){
   try{
     const pat=localStorage.getItem(GH_PAT_K);
     const gist=localStorage.getItem(GH_GIST_K);
-    const body=JSON.stringify({files:{'cookie-vault.json':{content:JSON.stringify({version:1,exported:Date.now(),vault},null,2)}}});
+    const body=JSON.stringify({files:{'saturnity-vault.json':{content:JSON.stringify({version:1,exported:Date.now(),vault},null,2)}}});
     const r=await fetch('https://api.github.com/gists/'+gist,{method:'PATCH',headers:{'Authorization':'token '+pat,'Content-Type':'application/json'},body});
     if(!r.ok)throw new Error('HTTP '+r.status);
     setSyncDot('ok');
@@ -4473,9 +4484,6 @@ function openVaultSettings(){
   document.getElementById('vs-gh-pat').value=localStorage.getItem(GH_PAT_K)||'';
   document.getElementById('vs-gh-gist').value=localStorage.getItem(GH_GIST_K)||'';
   document.getElementById('vs-gh-enabled').checked=localStorage.getItem(GH_EN_K)==='1';
-  document.getElementById('vs-w1').value=(getWorkerUrls()[0])||'';
-  document.getElementById('vs-w2').value=(getWorkerUrls()[1])||'';
-  document.getElementById('vs-w3').value=(getWorkerUrls()[2])||'';
   document.getElementById('vs-decoy-pin').value=localStorage.getItem('cv_decoy_pin')||'';
   openMod('vault-settings-modal');
 }
@@ -4483,20 +4491,14 @@ function saveVaultSettings(){
   const pat=document.getElementById('vs-gh-pat').value.trim();
   const gist=document.getElementById('vs-gh-gist').value.trim();
   const en=document.getElementById('vs-gh-enabled').checked;
-  const w1=document.getElementById('vs-w1').value.trim();
-  const w2=document.getElementById('vs-w2').value.trim();
-  const w3=document.getElementById('vs-w3').value.trim();
   const decoy=document.getElementById('vs-decoy-pin').value.trim();
   if(pat)localStorage.setItem(GH_PAT_K,pat);else localStorage.removeItem(GH_PAT_K);
   if(gist)localStorage.setItem(GH_GIST_K,gist);else localStorage.removeItem(GH_GIST_K);
   localStorage.setItem(GH_EN_K,en?'1':'0');
-  const urls=[w1,w2,w3].filter(Boolean);
-  localStorage.setItem('cv_worker_urls',JSON.stringify(urls));
   if(decoy&&!/^\d{4,8}$/.test(decoy)){toast('Decoy PIN must be 4–8 digits','err');return;}
   if(decoy===REAL_PIN){toast('Decoy PIN cannot match real PIN','err');return;}
   if(decoy)localStorage.setItem('cv_decoy_pin',decoy);else localStorage.removeItem('cv_decoy_pin');
   setSyncDot(ghEnabled()?'ok':'off');
-  updateBtWorkerStatus();
   closeMod('vault-settings-modal');
   toast('Settings saved','ok');
 }
@@ -4579,232 +4581,6 @@ function updateHealthScore(){
 // health-badge click → toast breakdown (wired below in Feature 11)
 
 // ═══════════════════════════════════════
-// BAN CHECKER TERMINAL
-// ═══════════════════════════════════════
-
-function getWorkerUrls(){
-  try{return JSON.parse(localStorage.getItem('cv_worker_urls')||'[]').filter(Boolean);}
-  catch{return[];}
-}
-
-function updateBtWorkerStatus(){
-  const urls=getWorkerUrls();
-  const el=document.getElementById('bt-worker-status');
-  if(!el)return;
-  if(!urls.length)el.textContent='no workers configured';
-  else el.textContent=urls.length+' worker'+(urls.length>1?'s':'')+' ready';
-  el.style.color=urls.length?'var(--ok)':'var(--dim)';
-}
-
-function openBanTerminal(){
-  // Always reset button state when opening — prevents stuck bt-run from prior failed runs
-  banCheckAbort=false;
-  banCheckRunning=false;
-  if(currentRequestController){currentRequestController.abort();currentRequestController=null;}
-  document.getElementById('bt-run').disabled=false;
-  document.getElementById('bt-stop').disabled=true;
-  const body=document.getElementById('bt-body');
-  const chev=document.getElementById('bt-chev');
-  if(body)body.classList.add('open');
-  if(chev)chev.textContent='▴';
-  updateBtWorkerStatus();
-}
-
-function closeBanTerminal(){
-  if(banCheckRunning){banCheckAbort=true;}
-  const body=document.getElementById('bt-body');
-  const chev=document.getElementById('bt-chev');
-  if(body)body.classList.remove('open');
-  if(chev)chev.textContent='▾';
-}
-
-function btLog(msg,type='info'){
-  const log=document.getElementById('bt-log');
-  const line=document.createElement('div');line.className='bt-line '+type;
-  const ts=new Date().toTimeString().slice(0,8);
-  line.innerHTML=`<span class="bt-ts">${ts}</span><span class="bt-msg">${msg}</span>`;
-  log.appendChild(line);
-  log.scrollTop=log.scrollHeight;
-}
-
-function btSetProgress(cur,total){
-  document.getElementById('bt-progress').textContent=total?`${cur}/${total}`:'';
-}
-
-async function callWorker(url,cookie,username){
-  currentRequestController=new AbortController();
-  const timeoutId=setTimeout(()=>currentRequestController.abort(),10000);
-  try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({cookie,username:username||''}),signal:currentRequestController.signal});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return r.json();
-  }finally{
-    clearTimeout(timeoutId);
-    currentRequestController=null;
-  }
-}
-
-async function runBanCheck(){
-  const urls=getWorkerUrls();
-  if(!urls.length){toast('No CF Worker URLs configured. Open Vault Settings.','err');return;}
-  const skipBanned=document.getElementById('bt-skip-banned').checked;
-  const log=document.getElementById('bt-log');
-  log.innerHTML='';
-  banFailedCookies=[];banCheckAbort=false;banCheckRunning=true;banWorkerIdx=0;
-  document.getElementById('bt-run').disabled=true;
-  document.getElementById('bt-stop').disabled=false;
-  document.getElementById('bt-export-failed').style.display='none';
-  document.getElementById('bt-summary').textContent='running…';
-
-  // Determine what to check: paste mode vs group selection
-  let toCheck=[];
-  if(btPasteMode){
-    const val=document.getElementById('bt-paste-ta').value;
-    const parsed=parseInput(val);
-    if(!parsed.length){
-      toast('No valid cookies in paste area','err');
-      banCheckRunning=false;
-      document.getElementById('bt-run').disabled=false;
-      document.getElementById('bt-stop').disabled=true;
-      return;
-    }
-    toCheck=[{name:'Pasted cookies',serverName:null,cookies:parsed,id:'__paste__'}];
-  }else{
-    // Group mode: use btSelectedGroup ('all' = all vault groups, else specific group id)
-    const baseGroups=btSelectedGroup==='all'?vault:[vault.find(g=>g.id===btSelectedGroup)].filter(Boolean);
-    toCheck=baseGroups.filter(g=>!(skipBanned&&g.banned));
-  }
-
-  if(!toCheck.length){
-    toast('No groups to check','warn');
-    banCheckRunning=false;
-    document.getElementById('bt-run').disabled=false;
-    document.getElementById('bt-stop').disabled=true;
-    return;
-  }
-
-  let total=toCheck.reduce((s,g)=>s+g.cookies.length,0);
-  let done=0,active=0,banned=0,expired=0,facelock=0,errors=0;
-  btLog(`Starting check — ${toCheck.length} group${toCheck.length!==1?'s':''}, ${total} cookies, ${urls.length} worker(s)`,'info');
-  btSetProgress(0,total);
-
-  try{
-    for(const g of toCheck){
-      if(banCheckAbort)break;
-      btLog(`── ${g.name}${g.serverName?' ('+g.serverName+')':''}`, 'muted');
-      for(const c of g.cookies){
-        if(banCheckAbort)break;
-        const url=urls[banWorkerIdx%urls.length];banWorkerIdx++;
-        const label=(c.username||c.cookie.substring(0,20)+'…');
-        try{
-          const res=await callWorker(url,c.cookie,c.username);
-          const status=(res.status||'').toLowerCase();
-          if(status==='active'){active++;btLog(`✓ ${label} — active`,'ok');}
-          else if(status==='banned'){banned++;c.banStatus='banned';banFailedCookies.push(c);
-            btLog(`✗ ${label} — BANNED${res.duration?' ('+res.duration+')':''}`,'ban');}
-          else if(status==='expired'){expired++;banFailedCookies.push(c);
-            btLog(`⚠ ${label} — expired`,'warn');}
-          else if(status==='facelock'){facelock++;banFailedCookies.push(c);
-            btLog(`⚡ ${label} — FACELOCK`,'facelock');}
-          else{errors++;btLog(`? ${label} — unknown: ${JSON.stringify(res)}`,'err');}
-        }catch(e){
-          if(banCheckAbort)break; // stop pressed — don't log as error
-          errors++;
-          banWorkerIdx++; // rotate past failed worker
-          btLog(`! ${label} — worker error (${e.message})`,'err');
-        }
-        done++;btSetProgress(done,total);
-        await new Promise(r=>setTimeout(r,120));
-      }
-    }
-  }finally{
-    // Always runs — buttons can never stay stuck
-    banCheckRunning=false;
-    document.getElementById('bt-run').disabled=false;
-    document.getElementById('bt-stop').disabled=true;
-    const summary=`done — active:${active} banned:${banned} expired:${expired} facelock:${facelock} errors:${errors}`;
-    document.getElementById('bt-summary').textContent=summary;
-    btLog('─────────────────────────────────────────────','muted');
-    btLog(summary,'info');
-    if(banFailedCookies.length){
-      document.getElementById('bt-export-failed').style.display='';
-      btLog(`${banFailedCookies.length} cookies flagged — click "export failed" to download`,'warn');
-    }
-    if(banCheckAbort)btLog('check aborted by user','muted');
-    // Feature 12: stamp lastChecked on checked groups and save
-    if(!btPasteMode){
-      const baseGroups=btSelectedGroup==='all'?vault:[vault.find(g=>g.id===btSelectedGroup)].filter(Boolean);
-      baseGroups.forEach(g=>{g.lastChecked=Date.now();});
-      saveVault();render();
-    }
-  }
-}
-
-// BAN CHECKER: mode toggle
-document.getElementById('bt-mode-group').addEventListener('click',()=>{
-  btPasteMode=false;
-  document.getElementById('bt-mode-group').classList.add('on');
-  document.getElementById('bt-mode-paste').classList.remove('on');
-  document.getElementById('bt-paste-wrap').classList.remove('open');
-  document.getElementById('bt-group-wrap').style.display='';
-});
-document.getElementById('bt-mode-paste').addEventListener('click',()=>{
-  btPasteMode=true;
-  document.getElementById('bt-mode-paste').classList.add('on');
-  document.getElementById('bt-mode-group').classList.remove('on');
-  document.getElementById('bt-paste-wrap').classList.add('open');
-  document.getElementById('bt-group-wrap').style.display='none';
-  setTimeout(()=>document.getElementById('bt-paste-ta').focus(),80);
-});
-// Paste counter
-document.getElementById('bt-paste-ta').addEventListener('input',()=>{
-  const val=document.getElementById('bt-paste-ta').value;
-  const info=document.getElementById('bt-paste-info');
-  if(!val.trim()){info.innerHTML='Awaiting input...';return;}
-  const parsed=parseInput(val);
-  if(!parsed.length){info.innerHTML='<span style="color:var(--danger)">No valid cookies</span>';return;}
-  info.innerHTML='<span>'+parsed.length+'</span> cookie'+(parsed.length!==1?'s':'')+' detected';
-});
-// Custom group select toggle
-document.getElementById('bt-sel-btn').addEventListener('click',e=>{
-  e.stopPropagation();
-  const btn=document.getElementById('bt-sel-btn');
-  const drop=document.getElementById('bt-sel-drop');
-  const isOpen=drop.classList.contains('open');
-  if(!isOpen)populateBanGroupSelect(); // refresh options
-  btn.classList.toggle('open',!isOpen);
-  drop.classList.toggle('open',!isOpen);
-});
-// Close custom select on outside click
-document.addEventListener('click',e=>{
-  const btn=document.getElementById('bt-sel-btn');
-  const drop=document.getElementById('bt-sel-drop');
-  if(btn&&drop&&!btn.contains(e.target)&&!drop.contains(e.target)){
-    btn.classList.remove('open');drop.classList.remove('open');
-  }
-});
-// ban-back and bt-close removed (terminal is now inline, not floating)
-document.getElementById('bt-run').addEventListener('click',runBanCheck);
-document.getElementById('bt-stop').addEventListener('click',()=>{
-  banCheckAbort=true;
-  if(currentRequestController)currentRequestController.abort();
-  document.getElementById('bt-stop').disabled=true;
-  btLog('stopping — aborting current request…','warn');
-});
-document.getElementById('bt-clear-log').addEventListener('click',()=>{
-  document.getElementById('bt-log').innerHTML='';
-  document.getElementById('bt-summary').textContent='ready';
-  document.getElementById('bt-export-failed').style.display='none';
-  document.getElementById('bt-progress').textContent='';
-  banFailedCookies=[];
-});
-document.getElementById('bt-export-failed').addEventListener('click',()=>{
-  const lines=banFailedCookies.map(c=>fmtLine(c,'user:pass:cookie')).filter(Boolean);
-  dl(lines.join('\n'),`ban-failed-${Date.now()}.txt`);
-  toast(`Exported ${lines.length} failed cookies`,'ok');
-});
-
 
 // ═══════════════════════════════════════
 // SORT / DISTRIBUTE PASTE
@@ -4829,25 +4605,68 @@ function calcDistribution(){
   const srvPfx=document.getElementById('sort-server-pfx').value.trim();
   const grpPfx=document.getElementById('sort-group-pfx').value.trim();
   const cookiesPerGrp=Math.max(1,parseInt(document.getElementById('sort-cookies-per-grp').value)||5);
-  const grpsPerSrv=Math.max(1,Math.min(18,parseInt(document.getElementById('sort-groups-per-srv').value)||18));
+  const grpsPerSrv=Math.max(1,parseInt(document.getElementById('sort-groups-per-srv').value)||999);
   const cookies=sortPending;
 
-  // Chunk cookies into groups (top-to-bottom order preserved)
+  // Find existing max group number for this prefix (to continue numbering)
+  let startGrpNum=1;
+  if(grpPfx){
+    const pfxLow=grpPfx.toLowerCase();
+    vault.forEach(g=>{
+      const nLow=g.name.toLowerCase();
+      if(nLow.startsWith(pfxLow)){
+        const rest=g.name.slice(grpPfx.length).trim();
+        const n=parseInt(rest);
+        if(!isNaN(n)&&n>=startGrpNum)startGrpNum=n+1;
+      }
+    });
+  }
+
+  // Find existing max server number for this prefix
+  let startSrvNum=1;
+  if(srvPfx){
+    const pfxLow=srvPfx.toLowerCase();
+    vault.forEach(g=>{
+      if(!g.serverName)return;
+      const sLow=g.serverName.toLowerCase();
+      if(sLow.startsWith(pfxLow)){
+        const rest=g.serverName.slice(srvPfx.length).trim();
+        const n=parseInt(rest);
+        if(!isNaN(n)&&n>=startSrvNum)startSrvNum=n+1;
+      }
+    });
+    // If exact match exists (single server, no number), keep using it
+    const exactMatch=vault.find(g=>(g.serverName||'').toLowerCase()===srvPfx.toLowerCase());
+    if(exactMatch)startSrvNum=1; // will reuse server name without number
+  }
+
+  // Chunk cookies into groups
   const groups=[];
   for(let i=0;i<cookies.length;i+=cookiesPerGrp){
     groups.push(cookies.slice(i,i+cookiesPerGrp));
   }
 
-  // Assign group + server names
-  const result=[];
-  let srvIdx=1,grpInSrv=0;
   const totalGroups=groups.length;
-  const padWidth=totalGroups>=10?String(totalGroups).length:0; // pad if 10+ groups
+  const totalNum=startGrpNum+totalGroups-1;
+  const padWidth=totalNum>=10?String(totalNum).length:0;
   function padNum(n){return padWidth>0?String(n).padStart(padWidth,'0'):String(n);}
+
+  const result=[];
+  let srvIdx=startSrvNum,grpInSrv=0;
+  // Count existing groups in starting server to determine initial grpInSrv offset
+  if(srvPfx){
+    const firstSrvName=srvPfx+(startSrvNum>1?' '+startSrvNum:'');
+    const existing=vault.filter(g=>(g.serverName||'').toLowerCase()===firstSrvName.toLowerCase()).length;
+    grpInSrv=existing%grpsPerSrv;
+    if(existing>=grpsPerSrv){srvIdx++;grpInSrv=0;}
+  }
+
   groups.forEach((ckSlice,gi)=>{
     if(grpInSrv>=grpsPerSrv){srvIdx++;grpInSrv=0;}
-    const srvName=srvPfx?(srvPfx+' '+srvIdx):null;
-    const grpName=grpPfx?(grpPfx+' '+padNum(gi+1)):('Group '+padNum(gi+1));
+    // Single server: use prefix alone (no number suffix) unless multiple servers needed
+    const needsNumber=srvIdx>1;
+    const srvName=srvPfx?(needsNumber?srvPfx+' '+srvIdx:srvPfx):null;
+    const grpName=grpPfx?(grpPfx+' '+padNum(startGrpNum+gi)):('Group '+padNum(startGrpNum+gi));
     result.push({srvName,grpName,cookies:ckSlice});
     grpInSrv++;
   });
@@ -4882,23 +4701,6 @@ document.getElementById('sort-preview-btn').addEventListener('click',()=>{
 document.getElementById('sort-confirm').addEventListener('click',async()=>{
   const dist=calcDistribution();
   if(!dist.length){toast('Nothing to create','warn');return;}
-
-  // Check server limits
-  const srvCounts=new Map();
-  dist.forEach(d=>{
-    if(d.srvName){
-      const k=d.srvName.trim().toLowerCase();
-      const existing=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k).length;
-      srvCounts.set(k,(srvCounts.get(k)||0)+1+existing);
-    }
-  });
-  for(const [k,count] of srvCounts){
-    if(count>18){
-      const srvLabel=dist.find(d=>d.srvName&&d.srvName.trim().toLowerCase()===k)?.srvName||k;
-      toast(`Server "${srvLabel}" would exceed 18 group limit`,'err');
-      return;
-    }
-  }
 
   // Create all groups — cookies preserved top-to-bottom within each group
   dist.forEach(d=>{
@@ -4965,7 +4767,11 @@ document.getElementById('bulk-bar-export').addEventListener('click',e=>{
 
 document.getElementById('bulk-bar-copy').addEventListener('click',()=>{
   if(!bulkSelected.size)return;
-  const lines=getBulkGroups().flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
+  // Sort by visual DOM order top-to-bottom
+  const cards=[...document.querySelectorAll('.gcard')];
+  const orderedIds=cards.map(c=>c.dataset.id).filter(id=>bulkSelected.has(id));
+  const orderedGroups=orderedIds.map(id=>vault.find(g=>g.id===id)).filter(Boolean);
+  const lines=orderedGroups.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
   copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
   clearBulkSelect();
 });
@@ -5064,17 +4870,7 @@ function sortedInsert(group){
 const _origApplyFilter=applyFilter;
 applyFilter=function(){
   _origApplyFilter();
-  const q=document.getElementById('search-in').value.trim().toLowerCase();
-  if(!q)return; // no lifting needed when empty — _origApplyFilter already handled it
-  // Lift non-dimmed (matching) cards to top of each .card-grid
-  document.querySelectorAll('.card-grid').forEach(grid=>{
-    const expTile=grid.querySelector('.exp-tile');
-    const all=[...grid.querySelectorAll('.gcard')];
-    const matching=all.filter(c=>!c.classList.contains('dim'));
-    const rest=all.filter(c=>c.classList.contains('dim'));
-    matching.forEach(c=>grid.insertBefore(c,expTile||null));
-    rest.forEach(c=>grid.insertBefore(c,expTile||null));
-  });
+  // No DOM reordering — just dim/undim. Reordering caused visual glitches.
 };
 
 // ═══════════════════════════════════════
@@ -5163,7 +4959,7 @@ mkCard=function(group){
 // ═══════════════════════════════════════
 // COOKIE ACTIVITY LOG
 // ═══════════════════════════════════════
-const CKLOG_K='cv_cookie_log';
+const CKLOG_K='sv_cookie_log';
 const CKLOG_MAX=1000;
 const CKLOG_SHOW=100;
 
@@ -5232,12 +5028,12 @@ document.getElementById('cklog-dl-txt').addEventListener('click',()=>{
     const d=new Date(e.t).toISOString();
     return`[${d}] [${e.type.toUpperCase()}] ${e.user||''}  ${e.msg}${e.ck?' | '+e.ck:''}`;
   });
-  dl(lines.join('\n'),`cookie-log-${Date.now()}.txt`);
+  dl(lines.join('\n'),`saturnity-log-${Date.now()}.txt`);
   toast(`Downloaded ${log.length} log entries`,'ok');
 });
 document.getElementById('cklog-dl-json').addEventListener('click',()=>{
   const log=loadCkLog();
-  dl(JSON.stringify(log,null,2),`cookie-log-${Date.now()}.json`);
+  dl(JSON.stringify(log,null,2),`saturnity-log-${Date.now()}.json`);
   toast(`Downloaded ${log.length} log entries`,'ok');
 });
 document.getElementById('cklog-clear').addEventListener('click',async()=>{
@@ -5293,36 +5089,7 @@ delGroup=function(id){
   _ckOrigDelGroup.apply(this,arguments);
 };
 
-// 4. Ban status updates from ban checker
-const _ckOrigRunBanCheck=runBanCheck;
-if(typeof runBanCheck==='function'){
-  runBanCheck=async function(){
-    await _ckOrigRunBanCheck.apply(this,arguments);
-  };
-}
-// Hook btLog to capture ban check results
-const _ckOrigBtLog=btLog;
-btLog=function(msg,type){
-  _ckOrigBtLog.apply(this,arguments);
-  if(type==='ok'||type==='ban'||type==='warn'||type==='facelock'){
-    const evtType=type==='ok'?'active':type==='ban'?'banned':type==='warn'?'expired':'facelock';
-    // Extract label from message e.g. "✓ username — active"
-    const m=msg.match(/[✓✗⚠⚡]\s+(.+?)\s+[—–]/);
-    const label=m?m[1]:msg.substring(0,40);
-    ckLogEvent(evtType,`Ban check: ${msg.replace(/[✓✗⚠⚡]\s*/,'').trim()}`,{username:label,cookie:null});
-  }
-};
-
-// 5. Copy events — hook copyText calls from card QC and panel
-const _ckOrigCopyText=copyText;
-copyText=function(text,onSuccess,onFail){
-  _ckOrigCopyText(text,()=>{
-    // Count lines = cookies copied
-    const lines=text.split('\n').filter(Boolean);
-    ckLogEvent('copied',`Copied ${lines.length} cookie${lines.length!==1?'s':''}`,null);
-    if(onSuccess)onSuccess();
-  },onFail);
-};
+// Copy events — no longer logged (spam)
 
 // ═══════════════════════════════════════
 // FIX 14: REFRESH BUTTON
@@ -5672,13 +5439,13 @@ function applySyncCookies(incomingCookies){
     vault.forEach(g=>{
       g.cookies.forEach((c,ci)=>{
         if((c.username||'').toLowerCase()===uLow){
-          // Update cookie and password in-place
           const changed=c.cookie!==ic.cookie||(ic.password&&c.password!==ic.password);
           if(changed){
             c.cookie=ic.cookie;
             if(ic.password)c.password=ic.password;
-            c.banStatus=undefined; // reset ban status after update
+            c.banStatus=undefined;
             logChange(g,`Cookie updated via sync: ${esc(ic.username)}`);
+            ckLogEvent('edited',`Synced — cookie updated in "${esc(g.name)}"`,ic);
             updated++;
           }
           found=true;
@@ -5787,6 +5554,349 @@ submitPin=function(){
   _origSubmitPin.apply(this,arguments);
   setTimeout(checkSwapReminders,300);
 };
+
+// ═══════════════════════════════════════
+// COOKIE EXTRACTOR
+// ═══════════════════════════════════════
+
+// Toggle panel open/close
+document.getElementById('cx-toggle').addEventListener('click',()=>{
+  const body=document.getElementById('cx-body');
+  const chev=document.getElementById('cx-chev');
+  const open=body.style.display==='flex';
+  body.style.display=open?'none':'flex';
+  chev.style.transform=open?'':'rotate(180deg)';
+});
+
+// Parse input: extract username from "username:anything:anything" or plain "username"
+function parseCxInput(raw){
+  return raw.split('\n')
+    .map(l=>l.trim())
+    .filter(Boolean)
+    .map(l=>l.split(':')[0].trim())
+    .filter(Boolean);
+}
+
+// Get cookies from currently active server filter
+function getCxScopeGroups(){
+  if(activeSrv==='all')return vault;
+  return vault.filter(g=>(g.serverName||'').trim().toLowerCase()===activeSrv);
+}
+
+// Live count while typing
+document.getElementById('cx-ta').addEventListener('input',()=>{
+  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  const info=document.getElementById('cx-info');
+  if(!usernames.length){info.textContent='';return;}
+  const scope=getCxScopeGroups();
+  const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
+  const matched=usernames.filter(u=>allCookies.some(c=>(c.username||'').toLowerCase()===u.toLowerCase()));
+  const srv=activeSrv==='all'?'all groups':`server "${activeSrv}"`;
+  info.textContent=`${matched.length}/${usernames.length} found in ${srv}`;
+  info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
+  document.getElementById('cx-match-count').textContent=matched.length?`${matched.length}/${usernames.length}`:'';
+});
+
+// Extract button
+document.getElementById('cx-search-btn').addEventListener('click',()=>{
+  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  if(!usernames.length){toast('No usernames to search','warn');return;}
+  const scope=getCxScopeGroups();
+  const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
+  const results=[];
+  usernames.forEach(u=>{
+    const uLow=u.toLowerCase();
+    const match=allCookies.find(c=>(c.username||'').toLowerCase()===uLow);
+    results.push({username:u,cookie:match||null,group:match?match._group:null});
+  });
+  renderCxResults(results);
+  const matched=results.filter(r=>r.cookie);
+  document.getElementById('cx-copy-all-btn').style.display=matched.length?'':'none';
+  document.getElementById('cx-copy-all-btn').dataset.matched=JSON.stringify(
+    matched.map(r=>fmtLine(r.cookie,'user:pass:cookie'))
+  );
+  const info=document.getElementById('cx-info');
+  info.textContent=`${matched.length}/${results.length} matched`;
+  info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
+  document.getElementById('cx-match-count').textContent=`${matched.length}/${results.length}`;
+});
+
+function renderCxResults(results){
+  const container=document.getElementById('cx-results');
+  container.innerHTML='';
+  if(!results.length){
+    container.innerHTML='<div class="cx-no-match">No results</div>';return;
+  }
+  const matched=results.filter(r=>r.cookie).length;
+  if(!matched){
+    container.innerHTML='<div class="cx-no-match">No matches found in current server</div>';
+  }
+  results.forEach(r=>{
+    const row=document.createElement('div');
+    row.className='cx-result-row '+(r.cookie?'matched':'unmatched');
+    const userEl=document.createElement('div');userEl.className='cx-result-user';
+    userEl.textContent=r.username;
+    row.appendChild(userEl);
+    if(r.cookie){
+      const meta=document.createElement('div');meta.className='cx-result-meta';
+      meta.textContent=r.cookie.cookie?r.cookie.cookie.substring(0,30)+'…':'no cookie';
+      row.appendChild(meta);
+      if(r.group){
+        const grpTag=document.createElement('div');grpTag.className='cx-result-group';
+        grpTag.textContent=r.group.name;
+        row.appendChild(grpTag);
+      }
+      const copyBtn=document.createElement('button');copyBtn.className='cx-result-copy';
+      copyBtn.textContent='copy u:p:c';
+      copyBtn.addEventListener('click',e=>{
+        e.stopPropagation();
+        const text=fmtLine(r.cookie,'user:pass:cookie');
+        copyText(text,()=>{copyBtn.textContent='✓ copied';setTimeout(()=>copyBtn.textContent='copy u:p:c',1400);},
+          ()=>toast('Copy failed','err'));
+      });
+      row.appendChild(copyBtn);
+    }else{
+      const notFound=document.createElement('div');notFound.className='cx-result-meta';
+      notFound.textContent='not in vault';
+      row.appendChild(notFound);
+    }
+    container.appendChild(row);
+  });
+}
+
+// Copy all matched
+document.getElementById('cx-copy-all-btn').addEventListener('click',()=>{
+  const scope=getCxScopeGroups();
+  const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
+  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  const lines=[];
+  usernames.forEach(u=>{
+    const match=allCookies.find(c=>(c.username||'').toLowerCase()===u.toLowerCase());
+    if(match){const t=fmtLine(match,'user:pass:cookie');if(t)lines.push(t);}
+  });
+  if(!lines.length){toast('No matched cookies to copy','warn');return;}
+  copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
+});
+
+// Clear
+document.getElementById('cx-clear-btn').addEventListener('click',()=>{
+  document.getElementById('cx-ta').value='';
+  document.getElementById('cx-results').innerHTML='';
+  document.getElementById('cx-info').textContent='';
+  document.getElementById('cx-match-count').textContent='';
+  document.getElementById('cx-copy-all-btn').style.display='none';
+});
+
+// ═══════════════════════════════════════
+// BUG 8B: GLOBAL ALTS VIEW
+// ═══════════════════════════════════════
+document.getElementById('hdr-alts-btn').addEventListener('click',openAltsModal);
+document.getElementById('alts-modal-close').addEventListener('click',()=>closeMod('alts-modal'));
+
+function openAltsModal(){
+  const list=document.getElementById('alts-modal-list');
+  list.innerHTML='';
+  let totalSets=0;
+  vault.forEach(g=>{
+    if(!g.alternatives||!g.alternatives.length)return;
+    g.alternatives.forEach((alt,ai)=>{
+      totalSets++;
+      const row=document.createElement('div');
+      row.style.cssText='background:rgba(123,47,255,.04);border:1px solid rgba(123,47,255,.18);border-radius:9px;padding:10px 12px;';
+      const hd=document.createElement('div');
+      hd.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:6px;';
+      hd.innerHTML=`
+        <span style="font-family:var(--sans);font-weight:700;font-size:12px;color:var(--a3);flex:1;">${esc(alt.label||'Alt '+(ai+1))}</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--dim);">${alt.cookies.length} cookie${alt.cookies.length!==1?'s':''}</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--dim);background:rgba(0,0,0,.3);border:1px solid var(--bdr);border-radius:4px;padding:1px 6px;">from: ${esc(g.name)}</span>`;
+      // Swap button — swap first cookie of this alt into the group as main
+      if(!alt.cookies.length){row.appendChild(hd);list.appendChild(row);return;}
+      const swapBtn=document.createElement('button');
+      swapBtn.style.cssText='background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.25);border-radius:6px;padding:4px 10px;font-family:var(--mono);font-size:9px;color:var(--a2);cursor:pointer;';
+      swapBtn.textContent='Swap to main';
+      swapBtn.addEventListener('click',async()=>{
+        const cookieCount=g.cookies.length;
+        if(!cookieCount){toast('Group has no main cookies to swap','warn');return;}
+        // Pick which main cookie to swap out
+        const idx=0; // swap first main cookie by default
+        const oldMain=g.cookies[idx];
+        const newMain={...alt.cookies[0]};
+        // Archive old main back to this alt
+        alt.cookies.splice(0,1,oldMain);
+        g.cookies[idx]={...newMain};
+        logChange(g,`Alt "${esc(alt.label||'Alt '+(ai+1))}" swapped to main`);
+        saveVault();openAltsModal();render();
+        if(panelId===g.id)refreshPanel();
+        toast(`Swapped "${alt.label||'Alt '+(ai+1)}" into ${g.name}`,'ok');
+      });
+      hd.appendChild(swapBtn);
+      row.appendChild(hd);
+      // Show first cookie username
+      const users=alt.cookies.map(c=>c.username||'(no user)').join(', ');
+      const meta=document.createElement('div');
+      meta.style.cssText='font-family:var(--mono);font-size:9px;color:var(--dim);';
+      meta.textContent=users;
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  });
+  if(!totalSets){
+    list.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:var(--dim);text-align:center;padding:30px 0;letter-spacing:1px;">No alternative cookies in vault</div>';
+  }
+  openMod('alts-modal');
+}
+
+// ═══════════════════════════════════════
+// BUG 8A: FIX ALTS DISAPPEARING — ensure alternatives always initialized
+// ═══════════════════════════════════════
+// Patch loadVault to always ensure alternatives array exists
+const _svOrigLoadVault=loadVault;
+loadVault=function(){
+  const v=_svOrigLoadVault.apply(this,arguments);
+  v.forEach(g=>{if(!g.alternatives)g.alternatives=[];});
+  return v;
+};
+
+// ═══════════════════════════════════════
+// BUG 12: PER-COOKIE BAN METADATA + REMINDERS
+// ═══════════════════════════════════════
+// Store ban start time + reason on the cookie object itself when swapping
+// Patch the swap confirm handler to add banMeta to the archived cookie
+
+const _svOrigSwapConfirm=document.getElementById('swap-confirm').onclick;
+// We override via addEventListener since it was set that way
+// Instead patch the swap logic at the archive step — find and wrap swap-confirm handler
+
+// Check swap reminders: look at each cookie's banMeta and fire if time elapsed
+function checkCookieBanReminders(){
+  const banner=document.getElementById('pin-reminder-banner');
+  if(!banner)return;
+  const now=Date.now();
+  const msgs=[];
+  vault.forEach(g=>{
+    (g.alternatives||[]).forEach(alt=>{
+      (alt.cookies||[]).forEach(c=>{
+        if(!c.banMeta)return;
+        const {reason,startedAt,remindAt,reminded}=c.banMeta;
+        if(reminded)return;
+        if(reason==='perm'||reason==='expired')return; // no reminder for these
+        if(remindAt&&now>=remindAt){
+          msgs.push(`${c.username||'Cookie'} in "${g.name}" — ${reason==='1d'?'1-day':'7-day'} ban should be lifted`);
+          c.banMeta.reminded=true;
+        }
+      });
+    });
+  });
+  if(msgs.length){
+    banner.innerHTML='';
+    msgs.forEach(m=>{
+      const d=document.createElement('div');
+      d.style.cssText='font-family:var(--mono);font-size:10px;color:var(--ok);margin-bottom:4px;';
+      d.textContent='🔓 '+m;
+      banner.appendChild(d);
+    });
+    banner.style.display='block';
+    saveVault(); // save the reminded=true flags
+  }
+}
+
+// Patch swap-confirm to store banMeta on archived cookie
+// Find the existing listener by wrapping the button
+const _swapConfirmBtn=document.getElementById('swap-confirm');
+const _origSwapListeners=[];
+// Since we can't easily remove the existing listener, we store banMeta before the existing handler fires
+// by adding a listener BEFORE (capture phase) on the button
+_swapConfirmBtn.addEventListener('click',()=>{
+  const reason=document.querySelector('.swap-reason-btn.on')?.dataset.reason||'1d';
+  const g=vault.find(x=>x.id===_swapGid);
+  if(!g)return;
+  const c=g.cookies[_swapIdx];
+  if(!c)return;
+  // Tag the cookie that's about to be archived with banMeta
+  const hours=reason==='1d'?24:reason==='7d'?168:null;
+  c._pendingBanMeta={
+    reason,
+    startedAt:Date.now(),
+    remindAt:hours?Date.now()+hours*3600000:null,
+    reminded:false
+  };
+},true); // capture phase — fires before the existing click handler
+
+// Patch the archive step in swap: after archiving, apply banMeta
+const _origSwapConfirmHandler=document.getElementById('swap-confirm');
+// We already have the swap logic inline — patch via observation of vault mutations
+// Simplest: after any swap, scan alts for _pendingBanMeta and apply
+const _realSaveVault=saveVault;
+saveVault=function(){
+  // Apply any pending ban meta to newly archived cookies
+  vault.forEach(g=>{
+    (g.alternatives||[]).forEach(alt=>{
+      (alt.cookies||[]).forEach(c=>{
+        if(c._pendingBanMeta){
+          c.banMeta={...c._pendingBanMeta};
+          delete c._pendingBanMeta;
+        }
+      });
+    });
+  });
+  _realSaveVault.apply(this,arguments);
+};
+
+// Check reminders on PIN unlock
+const _origSubmitPin2=submitPin;
+submitPin=function(){
+  _origSubmitPin2.apply(this,arguments);
+  setTimeout(()=>{checkSwapReminders();checkCookieBanReminders();},300);
+};
+
+
+// ── PORTRAIT OVERFLOW MENU ──────────────────────────────────────────────────
+(function(){
+  var trigger=document.getElementById('hdr-overflow-trigger');
+  var menu=document.getElementById('hdr-overflow-menu');
+  if(!trigger||!menu)return;
+  trigger.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=menu.classList.toggle('open');
+    trigger.classList.toggle('open',open);
+  });
+  document.addEventListener('click',function(e){
+    if(!menu.contains(e.target)&&e.target!==trigger){
+      menu.classList.remove('open');
+      trigger.classList.remove('open');
+    }
+  });
+  menu.querySelectorAll('.hdr-om-item[data-om]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var a=btn.dataset.om;
+      menu.classList.remove('open');trigger.classList.remove('open');
+      if(a==='stats')showStats();
+      else if(a==='log'){buildChangelogModal();openMod('cl-modal');}
+      else if(a==='activity')openCkLogModal();
+      else if(a==='alts')openAltsModal();
+      else if(a==='listview'){
+        listView=!listView;
+        localStorage.setItem('cv_list_view',listView?'1':'0');
+        applyListView();
+        btn.classList.toggle('active-item',listView);
+      }
+      else if(a==='sync')openSyncNowModal();
+      else if(a==='refresh'){render();toast('Refreshed','ok');}
+    });
+  });
+  // Column pills in overflow menu
+  menu.querySelectorAll('.hdr-om-col[data-c]').forEach(function(p){
+    p.classList.toggle('on',parseInt(p.dataset.c)===cols);
+    p.addEventListener('click',function(){
+      cols=parseInt(p.dataset.c);
+      localStorage.setItem('cv_cols',cols);
+      document.querySelectorAll('.col-pill').forEach(function(x){x.classList.toggle('on',parseInt(x.dataset.c)===cols);});
+      menu.querySelectorAll('.hdr-om-col').forEach(function(x){x.classList.toggle('on',parseInt(x.dataset.c)===cols);});
+      menu.classList.remove('open');trigger.classList.remove('open');
+      render();
+    });
+  });
+})();
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
