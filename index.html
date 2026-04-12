@@ -1763,9 +1763,16 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 <div id="powerdown"></div>
 <div id="pin-screen">
   <div class="pin-box">
-    <div class="pin-logo">🔐</div>
-    <div class="pin-vault-name" id="pin-vault-name">Cookie <span>Vault</span></div>
+    <div class="pin-logo">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="9" fill="#7b2fff"/>
+        <ellipse cx="20" cy="20" rx="18" ry="5.5" fill="none" stroke="#00d4ff" stroke-width="2.2" transform="rotate(-25 20 20)"/>
+        <circle cx="20" cy="20" r="4" fill="#9b4fff"/>
+      </svg>
+    </div>
+    <div class="pin-vault-name" id="pin-vault-name">Saturnity <span>Vault</span></div>
     <div class="pin-sub">Enter PIN to unlock</div>
+    <div id="pin-reminder-banner" style="display:none;background:rgba(0,255,170,.07);border:1px solid rgba(0,255,170,.2);border-radius:8px;padding:8px 12px;margin-bottom:4px;max-width:280px;text-align:left;"></div>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
       <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
@@ -1781,6 +1788,8 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
     <div class="pin-err" id="pin-err"></div>
     <div class="pin-lock-msg" id="pin-lock-msg"></div>
     <div class="pin-decoy-hint" id="pin-decoy-hint" style="display:none" title="Configure decoy PIN in Vault Settings">configure decoy →</div>
+    <button id="pin-recover-btn" style="margin-top:8px;background:none;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:9px;color:var(--dim);cursor:pointer;letter-spacing:.5px;" title="Recover data from previous version">recover data</button>
+    <div id="pin-recover-output" style="display:none;max-width:300px;background:rgba(0,0,0,.6);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:9px;color:var(--dim);line-height:1.8;text-align:left;max-height:180px;overflow-y:auto;"></div>
   </div>
 </div>
 
@@ -5554,17 +5563,8 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
 });
 
 // ═══════════════════════════════════════
-// SWAP REMINDER: inject banner into PIN screen
+// SWAP REMINDER: banner now in HTML, just wire reminders
 // ═══════════════════════════════════════
-(()=>{
-  const pinBox=document.querySelector('.pin-box');
-  if(pinBox){
-    const banner=document.createElement('div');
-    banner.id='pin-reminder-banner';
-    banner.style.cssText='display:none;background:rgba(0,255,170,.07);border:1px solid rgba(0,255,170,.2);border-radius:8px;padding:8px 12px;margin-bottom:12px;max-width:280px;text-align:left;';
-    pinBox.insertBefore(banner,pinBox.firstChild);
-  }
-})();
 
 // Check reminders when PIN screen is shown (called after successful unlock hidden)
 const _origSubmitPin=submitPin;
@@ -5913,6 +5913,63 @@ submitPin=function(){
       menu.classList.remove('open');trigger.classList.remove('open');
       render();
     });
+  });
+})();
+
+// ── DATA RECOVERY DIAGNOSTIC ────────────────────────────────────────────────
+(function(){
+  var btn=document.getElementById('pin-recover-btn');
+  var out=document.getElementById('pin-recover-output');
+  if(!btn||!out)return;
+  btn.addEventListener('click',function(){
+    // Scan all localStorage keys and try to find vault data
+    var lines=[];
+    var vaultKeys=[];
+    for(var i=0;i<localStorage.length;i++){
+      var k=localStorage.key(i);
+      if(!k)continue;
+      var v=localStorage.getItem(k);
+      var size=v?v.length:0;
+      if(k.includes('vault')||k.includes('cookie')||k.includes('saturnity')){
+        lines.push('📦 '+k+' ('+size+' chars)');
+        // Try to parse as vault array
+        try{
+          var d=JSON.parse(v);
+          var arr=Array.isArray(d)?d:(d&&d.vault?d.vault:null);
+          if(arr&&arr.length){
+            lines[lines.length-1]+=' → '+arr.length+' groups';
+            vaultKeys.push({k:k,data:arr});
+          }
+        }catch(e){}
+      }
+    }
+    if(!lines.length){
+      lines.push('No vault-related keys found in localStorage');
+      lines.push('');
+      lines.push('All keys present:');
+      for(var j=0;j<Math.min(localStorage.length,20);j++){
+        var ky=localStorage.key(j);
+        if(ky)lines.push('  '+ky);
+      }
+    }
+    // Auto-recover: if we found a vault key that has data, load it
+    if(vaultKeys.length){
+      var best=vaultKeys.sort(function(a,b){return b.data.length-a.data.length;})[0];
+      // Store under saturnity_vault_default
+      if(!localStorage.getItem('saturnity_vault_default')||JSON.parse(localStorage.getItem('saturnity_vault_default')||'[]').length===0){
+        localStorage.setItem('saturnity_vault_default',JSON.stringify(best.data));
+        lines.push('');
+        lines.push('✅ Recovered '+best.data.length+' groups from: '+best.k);
+        lines.push('Reload the page to see your data.');
+      }else{
+        lines.push('');
+        lines.push('saturnity_vault_default already has data — reload page.');
+      }
+    }
+    out.innerHTML=lines.map(function(l){return l.replace(/</g,'&lt;');}).join('<br>');
+    out.style.display='block';
+    btn.textContent='reload page';
+    btn.onclick=function(){location.reload();};
   });
 })();
 
