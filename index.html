@@ -10,7 +10,7 @@
   File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v1.1
+  Version     : v1.0
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -1469,36 +1469,17 @@ body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px;}
-.hdr-desktop-btns{display:flex;align-items:center;gap:6px;}
-.hdr-overflow{display:none;position:relative;flex-shrink:0;}
-.hdr-overflow-trigger{background:rgba(255,255,255,.06);border:1px solid var(--bdr);border-radius:8px;
-  width:34px;height:34px;font-size:18px;color:var(--dim);cursor:pointer;display:flex;align-items:center;
-  justify-content:center;transition:all .12s;line-height:1;}
-.hdr-overflow-trigger:hover,.hdr-overflow-trigger.open{border-color:var(--ac);color:var(--a2);}
-.hdr-overflow-menu{position:fixed;top:52px;right:8px;background:rgba(7,11,18,.98);
-  border:1px solid var(--bdrb);border-radius:12px;padding:6px;min-width:190px;
-  box-shadow:0 8px 32px rgba(0,0,0,.7);display:none;z-index:600;animation:qcIn .15s ease;}
-.hdr-overflow-menu.open{display:block;}
-.hdr-om-item{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;
-  border-radius:7px;padding:10px 12px;font-family:var(--mono);font-size:11px;color:var(--dim);
-  cursor:pointer;transition:all .12s;text-align:left;letter-spacing:.5px;}
-.hdr-om-item:hover,.hdr-om-item.active-item{background:rgba(15,111,255,.1);color:var(--bright);}
-.hdr-om-item svg{flex-shrink:0;opacity:.7;}
-.hdr-om-col{background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:5px;
-  width:32px;height:28px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
-  transition:all .12s;display:flex;align-items:center;justify-content:center;}
-.hdr-om-col.on{background:rgba(15,111,255,.3);border-color:var(--ac);color:var(--a2);}
-@media(max-width:700px){
+@media(max-width:600px){
   :root{--sw:0px;}
   .sidebar{display:none;}
   .hdr-stats{display:none;}
-  .hdr-title{display:none;}
-  .hdr-desktop-btns{display:none!important;}
-  .hdr-overflow{display:block;}
   .hdr-search{flex:1;max-width:none;min-width:0;}
   .hdr-search input{min-width:0;width:100%;}
-  .hdr-right{gap:6px;}
+  .hdr-right{gap:4px;flex-shrink:0;max-width:none;}
+  .hdr-meta{display:none;}
+  .list-view-btn,.sort-btn,.card-size-btn,.col-pills{display:none!important;}
   .data-switch{display:flex!important;flex-shrink:0;}
+  .hdr-title{display:none;}
 }
 
 /* ── BAN TAG ── */
@@ -1834,60 +1815,51 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <button class="srch-clear" id="srch-clear" title="Clear search">✕</button>
     </div>
     <div class="hdr-right">
-      <div class="hdr-desktop-btns">
-        <div class="hdr-meta">
-          <button class="hdr-meta-btn" id="hdr-stats-btn" title="Vault Stats">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats
-          </button>
-          <button class="hdr-meta-btn" id="hdr-cl-btn" title="Changelog">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Log
-          </button>
-          <button class="hdr-meta-btn" id="hdr-cklog-btn" title="Activity Log">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity
-          </button>
-          <button class="hdr-meta-btn" id="hdr-alts-btn" title="All Alts">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>Alts
-          </button>
-        </div>
-        <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List
+      <div class="hdr-meta">
+        <button class="hdr-meta-btn" id="hdr-stats-btn" title="Vault Stats">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>Stats
         </button>
-        <button class="sort-btn" id="sort-btn">A→Z</button>
-        <button class="card-size-btn" id="size-btn">M</button>
-        <div class="col-pills">
-          <button class="col-pill" data-c="1">1</button>
-          <button class="col-pill on" data-c="2">2</button>
-          <button class="col-pill" data-c="3">3</button>
-          <button class="col-pill" data-c="4">4</button>
-        </div>
-        <button class="hdr-meta-btn" id="hdr-sync-btn" title="Sync Vault">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>Sync
+        <button class="hdr-meta-btn" id="hdr-cl-btn" title="Changelog">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>Log
         </button>
-        <button class="hdr-meta-btn" id="hdr-refresh-btn" title="Refresh vault">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/></svg>Refresh
+        <button class="hdr-meta-btn" id="hdr-cklog-btn" title="Cookie Activity Log">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>Activity
+        </button>
+        <button class="hdr-meta-btn" id="hdr-alts-btn" title="All Alternative Cookies">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+          </svg>Alts
         </button>
       </div>
-      <div class="hdr-overflow">
-        <button class="hdr-overflow-trigger" id="hdr-overflow-trigger" title="More">&#8943;</button>
-        <div class="hdr-overflow-menu" id="hdr-overflow-menu">
-          <button class="hdr-om-item" data-om="stats"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats</button>
-          <button class="hdr-om-item" data-om="log"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Changelog</button>
-          <button class="hdr-om-item" data-om="activity"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity Log</button>
-          <button class="hdr-om-item" data-om="alts"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>All Alts</button>
-          <button class="hdr-om-item" data-om="listview" id="om-listview-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>List View</button>
-          <button class="hdr-om-item" data-om="sync"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>Sync</button>
-          <button class="hdr-om-item" data-om="refresh"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/></svg>Refresh</button>
-          <div style="height:1px;background:var(--bdr);margin:4px 0;"></div>
-          <div style="padding:4px 12px 6px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;">COLUMNS</div>
-          <div style="display:flex;gap:4px;padding:0 8px 6px;">
-            <button class="hdr-om-col" data-c="1">1</button>
-            <button class="hdr-om-col" data-c="2">2</button>
-            <button class="hdr-om-col" data-c="3">3</button>
-            <button class="hdr-om-col" data-c="4">4</button>
-          </div>
-        </div>
+      <button class="list-view-btn" id="list-view-btn" title="Toggle list view">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List
+      </button>
+      <button class="sort-btn" id="sort-btn">A→Z</button>
+      <button class="card-size-btn" id="size-btn">M</button>
+      <div class="col-pills">
+        <button class="col-pill" data-c="1">1</button>
+        <button class="col-pill on" data-c="2">2</button>
+        <button class="col-pill" data-c="3">3</button>
+        <button class="col-pill" data-c="4">4</button>
       </div>
       <button class="btn-add" id="hdr-add">+ Add</button>
+      <button class="hdr-meta-btn" id="hdr-sync-btn" title="Sync Vault">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/>
+        </svg>Sync
+      </button>
+      <button class="hdr-meta-btn" id="hdr-refresh-btn" title="Refresh vault">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/>
+        </svg>Refresh
+      </button>
       <div class="sync-dot" id="sync-dot" data-state="off" title="GitHub sync status"></div>
       <div class="data-switch" id="data-switch-btn">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--a3)" stroke-width="2">
@@ -2183,7 +2155,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
       <div>
         <div class="flbl">Max groups per server</div>
-        <input class="finput" id="sort-groups-per-srv" type="number" min="1" value="18">
+        <input class="finput" id="sort-groups-per-srv" type="number" min="1" max="18" value="18">
       </div>
       <div>
         <div class="flbl">Cookies per group</div>
@@ -2442,26 +2414,14 @@ const COOKIE_PFX='_|WARNING:-DO-NOT-SHARE-THIS.';
 const DS_K='cv_data_configs',DS_ACTIVE_K='cv_active_config';
 // Active config storage key — resolved before any vault read
 let SK_ACTIVE=(()=>{const id=localStorage.getItem('cv_active_config')||'default';return'saturnity_vault_'+id;})();
-// ── DATA MIGRATION ─────────────────────────────────────────────────────────
-// Migrates cookie_vault_* keys (pre-rebrand) → saturnity_vault_* keys
+// Data migration: if default config is empty but old key has data, migrate it
 (()=>{
   try{
-    const keysToMigrate=[];
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
-      if(k&&k.startsWith('cookie_vault_'))keysToMigrate.push(k);
+    const newKey='saturnity_vault_default';
+    const oldKey='saturnity_vault_v1';
+    if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){
+      localStorage.setItem(newKey,localStorage.getItem(oldKey));
     }
-    keysToMigrate.forEach(oldKey=>{
-      const newKey=oldKey.replace('cookie_vault_','saturnity_vault_');
-      if(!localStorage.getItem(newKey)){
-        const val=localStorage.getItem(oldKey);
-        if(val)localStorage.setItem(newKey,val);
-      }
-    });
-    // Secondary: saturnity_vault_v1 → saturnity_vault_default
-    const sv1=localStorage.getItem('saturnity_vault_v1');
-    const svd=localStorage.getItem('saturnity_vault_default');
-    if(sv1&&!svd)localStorage.setItem('saturnity_vault_default',sv1);
   }catch(e){}
 })();
 const PALETTE=[
@@ -4605,7 +4565,7 @@ function calcDistribution(){
   const srvPfx=document.getElementById('sort-server-pfx').value.trim();
   const grpPfx=document.getElementById('sort-group-pfx').value.trim();
   const cookiesPerGrp=Math.max(1,parseInt(document.getElementById('sort-cookies-per-grp').value)||5);
-  const grpsPerSrv=Math.max(1,parseInt(document.getElementById('sort-groups-per-srv').value)||999);
+  const grpsPerSrv=Math.max(1,Math.min(18,parseInt(document.getElementById('sort-groups-per-srv').value)||18));
   const cookies=sortPending;
 
   // Find existing max group number for this prefix (to continue numbering)
@@ -4701,6 +4661,23 @@ document.getElementById('sort-preview-btn').addEventListener('click',()=>{
 document.getElementById('sort-confirm').addEventListener('click',async()=>{
   const dist=calcDistribution();
   if(!dist.length){toast('Nothing to create','warn');return;}
+
+  // Check server limits
+  const srvCounts=new Map();
+  dist.forEach(d=>{
+    if(d.srvName){
+      const k=d.srvName.trim().toLowerCase();
+      const existing=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k).length;
+      srvCounts.set(k,(srvCounts.get(k)||0)+1+existing);
+    }
+  });
+  for(const [k,count] of srvCounts){
+    if(count>18){
+      const srvLabel=dist.find(d=>d.srvName&&d.srvName.trim().toLowerCase()===k)?.srvName||k;
+      toast(`Server "${srvLabel}" would exceed 18 group limit`,'err');
+      return;
+    }
+  }
 
   // Create all groups — cookies preserved top-to-bottom within each group
   dist.forEach(d=>{
@@ -5848,55 +5825,6 @@ submitPin=function(){
   _origSubmitPin2.apply(this,arguments);
   setTimeout(()=>{checkSwapReminders();checkCookieBanReminders();},300);
 };
-
-
-// ── PORTRAIT OVERFLOW MENU ──────────────────────────────────────────────────
-(function(){
-  var trigger=document.getElementById('hdr-overflow-trigger');
-  var menu=document.getElementById('hdr-overflow-menu');
-  if(!trigger||!menu)return;
-  trigger.addEventListener('click',function(e){
-    e.stopPropagation();
-    var open=menu.classList.toggle('open');
-    trigger.classList.toggle('open',open);
-  });
-  document.addEventListener('click',function(e){
-    if(!menu.contains(e.target)&&e.target!==trigger){
-      menu.classList.remove('open');
-      trigger.classList.remove('open');
-    }
-  });
-  menu.querySelectorAll('.hdr-om-item[data-om]').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var a=btn.dataset.om;
-      menu.classList.remove('open');trigger.classList.remove('open');
-      if(a==='stats')showStats();
-      else if(a==='log'){buildChangelogModal();openMod('cl-modal');}
-      else if(a==='activity')openCkLogModal();
-      else if(a==='alts')openAltsModal();
-      else if(a==='listview'){
-        listView=!listView;
-        localStorage.setItem('cv_list_view',listView?'1':'0');
-        applyListView();
-        btn.classList.toggle('active-item',listView);
-      }
-      else if(a==='sync')openSyncNowModal();
-      else if(a==='refresh'){render();toast('Refreshed','ok');}
-    });
-  });
-  // Column pills in overflow menu
-  menu.querySelectorAll('.hdr-om-col[data-c]').forEach(function(p){
-    p.classList.toggle('on',parseInt(p.dataset.c)===cols);
-    p.addEventListener('click',function(){
-      cols=parseInt(p.dataset.c);
-      localStorage.setItem('cv_cols',cols);
-      document.querySelectorAll('.col-pill').forEach(function(x){x.classList.toggle('on',parseInt(x.dataset.c)===cols);});
-      menu.querySelectorAll('.hdr-om-col').forEach(function(x){x.classList.toggle('on',parseInt(x.dataset.c)===cols);});
-      menu.classList.remove('open');trigger.classList.remove('open');
-      render();
-    });
-  });
-})();
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
