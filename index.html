@@ -10,7 +10,7 @@
   File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v1.1
+  Version     : v1.2
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -1488,19 +1488,22 @@ body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
   width:32px;height:28px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
   transition:all .12s;display:flex;align-items:center;justify-content:center;}
 .hdr-om-col.on{background:rgba(15,111,255,.3);border-color:var(--ac);color:var(--a2);}
+/* Portrait — covers all tablet/phone orientations */
 @media(max-width:960px){
   :root{--sw:0px;}
   .sidebar{display:none;}
   .hdr-stats{display:none;}
   .hdr-title{display:none;}
   .hdr-desktop-btns{display:none!important;}
-  .hdr-overflow{display:block!important;}
-  .hdr-search{flex:1;min-width:60px;max-width:none;}
-  .hdr-search input{min-width:0;width:100%;}
-  .hdr-right{gap:4px;flex-shrink:0;overflow:hidden;}
-  .data-switch{display:flex!important;flex-shrink:0;max-width:130px;}
-  .data-switch-lbl{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .hdr-overflow{display:block!important;visibility:visible!important;opacity:1!important;}
+  .hdr{gap:6px;padding:0 10px;}
+  .hdr-search{flex:1;min-width:80px;max-width:none;order:0;}
+  .hdr-search input{min-width:0;width:100%;direction:ltr;text-align:left;unicode-bidi:plaintext;}
+  .hdr-right{gap:4px;flex-shrink:0;min-width:0;overflow:visible;}
+  .data-switch{display:flex!important;flex-shrink:0;max-width:120px;min-width:0;}
+  .data-switch-lbl{max-width:65px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .btn-add{padding:7px 10px;font-size:11px;white-space:nowrap;flex-shrink:0;}
+  .sync-dot{flex-shrink:0;}
 }
 
 /* ── BAN TAG ── */
@@ -1841,7 +1844,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <svg class="srch-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
-      <input type="text" id="search-in" placeholder="Search groups or usernames...">
+      <input type="text" id="search-in" placeholder="Search groups or usernames..." dir="ltr" inputmode="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="srch-clear" id="srch-clear" title="Clear search">✕</button>
     </div>
     <div class="hdr-right">
@@ -2038,6 +2041,31 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <div id="vault"></div>
     </main>
   </div>
+</div>
+
+<!-- COPY FORMAT POPUP -->
+<div class="exp-popup" id="copy-fmt-popup">
+  <div class="exp-pop-label">Copy Format</div>
+  <button class="exp-pop-btn" data-copyfmt="user:pass:cookie">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    <span class="exp-pop-btn-main">u:p:c</span><span class="exp-pop-btn-sub">user:pass:cookie</span>
+  </button>
+  <button class="exp-pop-btn" data-copyfmt="user:cookie">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    <span class="exp-pop-btn-main">u:c</span><span class="exp-pop-btn-sub">user:cookie</span>
+  </button>
+  <button class="exp-pop-btn" data-copyfmt="user:pass">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    <span class="exp-pop-btn-main">u:p</span><span class="exp-pop-btn-sub">user:pass</span>
+  </button>
+  <button class="exp-pop-btn" data-copyfmt="username">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    <span class="exp-pop-btn-main">u</span><span class="exp-pop-btn-sub">username only</span>
+  </button>
+  <button class="exp-pop-btn" data-copyfmt="cookie">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    <span class="exp-pop-btn-main">c</span><span class="exp-pop-btn-sub">cookie only</span>
+  </button>
 </div>
 
 <!-- EXPORT POPUP -->
@@ -3553,20 +3581,14 @@ function render(){
       </div>
       <div class="sec-meta">${groups.length}g · ${totalC}c</div>
       ${warn}
-      <button class="sec-copybtn" title="Copy all as u:p:c">
+      <button class="sec-copybtn" title="Copy all — choose format">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
       </button>
       <button class="sec-expbtn">export</button>`;
     hd.querySelector('.sec-copybtn').addEventListener('click',e=>{
       e.stopPropagation();
       const live=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
-      const lines=live.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
-      const btn=hd.querySelector('.sec-copybtn');
-      copyText(lines.join('\n'),()=>{
-        btn.style.color='var(--ok)';
-        setTimeout(()=>btn.style.color='',1400);
-        toast(`Copied ${lines.length} cookies`,'ok');
-      },()=>toast('Copy failed','err'));
+      openCopyFmtPopup(e.currentTarget,live);
     });
     hd.querySelector('.sec-expbtn').addEventListener('click',e=>{
       e.stopPropagation();
@@ -4791,15 +4813,42 @@ document.getElementById('bulk-bar-export').addEventListener('click',e=>{
   e.currentTarget.classList.add('bulk-bar-export-anchor');
 });
 
-document.getElementById('bulk-bar-copy').addEventListener('click',()=>{
+// ── COPY FORMAT POPUP ──────────────────────────────────────────────────────
+let _copyFmtGroups=null;
+function openCopyFmtPopup(anchor,groups){
+  _copyFmtGroups=groups;
+  const popup=document.getElementById('copy-fmt-popup');
+  popup.classList.add('open');
+  const rect=anchor.getBoundingClientRect();
+  let left=rect.left,top=rect.bottom+6;
+  if(left+230>window.innerWidth-8)left=window.innerWidth-238;
+  if(top+240>window.innerHeight-8)top=rect.top-246;
+  popup.style.left=left+'px';popup.style.top=top+'px';
+}
+function closeCopyFmtPopup(){document.getElementById('copy-fmt-popup').classList.remove('open');}
+document.querySelectorAll('.exp-pop-btn[data-copyfmt]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const fmt=btn.dataset.copyfmt;
+    const src=_copyFmtGroups||(sortVault(vault));
+    const lines=src.flatMap(g=>g.cookies.map(c=>fmtLine(c,fmt))).filter(Boolean);
+    copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} lines (${fmt})`,'ok'),()=>toast('Copy failed','err'));
+    closeCopyFmtPopup();
+    clearBulkSelect();
+  });
+});
+document.addEventListener('click',e=>{
+  const popup=document.getElementById('copy-fmt-popup');
+  if(popup&&popup.classList.contains('open')&&!popup.contains(e.target)){
+    closeCopyFmtPopup();
+  }
+});
+
+document.getElementById('bulk-bar-copy').addEventListener('click',e=>{
   if(!bulkSelected.size)return;
-  // Sort by visual DOM order top-to-bottom
   const cards=[...document.querySelectorAll('.gcard')];
   const orderedIds=cards.map(c=>c.dataset.id).filter(id=>bulkSelected.has(id));
   const orderedGroups=orderedIds.map(id=>vault.find(g=>g.id===id)).filter(Boolean);
-  const lines=orderedGroups.flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
-  copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
-  clearBulkSelect();
+  openCopyFmtPopup(e.currentTarget,orderedGroups);
 });
 
 document.getElementById('bulk-bar-ban').addEventListener('click',async()=>{
@@ -5594,6 +5643,15 @@ function parseCxInput(raw){
     .filter(Boolean);
 }
 
+// Match a query term against a cookie — by username OR cookie string
+function cxMatch(term,c){
+  const tLow=term.toLowerCase();
+  if((c.username||'').toLowerCase()===tLow)return true;
+  // Also match if term appears anywhere in cookie string
+  if(c.cookie&&c.cookie.toLowerCase().includes(tLow))return true;
+  return false;
+}
+
 // Get cookies from currently active server filter
 function getCxScopeGroups(){
   if(activeSrv==='all')return vault;
@@ -5607,7 +5665,7 @@ document.getElementById('cx-ta').addEventListener('input',()=>{
   if(!usernames.length){info.textContent='';return;}
   const scope=getCxScopeGroups();
   const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
-  const matched=usernames.filter(u=>allCookies.some(c=>(c.username||'').toLowerCase()===u.toLowerCase()));
+  const matched=usernames.filter(u=>allCookies.some(c=>cxMatch(u,c)));
   const srv=activeSrv==='all'?'all groups':`server "${activeSrv}"`;
   info.textContent=`${matched.length}/${usernames.length} found in ${srv}`;
   info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
@@ -5622,16 +5680,12 @@ document.getElementById('cx-search-btn').addEventListener('click',()=>{
   const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
   const results=[];
   usernames.forEach(u=>{
-    const uLow=u.toLowerCase();
-    const match=allCookies.find(c=>(c.username||'').toLowerCase()===uLow);
+    const match=allCookies.find(c=>cxMatch(u,c));
     results.push({username:u,cookie:match||null,group:match?match._group:null});
   });
   renderCxResults(results);
   const matched=results.filter(r=>r.cookie);
   document.getElementById('cx-copy-all-btn').style.display=matched.length?'':'none';
-  document.getElementById('cx-copy-all-btn').dataset.matched=JSON.stringify(
-    matched.map(r=>fmtLine(r.cookie,'user:pass:cookie'))
-  );
   const info=document.getElementById('cx-info');
   info.textContent=`${matched.length}/${results.length} matched`;
   info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
