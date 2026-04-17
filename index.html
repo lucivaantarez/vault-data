@@ -10,7 +10,7 @@
   File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v1.2
+  Version     : v1.3
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -1488,8 +1488,8 @@ body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
   width:32px;height:28px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
   transition:all .12s;display:flex;align-items:center;justify-content:center;}
 .hdr-om-col.on{background:rgba(15,111,255,.3);border-color:var(--ac);color:var(--a2);}
-/* Portrait — covers all tablet/phone orientations */
-@media(max-width:960px){
+/* Portrait/compact mode — triggered by CSS media query OR JS class */
+@media(max-width:960px),(max-device-width:960px){
   :root{--sw:0px;}
   .sidebar{display:none;}
   .hdr-stats{display:none;}
@@ -1505,6 +1505,19 @@ body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
   .btn-add{padding:7px 10px;font-size:11px;white-space:nowrap;flex-shrink:0;}
   .sync-dot{flex-shrink:0;}
 }
+/* JS-applied compact mode for tablets that report wide viewport */
+body.compact-mode .sidebar{display:none;}
+body.compact-mode .hdr-stats{display:none;}
+body.compact-mode .hdr-title{display:none;}
+body.compact-mode .hdr-desktop-btns{display:none!important;}
+body.compact-mode .hdr-overflow{display:block!important;visibility:visible!important;opacity:1!important;}
+body.compact-mode .hdr{gap:6px;padding:0 10px;}
+body.compact-mode .hdr-search{flex:1;min-width:80px;max-width:none;}
+body.compact-mode .hdr-search input{direction:ltr;text-align:left;unicode-bidi:plaintext;}
+body.compact-mode .hdr-right{gap:4px;flex-shrink:0;min-width:0;overflow:visible;}
+body.compact-mode .data-switch{display:flex!important;flex-shrink:0;max-width:120px;min-width:0;}
+body.compact-mode .data-switch-lbl{max-width:65px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+body.compact-mode .btn-add{padding:7px 10px;font-size:11px;white-space:nowrap;flex-shrink:0;}
 
 /* ── BAN TAG ── */
 .gcard-banned-tag{position:absolute;top:7px;left:8px;z-index:5;pointer-events:none;
@@ -5635,19 +5648,33 @@ document.getElementById('cx-toggle').addEventListener('click',()=>{
 });
 
 // Parse input: extract username from "username:anything:anything" or plain "username"
+// Parse each line: if it contains COOKIE_PFX treat whole line as cookie string,
+// otherwise extract username (before first colon)
 function parseCxInput(raw){
   return raw.split('\n')
     .map(l=>l.trim())
     .filter(Boolean)
-    .map(l=>l.split(':')[0].trim())
+    .map(l=>{
+      // If the line is (or contains) a full cookie string, keep it whole
+      if(l.includes(COOKIE_PFX))return l;
+      // Otherwise extract the part before the first colon as username
+      return l.split(':')[0].trim();
+    })
     .filter(Boolean);
 }
 
-// Match a query term against a cookie — by username OR cookie string
+// Match a search term against a cookie
+// term can be: username, or a full/partial cookie string
 function cxMatch(term,c){
+  const isCookieTerm=term.includes(COOKIE_PFX);
+  if(isCookieTerm){
+    // Match against the raw cookie string — find the cookie part of the term
+    const cookiePart=term.substring(term.indexOf(COOKIE_PFX));
+    return c.cookie&&c.cookie===cookiePart;
+  }
   const tLow=term.toLowerCase();
   if((c.username||'').toLowerCase()===tLow)return true;
-  // Also match if term appears anywhere in cookie string
+  // Partial cookie match for short search terms
   if(c.cookie&&c.cookie.toLowerCase().includes(tLow))return true;
   return false;
 }
@@ -5660,28 +5687,30 @@ function getCxScopeGroups(){
 
 // Live count while typing
 document.getElementById('cx-ta').addEventListener('input',()=>{
-  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  const terms=parseCxInput(document.getElementById('cx-ta').value);
   const info=document.getElementById('cx-info');
-  if(!usernames.length){info.textContent='';return;}
+  if(!terms.length){info.textContent='';return;}
   const scope=getCxScopeGroups();
   const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
-  const matched=usernames.filter(u=>allCookies.some(c=>cxMatch(u,c)));
+  const matched=terms.filter(t=>allCookies.some(c=>cxMatch(t,c)));
   const srv=activeSrv==='all'?'all groups':`server "${activeSrv}"`;
-  info.textContent=`${matched.length}/${usernames.length} found in ${srv}`;
+  info.textContent=`${matched.length}/${terms.length} found in ${srv}`;
   info.style.color=matched.length>0?'var(--ok)':'var(--dim)';
-  document.getElementById('cx-match-count').textContent=matched.length?`${matched.length}/${usernames.length}`:'';
+  document.getElementById('cx-match-count').textContent=matched.length?`${matched.length}/${terms.length}`:'';
 });
 
 // Extract button
 document.getElementById('cx-search-btn').addEventListener('click',()=>{
-  const usernames=parseCxInput(document.getElementById('cx-ta').value);
-  if(!usernames.length){toast('No usernames to search','warn');return;}
+  const terms=parseCxInput(document.getElementById('cx-ta').value);
+  if(!terms.length){toast('No terms to search','warn');return;}
   const scope=getCxScopeGroups();
   const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
   const results=[];
-  usernames.forEach(u=>{
-    const match=allCookies.find(c=>cxMatch(u,c));
-    results.push({username:u,cookie:match||null,group:match?match._group:null});
+  terms.forEach(t=>{
+    const match=allCookies.find(c=>cxMatch(t,c));
+    // Display label: username if available, else first 30 chars of cookie
+    const label=match?.username||(t.includes(COOKIE_PFX)?t.substring(t.indexOf(COOKIE_PFX),t.indexOf(COOKIE_PFX)+40)+'…':t);
+    results.push({term:t,label,cookie:match||null,group:match?match._group:null});
   });
   renderCxResults(results);
   const matched=results.filter(r=>r.cookie);
@@ -5700,21 +5729,28 @@ function renderCxResults(results){
   }
   const matched=results.filter(r=>r.cookie).length;
   if(!matched){
-    container.innerHTML='<div class="cx-no-match">No matches found in current server</div>';
+    container.innerHTML='<div class="cx-no-match">No matches found in current scope</div>';
   }
   results.forEach(r=>{
     const row=document.createElement('div');
     row.className='cx-result-row '+(r.cookie?'matched':'unmatched');
     const userEl=document.createElement('div');userEl.className='cx-result-user';
-    userEl.textContent=r.username;
+    userEl.textContent=r.label||r.term;
     row.appendChild(userEl);
     if(r.cookie){
       const meta=document.createElement('div');meta.className='cx-result-meta';
-      meta.textContent=r.cookie.cookie?r.cookie.cookie.substring(0,30)+'…':'no cookie';
+      meta.textContent=r.cookie.cookie?r.cookie.cookie.substring(0,28)+'…':'no cookie';
       row.appendChild(meta);
       if(r.group){
         const grpTag=document.createElement('div');grpTag.className='cx-result-group';
         grpTag.textContent=r.group.name;
+        // Click group tag → scroll to and highlight the card
+        grpTag.style.cursor='pointer';
+        grpTag.title='Click to open group';
+        grpTag.addEventListener('click',e=>{
+          e.stopPropagation();
+          highlightAndOpenGroup(r.group.id);
+        });
         row.appendChild(grpTag);
       }
       const copyBtn=document.createElement('button');copyBtn.className='cx-result-copy';
@@ -5726,6 +5762,9 @@ function renderCxResults(results){
           ()=>toast('Copy failed','err'));
       });
       row.appendChild(copyBtn);
+      // Click row → open group panel
+      row.style.cursor='pointer';
+      row.addEventListener('click',()=>highlightAndOpenGroup(r.group.id));
     }else{
       const notFound=document.createElement('div');notFound.className='cx-result-meta';
       notFound.textContent='not in vault';
@@ -5735,15 +5774,29 @@ function renderCxResults(results){
   });
 }
 
+// Scroll to group card, flash highlight, open panel
+function highlightAndOpenGroup(groupId){
+  // Open panel
+  openPanel(groupId);
+  // Scroll to card and flash
+  const card=document.querySelector(`.gcard[data-id="${groupId}"]`);
+  if(card){
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.style.transition='box-shadow .15s';
+    card.style.boxShadow='0 0 0 3px var(--a2)';
+    setTimeout(()=>{card.style.boxShadow='';},1500);
+  }
+}
+
 // Copy all matched
 document.getElementById('cx-copy-all-btn').addEventListener('click',()=>{
   const scope=getCxScopeGroups();
   const allCookies=scope.flatMap(g=>g.cookies.map(c=>({...c,_group:g})));
-  const usernames=parseCxInput(document.getElementById('cx-ta').value);
+  const terms=parseCxInput(document.getElementById('cx-ta').value);
   const lines=[];
-  usernames.forEach(u=>{
-    const match=allCookies.find(c=>(c.username||'').toLowerCase()===u.toLowerCase());
-    if(match){const t=fmtLine(match,'user:pass:cookie');if(t)lines.push(t);}
+  terms.forEach(t=>{
+    const match=allCookies.find(c=>cxMatch(t,c));
+    if(match){const tx=fmtLine(match,'user:pass:cookie');if(tx)lines.push(tx);}
   });
   if(!lines.length){toast('No matched cookies to copy','warn');return;}
   copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} cookies`,'ok'),()=>toast('Copy failed','err'));
@@ -6025,6 +6078,23 @@ submitPin=function(){
     btn.onclick=function(){location.reload();};
   });
 })();
+
+// ── COMPACT MODE DETECTION ──────────────────────────────────────────────────
+// Handles tablets that report >960px viewport but are actually in mobile/portrait layout
+function updateCompactMode(){
+  // Use actual screen dimensions, not viewport — catches tablets with wide viewport but small screen
+  const screenW=Math.min(screen.width,screen.height); // smaller dimension = portrait width
+  const viewW=window.innerWidth;
+  // Compact if: screen physically narrow, or viewport is narrow, or touch device with moderate width
+  const isTouchDevice='ontouchstart' in window||navigator.maxTouchPoints>0;
+  const isCompact=viewW<=960||(isTouchDevice&&viewW<=1200)||(screenW<=960);
+  document.body.classList.toggle('compact-mode',isCompact);
+  // Also fix --sw for sidebar
+  if(isCompact)document.documentElement.style.setProperty('--sw','0px');
+}
+updateCompactMode();
+window.addEventListener('resize',updateCompactMode);
+window.addEventListener('orientationchange',()=>setTimeout(updateCompactMode,150));
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
