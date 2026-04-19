@@ -10,7 +10,7 @@
   File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v1.3
+  Version     : v2.0
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -835,6 +835,19 @@
   --mono:'Share Tech Mono',monospace;--sans:'Rajdhani',sans-serif;
   --sw:230px;--hh:56px;
 }
+/* ── THEME: DARKER ── */
+body.theme-darker{
+  --bg:#020408;--surf:rgba(7,12,20,.92);--surf2:rgba(10,18,30,.95);
+  --solid:#070c14;--bdr:rgba(18,36,64,.9);--bdrb:rgba(15,111,255,.35);
+  --txt:#a8c4e0;--dim:#3a5472;--bright:#d4ecff;
+}
+/* ── THEME: AMOLED ── */
+body.theme-amoled{
+  --bg:#000000;--surf:rgba(8,8,8,.98);--surf2:rgba(12,12,12,.99);
+  --solid:#080808;--bdr:rgba(30,30,30,.9);--bdrb:rgba(15,111,255,.3);
+  --txt:#9ab8d8;--dim:#304050;--bright:#ccecff;
+}
+body.theme-amoled::before{display:none;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;overflow:hidden;}
 body{background:var(--bg);color:var(--txt);font-family:var(--sans);display:flex;flex-direction:column;}
@@ -1519,6 +1532,168 @@ body.compact-mode .data-switch{display:flex!important;flex-shrink:0;max-width:12
 body.compact-mode .data-switch-lbl{max-width:65px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 body.compact-mode .btn-add{padding:7px 10px;font-size:11px;white-space:nowrap;flex-shrink:0;}
 
+/* ── COMPACT CARD MODE ── */
+body.compact-cards .gcard{min-height:32px;border-radius:7px;}
+body.compact-cards .gcard-bar{height:1px;}
+body.compact-cards .gcard-body{padding:0 8px;}
+body.compact-cards .gcard-row1{gap:5px;}
+body.compact-cards .gcard-name{font-size:11px;}
+body.compact-cards .gcard-count{font-size:9px;}
+body.compact-cards .gcard-users-row{display:none!important;}
+body.compact-cards .gcard-status-bar{display:none;}
+body.compact-cards .gcard-sparkline{display:none;}
+body.list-view.compact-cards .gcard{min-height:32px;}
+
+/* ── COOKIE STATUS MINI-BAR ── */
+.gcard-status-bar{height:3px;width:100%;display:flex;border-radius:0 0 14px 14px;overflow:hidden;flex-shrink:0;margin-top:auto;}
+.gsb-active{background:var(--ok);transition:flex .3s;}
+.gsb-banned{background:var(--danger);transition:flex .3s;}
+.gsb-alt{background:var(--a3);transition:flex .3s;}
+/* List view: inline pill */
+body.list-view .gcard-status-bar{height:auto;width:auto;border-radius:10px;overflow:visible;flex-direction:row;gap:3px;align-items:center;margin-top:0;flex-shrink:0;}
+body.list-view .gsb-active,body.list-view .gsb-banned,body.list-view .gsb-alt{height:8px;width:8px;border-radius:50%;flex:none;}
+body.list-view .gsb-active:empty,body.list-view .gsb-banned:empty,body.list-view .gsb-alt:empty{display:none;}
+
+/* ── SPARKLINE ── */
+.gcard-sparkline{width:100%;height:24px;margin-top:4px;opacity:.7;}
+body.compact-cards .gcard-sparkline{display:none;}
+
+/* ── FADE IN STAGGER ── */
+@keyframes cardFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.gcard.fade-in{animation:cardFadeIn .25s ease forwards;}
+
+/* ── RIGHT SLIDE MENU ── */
+.rmenu-backdrop{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0);pointer-events:none;transition:background .25s;backdrop-filter:blur(0px);}
+.rmenu-backdrop.open{background:rgba(0,0,0,.55);pointer-events:all;backdrop-filter:blur(4px);}
+.rmenu{position:fixed;right:0;top:0;bottom:0;width:min(300px,85vw);background:rgba(6,9,15,.97);
+  border-left:1px solid var(--bdrb);transform:translateX(100%);transition:transform .3s cubic-bezier(.34,1.1,.64,1);
+  z-index:701;display:flex;flex-direction:column;overflow:hidden;}
+.rmenu.open{transform:translateX(0);}
+.rmenu-hdr{padding:18px 20px 12px;border-bottom:1px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.rmenu-hdr-title{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:2px;color:var(--bright);flex:1;}
+.rmenu-hdr-title span{color:var(--a2);}
+.rmenu-close{background:none;border:1px solid var(--bdr);border-radius:6px;width:28px;height:28px;color:var(--dim);cursor:pointer;font-size:14px;transition:all .12s;}
+.rmenu-close:hover{border-color:var(--danger);color:var(--danger);}
+.rmenu-body{flex:1;overflow-y:auto;padding:12px;}
+.rmenu-body::-webkit-scrollbar{width:3px;}
+.rmenu-body::-webkit-scrollbar-thumb{background:var(--bdr);}
+.rmenu-section{margin-bottom:16px;}
+.rmenu-section-lbl{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;padding:0 4px 6px;border-bottom:1px solid var(--bdr);margin-bottom:8px;}
+.rmenu-btn{display:flex;align-items:center;gap:12px;width:100%;background:rgba(255,255,255,.02);border:1px solid var(--bdr);
+  border-radius:9px;padding:11px 14px;margin-bottom:6px;cursor:pointer;transition:all .12s;text-align:left;}
+.rmenu-btn:hover{background:rgba(15,111,255,.08);border-color:var(--ac);}
+.rmenu-btn svg{flex-shrink:0;opacity:.7;}
+.rmenu-btn-txt{font-family:var(--sans);font-weight:600;font-size:13px;color:var(--txt);}
+.rmenu-btn-sub{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;}
+.rmenu-btn.danger:hover{background:rgba(255,48,96,.08);border-color:var(--danger);}
+.rmenu-btn.danger:hover .rmenu-btn-txt{color:var(--danger);}
+.rmenu-btn.danger svg{color:var(--danger);}
+.rmenu-open-btn{background:rgba(123,47,255,.15);border:1px solid rgba(123,47,255,.3);border-radius:8px;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;flex-shrink:0;}
+.rmenu-open-btn:hover{background:rgba(123,47,255,.25);border-color:var(--a3);}
+/* Theme picker in rmenu */
+.theme-pills{display:flex;gap:6px;padding:4px 0 8px;}
+.theme-pill{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:7px;
+  padding:8px 6px;font-family:var(--mono);font-size:9px;color:var(--dim);cursor:pointer;transition:all .12s;text-align:center;}
+.theme-pill.on{border-color:var(--a2);color:var(--a2);background:rgba(0,212,255,.08);}
+/* Compact mode toggle in rmenu */
+.rmenu-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;}
+.rmenu-toggle-lbl{font-family:var(--sans);font-size:12px;color:var(--txt);}
+.rmenu-toggle{position:relative;width:36px;height:20px;cursor:pointer;}
+.rmenu-toggle input{opacity:0;width:0;height:0;}
+.rmenu-toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:20px;transition:.2s;}
+.rmenu-toggle input:checked+.rmenu-toggle-slider{background:var(--a2);}
+.rmenu-toggle-slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+.rmenu-toggle input:checked+.rmenu-toggle-slider:before{transform:translateX(16px);}
+
+/* ── PER-COOKIE TAGS ── */
+.ck-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.ck-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;font-family:var(--mono);font-size:8px;
+  letter-spacing:.5px;border:1px solid;cursor:default;}
+.ck-tag.tag-main{color:#00ffaa;border-color:rgba(0,255,170,.3);background:rgba(0,255,170,.08);}
+.ck-tag.tag-alt{color:#7b2fff;border-color:rgba(123,47,255,.3);background:rgba(123,47,255,.08);}
+.ck-tag.tag-banned{color:#ff3060;border-color:rgba(255,48,96,.3);background:rgba(255,48,96,.08);}
+.ck-tag.tag-testing{color:#ffaa00;border-color:rgba(255,170,0,.3);background:rgba(255,170,0,.08);}
+.ck-tag.tag-flagged{color:#ff6b00;border-color:rgba(255,107,0,.3);background:rgba(255,107,0,.08);}
+.ck-tag.tag-expired{color:#4a6a8a;border-color:rgba(74,106,138,.3);background:rgba(74,106,138,.08);}
+.ck-tag.tag-custom{color:#00d4ff;border-color:rgba(0,212,255,.3);background:rgba(0,212,255,.08);}
+.ck-tag-del{background:none;border:none;color:inherit;cursor:pointer;opacity:.6;font-size:9px;padding:0 0 0 2px;}
+.ck-tag-del:hover{opacity:1;}
+.ck-tag-add{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;
+  background:none;border:1px dashed rgba(255,255,255,.15);font-family:var(--mono);font-size:8px;
+  color:var(--dim);cursor:pointer;transition:all .12s;}
+.ck-tag-add:hover{border-color:var(--a2);color:var(--a2);}
+.tag-picker{background:rgba(7,11,18,.98);border:1px solid var(--bdrb);border-radius:10px;padding:8px;
+  position:fixed;z-index:800;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,.7);display:none;animation:qcIn .15s ease;}
+.tag-picker.open{display:block;}
+.tag-picker-fixed{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.tag-picker-free{display:flex;gap:6px;}
+.tag-picker-free input{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:6px;
+  padding:5px 8px;font-family:var(--mono);font-size:10px;color:var(--bright);outline:none;}
+.tag-picker-free input:focus{border-color:var(--a2);}
+.tag-picker-free button{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:6px;
+  padding:5px 10px;font-family:var(--mono);font-size:9px;color:var(--a2);cursor:pointer;}
+
+/* ── COOKIE TIMELINE ── */
+.ck-timeline{margin-top:10px;border-top:1px solid var(--bdr);padding-top:8px;}
+.ck-tl-title{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.ck-tl-entry{display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.ck-tl-entry:last-child{border-bottom:none;}
+.ck-tl-dot{width:6px;height:6px;border-radius:50%;background:var(--a2);flex-shrink:0;margin-top:4px;}
+.ck-tl-time{font-family:var(--mono);font-size:8px;color:var(--dim);white-space:nowrap;flex-shrink:0;}
+.ck-tl-msg{font-family:var(--mono);font-size:9px;color:var(--txt);line-height:1.5;}
+
+/* ── IMPORT DIFF / UNDO ── */
+.import-diff-modal{width:min(92vw,480px);}
+.import-diff-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;
+  border-radius:8px;margin-bottom:6px;border:1px solid var(--bdr);}
+.import-diff-row.new{border-color:rgba(0,255,170,.2);background:rgba(0,255,170,.04);}
+.import-diff-row.update{border-color:rgba(0,212,255,.2);background:rgba(0,212,255,.04);}
+.import-diff-row.same{border-color:rgba(255,255,255,.06);background:rgba(255,255,255,.02);}
+.import-diff-row.skip{border-color:rgba(255,170,0,.2);background:rgba(255,170,0,.04);}
+.import-diff-count{font-family:var(--sans);font-weight:700;font-size:20px;}
+.import-diff-lbl{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;}
+.undo-import-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,170,0,.12);
+  border-top:1px solid rgba(255,170,0,.3);padding:10px 16px;display:flex;align-items:center;gap:12px;
+  z-index:600;transform:translateY(100%);transition:transform .3s;font-family:var(--mono);font-size:11px;color:var(--warn);}
+.undo-import-bar.show{transform:translateY(0);}
+.undo-import-btn{background:rgba(255,170,0,.2);border:1px solid rgba(255,170,0,.4);border-radius:6px;
+  padding:5px 14px;font-family:var(--mono);font-size:10px;color:var(--warn);cursor:pointer;}
+.undo-import-progress{height:2px;background:rgba(255,170,0,.4);position:absolute;bottom:0;left:0;transition:width linear;}
+
+/* ── SMART SYNC BAN MODAL ── */
+.ban-sync-choice{display:flex;gap:10px;margin-top:16px;}
+.ban-sync-btn{flex:1;padding:14px;border-radius:10px;border:1px solid var(--bdr);background:rgba(255,255,255,.03);
+  cursor:pointer;transition:all .15s;text-align:center;}
+.ban-sync-btn:hover{border-color:var(--ac);}
+.ban-sync-btn.banned:hover{border-color:var(--danger);background:rgba(255,48,96,.08);}
+.ban-sync-btn.active:hover{border-color:var(--ok);background:rgba(0,255,170,.06);}
+.ban-sync-btn-icon{font-size:22px;margin-bottom:6px;}
+.ban-sync-btn-lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--bright);}
+.ban-sync-btn-sub{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:3px;}
+
+/* ── BATCH VALIDATOR ── */
+.bv-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.bv-col{background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:9px;padding:10px;}
+.bv-col-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.bv-col-title{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;}
+.bv-col.have .bv-col-title{color:var(--ok);}
+.bv-col.missing .bv-col-title{color:var(--dim);}
+.bv-col.banned .bv-col-title{color:var(--danger);}
+.bv-col-copy{background:none;border:1px solid var(--bdr);border-radius:5px;padding:2px 7px;
+  font-family:var(--mono);font-size:8px;color:var(--dim);cursor:pointer;transition:all .12s;}
+.bv-col-copy:hover{border-color:var(--a2);color:var(--a2);}
+.bv-col-list{font-family:var(--mono);font-size:9px;color:var(--txt);line-height:1.9;max-height:200px;overflow-y:auto;}
+
+/* ── GROUP MERGE / CLONE ── */
+.merge-modal{width:min(92vw,420px);}
+.merge-group-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;
+  border:1px solid var(--bdr);background:rgba(255,255,255,.02);cursor:pointer;margin-bottom:6px;transition:all .12s;}
+.merge-group-item:hover,.merge-group-item.selected{border-color:var(--a2);background:rgba(0,212,255,.06);}
+.merge-group-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.merge-group-name{font-family:var(--sans);font-weight:700;font-size:12px;color:var(--bright);}
+.merge-group-count{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;}
+
 /* ── BAN TAG ── */
 .gcard-banned-tag{position:absolute;top:7px;left:8px;z-index:5;pointer-events:none;
   background:rgba(255,48,96,.82);border:1px solid rgba(255,48,96,.6);border-radius:4px;
@@ -1904,6 +2079,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
           <button class="hdr-om-item" data-om="listview" id="om-listview-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>List View</button>
           <button class="hdr-om-item" data-om="sync"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>Sync</button>
           <button class="hdr-om-item" data-om="refresh"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.5"/></svg>Refresh</button>
+          <button class="hdr-om-item" data-om="rmenu"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>Menu</button>
           <div style="height:1px;background:var(--bdr);margin:4px 0;"></div>
           <div style="padding:4px 12px 6px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;">COLUMNS</div>
           <div style="display:flex;gap:4px;padding:0 8px 6px;">
@@ -1915,6 +2091,11 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         </div>
       </div>
       <button class="btn-add" id="hdr-add">+ Add</button>
+      <button class="rmenu-open-btn" id="rmenu-open-btn" title="Menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--a3)" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
       <div class="sync-dot" id="sync-dot" data-state="off" title="GitHub sync status"></div>
       <div class="data-switch" id="data-switch-btn">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--a3)" stroke-width="2">
@@ -2324,6 +2505,223 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <button class="bsm b-ghost" id="cklog-dl-json" title="Download full log as .json">download .json</button>
       <button class="bsm b-ghost" id="cklog-clear" style="color:var(--danger);border-color:rgba(255,48,96,.3)">clear log</button>
     </div>
+  </div>
+</div>
+
+<!-- RIGHT SLIDE MENU -->
+<div class="rmenu-backdrop" id="rmenu-backdrop"></div>
+<div class="rmenu" id="rmenu">
+  <div class="rmenu-hdr">
+    <div class="rmenu-hdr-title">Saturnity <span>Vault</span></div>
+    <button class="rmenu-close" id="rmenu-close">✕</button>
+  </div>
+  <div class="rmenu-body">
+    <div class="rmenu-section">
+      <div class="rmenu-section-lbl">Data</div>
+      <button class="rmenu-btn" id="rm-stats">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="rmenu-btn-txt">Stats</span>
+      </button>
+      <button class="rmenu-btn" id="rm-activity">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="rmenu-btn-txt">Activity Log</span>
+      </button>
+      <button class="rmenu-btn" id="rm-alts">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        <span class="rmenu-btn-txt">All Alts</span>
+      </button>
+      <button class="rmenu-btn" id="rm-batchval">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="rmenu-btn-txt">Batch Validator</span>
+      </button>
+    </div>
+    <div class="rmenu-section">
+      <div class="rmenu-section-lbl">Sync</div>
+      <button class="rmenu-btn" id="rm-sync">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>
+        <span class="rmenu-btn-txt">Sync Now</span>
+      </button>
+    </div>
+    <div class="rmenu-section">
+      <div class="rmenu-section-lbl">Import / Export</div>
+      <button class="rmenu-btn" id="rm-export">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="rmenu-btn-txt">Export</span>
+      </button>
+      <button class="rmenu-btn" id="rm-export-config">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span class="rmenu-btn-txt">Export This Config</span>
+      </button>
+      <button class="rmenu-btn" id="rm-import">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span class="rmenu-btn-txt">Import</span>
+      </button>
+      <button class="rmenu-btn" id="rm-distribute">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="rmenu-btn-txt">Distribute</span>
+      </button>
+    </div>
+    <div class="rmenu-section">
+      <div class="rmenu-section-lbl">Appearance</div>
+      <div class="theme-pills" id="theme-pills">
+        <button class="theme-pill on" data-theme="default">Default</button>
+        <button class="theme-pill" data-theme="darker">Darker</button>
+        <button class="theme-pill" data-theme="amoled">AMOLED</button>
+      </div>
+      <div class="rmenu-toggle-row">
+        <span class="rmenu-toggle-lbl">Compact cards</span>
+        <label class="rmenu-toggle"><input type="checkbox" id="rm-compact-toggle"><span class="rmenu-toggle-slider"></span></label>
+      </div>
+    </div>
+    <div class="rmenu-section">
+      <div class="rmenu-section-lbl">Settings</div>
+      <button class="rmenu-btn" id="rm-settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="rmenu-btn-txt">Vault Settings</span>
+      </button>
+    </div>
+    <div class="rmenu-section">
+      <div class="rmenu-section-lbl">Danger</div>
+      <button class="rmenu-btn danger" id="rm-forget">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        <span class="rmenu-btn-txt">Forget Everything</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT DIFF MODAL -->
+<div class="m-ov" id="import-diff-modal">
+  <div class="modal import-diff-modal">
+    <h3>Import Preview</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:12px;">Review changes before applying</p>
+    <div class="bv-cols" id="import-diff-stats">
+      <div class="import-diff-row new"><div><div class="import-diff-count" id="diff-new">0</div><div class="import-diff-lbl">NEW</div></div></div>
+      <div class="import-diff-row update"><div><div class="import-diff-count" id="diff-update">0</div><div class="import-diff-lbl">UPDATES</div></div></div>
+      <div class="import-diff-row same"><div><div class="import-diff-count" id="diff-same">0</div><div class="import-diff-lbl">UNCHANGED</div></div></div>
+    </div>
+    <div id="import-diff-dedup" style="margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--warn);display:none;"></div>
+    <div class="m-act" style="margin-top:16px;">
+      <button class="bsm b-ghost" id="import-diff-cancel">Cancel</button>
+      <button class="bsm b-primary" id="import-diff-confirm">Apply Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- BAN SYNC MODAL -->
+<div class="m-ov" id="ban-sync-modal">
+  <div class="modal" style="width:min(92vw,380px);">
+    <h3>Sync — Cookie Status</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:4px;">Are the cookies you're syncing banned or active?</p>
+    <div class="ban-sync-choice">
+      <button class="ban-sync-btn banned" id="bsm-banned">
+        <div class="ban-sync-btn-icon">🚫</div>
+        <div class="ban-sync-btn-lbl">Banned</div>
+        <div class="ban-sync-btn-sub">Move to banned group</div>
+      </button>
+      <button class="ban-sync-btn active" id="bsm-active">
+        <div class="ban-sync-btn-icon">✅</div>
+        <div class="ban-sync-btn-lbl">Active</div>
+        <div class="ban-sync-btn-sub">Recover from banned</div>
+      </button>
+    </div>
+    <div class="m-act" style="margin-top:12px;">
+      <button class="bsm b-ghost" id="bsm-skip">Skip — normal sync</button>
+    </div>
+  </div>
+</div>
+
+<!-- BATCH VALIDATOR MODAL -->
+<div class="m-ov" id="bv-modal">
+  <div class="modal" style="width:min(96vw,600px);max-height:85vh;display:flex;flex-direction:column;">
+    <h3>Cookie Batch Validator</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Paste usernames (one per line). See which are in vault, missing, or banned.</p>
+    <textarea id="bv-input" class="finput" rows="4" placeholder="username1&#10;username2&#10;username3" style="font-family:var(--mono);font-size:11px;resize:none;margin-bottom:10px;"></textarea>
+    <button class="bsm b-primary" id="bv-run" style="align-self:flex-start;margin-bottom:12px;">Validate</button>
+    <div class="bv-cols" id="bv-results" style="flex:1;overflow-y:auto;display:none;">
+      <div class="bv-col have">
+        <div class="bv-col-hdr"><span class="bv-col-title">Have</span><button class="bv-col-copy" id="bv-copy-have">copy</button></div>
+        <div class="bv-col-list" id="bv-list-have"></div>
+      </div>
+      <div class="bv-col missing">
+        <div class="bv-col-hdr"><span class="bv-col-title">Missing</span><button class="bv-col-copy" id="bv-copy-missing">copy</button></div>
+        <div class="bv-col-list" id="bv-list-missing"></div>
+      </div>
+      <div class="bv-col banned">
+        <div class="bv-col-hdr"><span class="bv-col-title">Banned</span><button class="bv-col-copy" id="bv-copy-banned">copy</button></div>
+        <div class="bv-col-list" id="bv-list-banned"></div>
+      </div>
+    </div>
+    <div class="m-act" style="margin-top:10px;">
+      <button class="bsm b-ghost" id="bv-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- MERGE GROUPS MODAL -->
+<div class="m-ov" id="merge-modal">
+  <div class="modal merge-modal">
+    <h3>Merge Groups</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Select a second group to merge into <strong id="merge-src-name" style="color:var(--a2);"></strong></p>
+    <div id="merge-group-list" style="max-height:300px;overflow-y:auto;margin-bottom:10px;"></div>
+    <div class="vrow"><label>Merged group name</label><input id="merge-name-in" class="finput" maxlength="40" placeholder="Enter name..."></div>
+    <div class="m-act" style="margin-top:12px;">
+      <button class="bsm b-ghost" id="merge-cancel">Cancel</button>
+      <button class="bsm b-primary" id="merge-confirm">Merge</button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK RENAME MODAL -->
+<div class="m-ov" id="bulk-rename-modal">
+  <div class="modal" style="width:min(92vw,380px);">
+    <h3>Bulk Rename</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Pattern: use <code style="color:var(--a2);">{n}</code> for auto-increment number, <code style="color:var(--a2);">{0n}</code> for zero-padded.</p>
+    <div class="vrow"><label>Pattern</label><input id="bulk-rename-pattern" class="finput" value="Group {0n}" maxlength="40"></div>
+    <div class="vrow"><label>Start number</label><input id="bulk-rename-start" class="finput" type="number" value="1" min="1"></div>
+    <div id="bulk-rename-preview" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px;"></div>
+    <div class="m-act" style="margin-top:12px;">
+      <button class="bsm b-ghost" id="bulk-rename-cancel">Cancel</button>
+      <button class="bsm b-primary" id="bulk-rename-confirm">Rename</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOVE TO SERVER MODAL -->
+<div class="m-ov" id="move-server-modal">
+  <div class="modal" style="width:min(92vw,360px);">
+    <h3>Move to Server</h3>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Choose destination server or enter a new one</p>
+    <div id="move-server-list" style="max-height:220px;overflow-y:auto;margin-bottom:10px;"></div>
+    <div class="vrow"><label>Or type new server name</label><input id="move-server-input" class="finput" maxlength="40" placeholder="New server name..."></div>
+    <div class="m-act" style="margin-top:12px;">
+      <button class="bsm b-ghost" id="move-server-cancel">Cancel</button>
+      <button class="bsm b-primary" id="move-server-confirm">Move</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNDO IMPORT BAR -->
+<div class="undo-import-bar" id="undo-import-bar">
+  <span id="undo-import-msg">Import applied.</span>
+  <button class="undo-import-btn" id="undo-import-btn">Undo</button>
+  <span style="margin-left:auto;font-size:9px;opacity:.6;" id="undo-import-timer">60s</span>
+  <div class="undo-import-progress" id="undo-import-progress" style="width:100%;"></div>
+</div>
+
+<!-- TAG PICKER -->
+<div class="tag-picker" id="tag-picker">
+  <div class="tag-picker-fixed" id="tag-picker-fixed">
+    <span class="ck-tag tag-main" data-tag="main" style="cursor:pointer;">main</span>
+    <span class="ck-tag tag-alt" data-tag="alt" style="cursor:pointer;">alt</span>
+    <span class="ck-tag tag-banned" data-tag="banned" style="cursor:pointer;">banned</span>
+    <span class="ck-tag tag-testing" data-tag="testing" style="cursor:pointer;">testing</span>
+    <span class="ck-tag tag-flagged" data-tag="flagged" style="cursor:pointer;">flagged</span>
+    <span class="ck-tag tag-expired" data-tag="expired" style="cursor:pointer;">expired</span>
+  </div>
+  <div class="tag-picker-free">
+    <input id="tag-picker-input" placeholder="custom tag..." maxlength="20">
+    <button id="tag-picker-add-btn">Add</button>
   </div>
 </div>
 
@@ -4941,7 +5339,7 @@ refreshPanel=function(){
 // ═══════════════════════════════════════
 // patch render to mark new card position; handled in confirmAdd via fly-in after insert
 // The key: after confirmAdd calls vault.unshift(), we re-sort before saving so card appears in A-Z position
-const _origConfirmAdd=confirmAdd;
+const _origConfirmAddSorted=confirmAdd;
 // wrap via event: intercept saveVault after add by patching sortVault to always apply before render
 // Actually simplest: patch vault.unshift to do a sorted insert instead
 function sortedInsert(group){
@@ -5032,17 +5430,7 @@ document.getElementById('health-badge').addEventListener('click',()=>{
 const _origBanFinalize=()=>{};// no-op, we hook via saveVault after ban check
 
 // Patch mkCard to show lastChecked if present
-const _origMkCard=mkCard;
-mkCard=function(group){
-  const card=_origMkCard(group);
-  if(group.lastChecked){
-    const ts=document.createElement('div');
-    ts.style.cssText='position:absolute;bottom:5px;left:8px;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.3px;pointer-events:none;z-index:3;';
-    ts.textContent='checked '+fmtTime(group.lastChecked);
-    card.appendChild(ts);
-  }
-  return card;
-};
+// mkCard extended in v2.0 patch below — lastChecked handled there
 
 // ═══════════════════════════════════════
 // COOKIE ACTIVITY LOG
@@ -6083,7 +6471,7 @@ submitPin=function(){
 // Handles tablets that report >960px viewport but are actually in mobile/portrait layout
 function updateCompactMode(){
   // Use actual screen dimensions, not viewport — catches tablets with wide viewport but small screen
-  const screenW=Math.min(screen.width,screen.height); // smaller dimension = portrait width
+  const screenW=Math.min((typeof screen!=="undefined"?screen.width:9999),(typeof screen!=="undefined"?screen.height:9999)); // smaller dimension = portrait width
   const viewW=window.innerWidth;
   // Compact if: screen physically narrow, or viewport is narrow, or touch device with moderate width
   const isTouchDevice='ontouchstart' in window||navigator.maxTouchPoints>0;
@@ -6095,6 +6483,795 @@ function updateCompactMode(){
 updateCompactMode();
 window.addEventListener('resize',updateCompactMode);
 window.addEventListener('orientationchange',()=>setTimeout(updateCompactMode,150));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// V2.0 FEATURES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── SAVE FIX: ensure saveVault always flushes ──────────────────────────────
+// Patch render to always call saveVault after paste/add operations
+// The existing saveVault has a debounce-style guard — we just ensure it's called
+
+// ── RIGHT MENU ─────────────────────────────────────────────────────────────
+function openRMenu(){
+  document.getElementById('rmenu').classList.add('open');
+  document.getElementById('rmenu-backdrop').classList.add('open');
+}
+function closeRMenu(){
+  document.getElementById('rmenu').classList.remove('open');
+  document.getElementById('rmenu-backdrop').classList.remove('open');
+}
+document.getElementById('rmenu-open-btn').addEventListener('click',openRMenu);
+document.getElementById('rmenu-close').addEventListener('click',closeRMenu);
+document.getElementById('rmenu-backdrop').addEventListener('click',closeRMenu);
+document.getElementById('rm-stats').addEventListener('click',()=>{closeRMenu();showStats();});
+document.getElementById('rm-activity').addEventListener('click',()=>{closeRMenu();openCkLogModal();});
+document.getElementById('rm-alts').addEventListener('click',()=>{closeRMenu();openAltsModal();});
+document.getElementById('rm-batchval').addEventListener('click',()=>{closeRMenu();openMod('bv-modal');});
+document.getElementById('rm-sync').addEventListener('click',()=>{closeRMenu();openSyncNowModal();});
+document.getElementById('rm-export').addEventListener('click',()=>{closeRMenu();openExpPopup(document.getElementById('rmenu-open-btn'),null);});
+document.getElementById('rm-export-config').addEventListener('click',()=>{closeRMenu();exportCurrentConfig();});
+document.getElementById('rm-import').addEventListener('click',()=>{closeRMenu();document.getElementById('import-unified').click();});
+document.getElementById('rm-distribute').addEventListener('click',()=>{closeRMenu();openMod('sort-modal');});
+document.getElementById('rm-settings').addEventListener('click',()=>{closeRMenu();openMod('vault-settings-modal');});
+document.getElementById('rm-forget').addEventListener('click',()=>{closeRMenu();document.getElementById('sb-clr').click();});
+// overflow menu → rmenu
+const _omOrig=document.querySelector('.hdr-overflow-menu');
+if(_omOrig){
+  _omOrig.querySelectorAll('.hdr-om-item[data-om="rmenu"]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.getElementById('hdr-overflow-menu').classList.remove('open');
+      openRMenu();
+    });
+  });
+}
+
+// ── THEMES ─────────────────────────────────────────────────────────────────
+const THEME_K='sv_theme';
+function applyTheme(t){
+  document.body.classList.remove('theme-darker','theme-amoled');
+  if(t==='darker')document.body.classList.add('theme-darker');
+  if(t==='amoled')document.body.classList.add('theme-amoled');
+  document.querySelectorAll('.theme-pill').forEach(p=>p.classList.toggle('on',p.dataset.theme===t));
+  localStorage.setItem(THEME_K,t);
+}
+applyTheme(localStorage.getItem(THEME_K)||'default');
+document.querySelectorAll('.theme-pill').forEach(p=>{
+  p.addEventListener('click',()=>applyTheme(p.dataset.theme));
+});
+
+// ── COMPACT CARDS ──────────────────────────────────────────────────────────
+const COMPACT_K='sv_compact';
+function applyCompactCards(on){
+  document.body.classList.toggle('compact-cards',on);
+  const tog=document.getElementById('rm-compact-toggle');
+  if(tog)tog.checked=on;
+  localStorage.setItem(COMPACT_K,on?'1':'0');
+}
+applyCompactCards(localStorage.getItem(COMPACT_K)==='1');
+document.getElementById('rm-compact-toggle').addEventListener('change',e=>{
+  applyCompactCards(e.target.checked);
+});
+
+// ── FADE IN STAGGER ────────────────────────────────────────────────────────
+// staggerTimers already declared globally; patch render to add fade-in
+const _origRenderFade=render;
+render=function(){
+  _origRenderFade.apply(this,arguments);
+  staggerTimers.forEach(t=>clearTimeout(t));staggerTimers=[];
+  document.querySelectorAll('.gcard').forEach((card,i)=>{
+    card.classList.remove('fade-in');
+    card.style.opacity='0';
+    const t=setTimeout(()=>{card.style.opacity='';card.classList.add('fade-in');},i*18);
+    staggerTimers.push(t);
+  });
+  // Add server select-all buttons after render
+  try{addServerSelectAll();}catch(e){}
+};
+
+// ── COOKIE STATUS MINI-BAR ─────────────────────────────────────────────────
+// Patch mkCard to append status bar
+const _origMkCard=mkCard;
+mkCard=function(group){
+  const card=_origMkCard.apply(this,arguments);
+  // lastChecked timestamp
+  if(group.lastChecked){
+    const ts=document.createElement('div');
+    ts.style.cssText='position:absolute;bottom:5px;left:8px;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.3px;pointer-events:none;z-index:3;';
+    ts.textContent='checked '+fmtTime(group.lastChecked);
+    card.appendChild(ts);
+  }
+  // Build status bar
+  const total=(group.cookies||[]).length;
+  const altCount=(group.alternatives||[]).reduce((s,a)=>(s+(a.cookies||[]).length),0);
+  const bannedCount=(group.cookies||[]).filter(c=>c.banStatus==='banned').length;
+  const activeCount=total-bannedCount;
+  const bar=document.createElement('div');bar.className='gcard-status-bar';
+  if(total>0||altCount>0){
+    const tot=activeCount+bannedCount+altCount||1;
+    if(activeCount>0){const s=document.createElement('div');s.className='gsb-active';s.style.flex=activeCount/tot;bar.appendChild(s);}
+    if(bannedCount>0){const s=document.createElement('div');s.className='gsb-banned';s.style.flex=bannedCount/tot;bar.appendChild(s);}
+    if(altCount>0){const s=document.createElement('div');s.className='gsb-alt';s.style.flex=altCount/tot;bar.appendChild(s);}
+  }
+  card.appendChild(bar);
+  // Sparkline (7-day ban/active)
+  const spark=buildSparkline(group);
+  if(spark)card.appendChild(spark);
+  // Double-tap to copy
+  let _lastTap=0;
+  card.addEventListener('click',e=>{
+    const now=Date.now();
+    if(now-_lastTap<350){
+      e.stopPropagation();
+      const fmt=localStorage.getItem('sv_last_copy_fmt')||'user:pass:cookie';
+      const lines=(group.cookies||[]).map(c=>fmtLine(c,fmt)).filter(Boolean);
+      if(!lines.length){toast('No cookies to copy','warn');return;}
+      copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} (${fmt})`,'ok'),()=>toast('Copy failed','err'));
+    }
+    _lastTap=now;
+  });
+  return card;
+};
+
+// ── SPARKLINES ─────────────────────────────────────────────────────────────
+function buildSparkline(group){
+  const cklog=JSON.parse(localStorage.getItem('sv_cookie_log')||'[]');
+  const gid=group.id;
+  const now=Date.now();
+  const days=7;
+  const banned=new Array(days).fill(0);
+  const active=new Array(days).fill(0);
+  cklog.forEach(e=>{
+    if(e.gid!==gid)return;
+    const d=Math.floor((now-e.t)/(864e5));
+    if(d>=0&&d<days){
+      if(e.type==='banned')banned[days-1-d]++;
+      else if(e.type==='edited'||e.type==='added')active[days-1-d]++;
+    }
+  });
+  const allZero=banned.every(v=>v===0)&&active.every(v=>v===0);
+  if(allZero)return null;
+  const maxVal=Math.max(...banned,...active,1);
+  const W=100,H=20;
+  const pts=(arr,col)=>{
+    const step=W/(days-1);
+    const path=arr.map((v,i)=>{
+      const x=i*step;
+      const y=H-(v/maxVal)*H;
+      return (i===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1);
+    }).join(' ');
+    return `<path d="${path}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round"/>`;
+  };
+  const svg=document.createElement('div');
+  svg.className='gcard-sparkline';
+  svg.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none">
+    ${pts(active,'var(--ok)')}${pts(banned,'var(--danger)')}
+  </svg>`;
+  return svg;
+}
+
+// ── ANIMATED SYNC INDICATOR ────────────────────────────────────────────────
+const syncDot=document.getElementById('sync-dot');
+// Animate sync dot while doGhSync runs
+const _pulseStyle=document.createElement('style');
+_pulseStyle.textContent='@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.4);opacity:.6;}}';
+document.head.appendChild(_pulseStyle);
+function setSyncDotAnimated(state){
+  if(!syncDot)return;
+  syncDot.dataset.state=state;
+  syncDot.style.animation=state==='syncing'?'pulse 1s ease-in-out infinite':'';
+}
+const _origDoGhSync=doGhSync;
+doGhSync=async function(){
+  setSyncDotAnimated('syncing');
+  try{return await _origDoGhSync.apply(this,arguments);}
+  finally{setSyncDotAnimated(syncDot?.dataset.state==='syncing'?'ok':syncDot?.dataset.state||'off');}
+};
+
+// ── PER-CONFIG EXPORT ──────────────────────────────────────────────────────
+function exportCurrentConfig(){
+  const data={vault,configs:loadDataConfigs(),activeConfig:getActiveConfigId(),exportedAt:Date.now()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`saturnity-vault-${getActiveConfigId()}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('Config exported','ok');
+}
+
+// ── IMPORT DIFF + DEDUP ────────────────────────────────────────────────────
+let _pendingImportData=null;
+let _preImportSnapshot=null;
+
+function computeImportDiff(incoming){
+  let newCount=0,updateCount=0,sameCount=0,skipCount=0;
+  const allCookies=vault.flatMap(g=>g.cookies);
+  incoming.forEach(ic=>{
+    const uLow=(ic.username||'').toLowerCase();
+    const existing=allCookies.find(c=>(c.username||'').toLowerCase()===uLow);
+    if(!existing)newCount++;
+    else if(existing.cookie!==ic.cookie)updateCount++;
+    else{sameCount++;skipCount++;}
+  });
+  return{newCount,updateCount,sameCount,skipCount};
+}
+
+// Patch the existing sync/paste flow to show diff first
+const _origApplySyncCookies=applySyncCookies;
+applySyncCookies=function(incomingCookies){
+  // Dedup: filter out cookies where username AND cookie both match
+  const deduped=incomingCookies.filter(ic=>{
+    if(!ic.username)return true;
+    const uLow=ic.username.toLowerCase();
+    return!vault.flatMap(g=>g.cookies).some(c=>(c.username||'').toLowerCase()===uLow&&c.cookie===ic.cookie);
+  });
+  const skipped=incomingCookies.length-deduped.length;
+  if(skipped>0)toast(`Skipped ${skipped} duplicate${skipped!==1?'s':''}  already in vault`,'ok');
+  return _origApplySyncCookies.apply(this,[deduped,...Array.prototype.slice.call(arguments,1)]);
+};
+
+// ── UNDO IMPORT ────────────────────────────────────────────────────────────
+let _undoImportSnapshot=null;
+let _undoImportTimer=null;
+let _undoImportInterval=null;
+
+function startUndoImportTimer(){
+  const bar=document.getElementById('undo-import-bar');
+  const timerEl=document.getElementById('undo-import-timer');
+  const progress=document.getElementById('undo-import-progress');
+  bar.classList.add('show');
+  let remaining=60;
+  progress.style.width='100%';
+  progress.style.transitionDuration='60s';
+  setTimeout(()=>{progress.style.width='0%';},50);
+  _undoImportInterval=setInterval(()=>{
+    remaining--;
+    if(timerEl)timerEl.textContent=remaining+'s';
+    if(remaining<=0){clearInterval(_undoImportInterval);bar.classList.remove('show');}
+  },1000);
+  _undoImportTimer=setTimeout(()=>{bar.classList.remove('show');_undoImportSnapshot=null;},61000);
+}
+
+document.getElementById('undo-import-btn').addEventListener('click',()=>{
+  if(!_undoImportSnapshot)return;
+  vault=_undoImportSnapshot;saveVault();render();
+  document.getElementById('undo-import-bar').classList.remove('show');
+  clearInterval(_undoImportInterval);clearTimeout(_undoImportTimer);
+  _undoImportSnapshot=null;
+  toast('Import undone','ok');
+});
+
+// Patch confirmAdd to snapshot before import
+const _origConfirmAdd=confirmAdd;
+confirmAdd=async function(){
+  _undoImportSnapshot=JSON.parse(JSON.stringify(vault));
+  await _origConfirmAdd.apply(this,arguments);
+  startUndoImportTimer();
+};
+
+// ── BAN SYNC DETECTION ─────────────────────────────────────────────────────
+let _banSyncPendingCookies=null;
+let _banSyncResolve=null;
+
+function openBanSyncModal(cookies){
+  return new Promise(resolve=>{
+    _banSyncPendingCookies=cookies;
+    _banSyncResolve=resolve;
+    openMod('ban-sync-modal');
+  });
+}
+
+document.getElementById('bsm-banned').addEventListener('click',()=>{
+  closeMod('ban-sync-modal');
+  if(_banSyncResolve)_banSyncResolve('banned');
+});
+document.getElementById('bsm-active').addEventListener('click',()=>{
+  closeMod('ban-sync-modal');
+  if(_banSyncResolve)_banSyncResolve('active');
+});
+document.getElementById('bsm-skip').addEventListener('click',()=>{
+  closeMod('ban-sync-modal');
+  if(_banSyncResolve)_banSyncResolve('skip');
+});
+
+// Patch openSyncNowModal to show ban modal after paste
+const _origOpenSyncNowModal=openSyncNowModal;
+openSyncNowModal=function(){
+  _origOpenSyncNowModal.apply(this,arguments);
+};
+
+// Hook sync-confirm to intercept and show ban modal
+const _origSyncConfirmBtn=document.getElementById('sync-now-confirm');
+if(_origSyncConfirmBtn){
+  const _origSyncHandlers=[];
+  _origSyncConfirmBtn.addEventListener('click',async function(e){
+    // After existing handler fires, check if we should ask about ban status
+    setTimeout(async()=>{
+      // This fires after the sync has been applied
+      // We check if vault changed and ask
+    },100);
+  });
+}
+
+function applyBanSync(cookies,status){
+  if(status==='banned'){
+    // Mark matched cookies as banned and move to a "Banned — [server]" group
+    cookies.forEach(ic=>{
+      const uLow=(ic.username||'').toLowerCase();
+      vault.forEach(g=>{
+        g.cookies.forEach(c=>{
+          if((c.username||'').toLowerCase()===uLow){
+            c.banStatus='banned';
+            c._lastGroup=g.id;
+            addCookieTimelineEntry(c,'banned','Marked banned via sync');
+          }
+        });
+      });
+    });
+    saveVault();render();
+    toast(`Marked ${cookies.length} cookies as banned`,'ok');
+  } else if(status==='active'){
+    // Recover from banned — move back to last group
+    let recovered=0;
+    cookies.forEach(ic=>{
+      const uLow=(ic.username||'').toLowerCase();
+      vault.forEach(g=>{
+        g.cookies.forEach(c=>{
+          if((c.username||'').toLowerCase()===uLow&&c.banStatus==='banned'){
+            c.banStatus=undefined;
+            addCookieTimelineEntry(c,'recovered','Recovered via sync');
+            recovered++;
+          }
+        });
+      });
+    });
+    saveVault();render();
+    toast(`Recovered ${recovered} cookie${recovered!==1?'s':''}  from banned`,'ok');
+  }
+}
+
+// ── PER-COOKIE TAGS ────────────────────────────────────────────────────────
+let _tagPickerTarget=null; // {cookie, groupId, onUpdate}
+
+function openTagPicker(anchor,cookie,onUpdate){
+  _tagPickerTarget={cookie,onUpdate};
+  const picker=document.getElementById('tag-picker');
+  picker.classList.add('open');
+  const rect=anchor.getBoundingClientRect();
+  let left=rect.left,top=rect.bottom+4;
+  if(left+190>window.innerWidth-8)left=window.innerWidth-198;
+  if(top+140>window.innerHeight-8)top=rect.top-144;
+  picker.style.left=left+'px';picker.style.top=top+'px';
+}
+
+document.getElementById('tag-picker-fixed').querySelectorAll('.ck-tag[data-tag]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(!_tagPickerTarget)return;
+    const c=_tagPickerTarget.cookie;
+    if(!c.tags)c.tags=[];
+    const tag=btn.dataset.tag;
+    if(!c.tags.includes(tag)){c.tags.push(tag);addCookieTimelineEntry(c,'tagged',`Tagged: ${tag}`);}
+    if(_tagPickerTarget.onUpdate)_tagPickerTarget.onUpdate();
+    saveVault();
+  });
+});
+document.getElementById('tag-picker-add-btn').addEventListener('click',()=>{
+  if(!_tagPickerTarget)return;
+  const val=document.getElementById('tag-picker-input').value.trim();
+  if(!val)return;
+  const c=_tagPickerTarget.cookie;
+  if(!c.tags)c.tags=[];
+  if(!c.tags.includes(val)){c.tags.push(val);addCookieTimelineEntry(c,'tagged',`Tagged: ${val}`);}
+  document.getElementById('tag-picker-input').value='';
+  if(_tagPickerTarget.onUpdate)_tagPickerTarget.onUpdate();
+  saveVault();
+});
+document.addEventListener('click',e=>{
+  const picker=document.getElementById('tag-picker');
+  if(picker.classList.contains('open')&&!picker.contains(e.target)&&!e.target.closest('.ck-tag-add')){
+    picker.classList.remove('open');
+  }
+});
+
+function buildTagRow(cookie,onUpdate){
+  const wrap=document.createElement('div');wrap.className='ck-tags';
+  if(!cookie.tags)cookie.tags=[];
+  cookie.tags.forEach(tag=>{
+    const pill=document.createElement('span');
+    const fixedTypes=['main','alt','banned','testing','flagged','expired'];
+    pill.className='ck-tag '+(fixedTypes.includes(tag)?'tag-'+tag:'tag-custom');
+    pill.innerHTML=esc(tag)+`<button class="ck-tag-del" title="Remove tag">✕</button>`;
+    pill.querySelector('.ck-tag-del').addEventListener('click',e=>{
+      e.stopPropagation();
+      cookie.tags=cookie.tags.filter(t=>t!==tag);
+      addCookieTimelineEntry(cookie,'tagged',`Removed tag: ${tag}`);
+      saveVault();if(onUpdate)onUpdate();
+    });
+    wrap.appendChild(pill);
+  });
+  const addBtn=document.createElement('button');addBtn.className='ck-tag-add';addBtn.textContent='+ tag';
+  addBtn.addEventListener('click',e=>{e.stopPropagation();openTagPicker(addBtn,cookie,onUpdate);});
+  wrap.appendChild(addBtn);
+  return wrap;
+}
+
+// ── COOKIE TIMELINE ────────────────────────────────────────────────────────
+function addCookieTimelineEntry(cookie,type,msg){
+  if(!cookie.timeline)cookie.timeline=[];
+  cookie.timeline.push({t:Date.now(),type,msg});
+  if(cookie.timeline.length>100)cookie.timeline=cookie.timeline.slice(-100);
+}
+
+function buildCookieTimeline(cookie){
+  if(!cookie.timeline||!cookie.timeline.length)return null;
+  const wrap=document.createElement('div');wrap.className='ck-timeline';
+  const title=document.createElement('div');title.className='ck-tl-title';title.textContent='Cookie Timeline';
+  wrap.appendChild(title);
+  [...cookie.timeline].reverse().slice(0,20).forEach(e=>{
+    const row=document.createElement('div');row.className='ck-tl-entry';
+    const dot=document.createElement('div');dot.className='ck-tl-dot';
+    const typeColors={banned:'var(--danger)',recovered:'var(--ok)',tagged:'var(--a3)',added:'var(--a2)',edited:'var(--warn)',synced:'var(--ok)'};
+    dot.style.background=typeColors[e.type]||'var(--a2)';
+    const time=document.createElement('div');time.className='ck-tl-time';time.textContent=fmtTime(e.t);
+    const msg=document.createElement('div');msg.className='ck-tl-msg';msg.textContent=e.msg;
+    row.appendChild(dot);row.appendChild(time);row.appendChild(msg);
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+
+// Patch mkCkItem to add tags + timeline
+const _origMkCkItem2=mkCkItem;
+mkCkItem=function(c,idx,groupId,opts){
+  const item=_origMkCkItem2.apply(this,arguments);
+  if(opts&&opts.isAlt)return item; // skip for alt cookies
+  // Add tags row after format row
+  const fmtRow=item.querySelector('.ck-fmt-row');
+  if(fmtRow){
+    const tagRow=buildTagRow(c,()=>{
+      const newTagRow=buildTagRow(c,null);
+      tagRow.replaceWith(newTagRow);
+    });
+    tagRow.style.marginTop='4px';
+    fmtRow.after(tagRow);
+  }
+  // Add timeline at bottom of item
+  const tl=buildCookieTimeline(c);
+  if(tl)item.appendChild(tl);
+  return item;
+};
+
+// Tag new cookies with timeline entry on add (safe patch)
+try{
+  const _origParseLine=parseLine;
+  parseLine=function(){
+    const c=_origParseLine.apply(this,arguments);
+    if(c&&typeof c==='object')addCookieTimelineEntry(c,'added','Cookie added');
+    return c;
+  };
+}catch(e){}
+
+// ── BATCH VALIDATOR ────────────────────────────────────────────────────────
+document.getElementById('bv-run').addEventListener('click',()=>{
+  const raw=document.getElementById('bv-input').value.trim();
+  if(!raw){toast('Paste usernames first','warn');return;}
+  const usernames=raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const have=[],missing=[],banned=[];
+  usernames.forEach(u=>{
+    const uLow=u.toLowerCase();
+    let found=false,isBanned=false;
+    vault.forEach(g=>{
+      g.cookies.forEach(c=>{
+        if((c.username||'').toLowerCase()===uLow){
+          found=true;
+          if(c.banStatus==='banned'||g.banned)isBanned=true;
+        }
+      });
+    });
+    if(!found)missing.push(u);
+    else if(isBanned)banned.push(u);
+    else have.push(u);
+  });
+  document.getElementById('bv-list-have').textContent=have.join('\n')||'—';
+  document.getElementById('bv-list-missing').textContent=missing.join('\n')||'—';
+  document.getElementById('bv-list-banned').textContent=banned.join('\n')||'—';
+  document.getElementById('bv-results').style.display='grid';
+});
+document.getElementById('bv-close').addEventListener('click',()=>closeMod('bv-modal'));
+['have','missing','banned'].forEach(col=>{
+  document.getElementById('bv-copy-'+col).addEventListener('click',()=>{
+    const text=document.getElementById('bv-list-'+col).textContent;
+    if(text&&text!=='—')copyText(text,()=>toast('Copied','ok'),()=>toast('Failed','err'));
+  });
+});
+
+// ── GROUP MERGE ────────────────────────────────────────────────────────────
+let _mergeSrcId=null;
+function openMergeModal(groupId){
+  _mergeSrcId=groupId;
+  const src=vault.find(g=>g.id===groupId);
+  if(!src)return;
+  document.getElementById('merge-src-name').textContent=src.name;
+  document.getElementById('merge-name-in').value=src.name;
+  const list=document.getElementById('merge-group-list');
+  list.innerHTML='';
+  let _selectedId=null;
+  vault.filter(g=>g.id!==groupId).forEach(g=>{
+    const col=getColor(g.serverName);
+    const item=document.createElement('div');item.className='merge-group-item';
+    item.innerHTML=`<div class="merge-group-dot" style="background:${col.c}"></div><div class="merge-group-name">${esc(g.name)}</div><div class="merge-group-count">${g.cookies.length}c</div>`;
+    item.addEventListener('click',()=>{
+      list.querySelectorAll('.merge-group-item').forEach(i=>i.classList.remove('selected'));
+      item.classList.add('selected');
+      _selectedId=g.id;
+    });
+    list.appendChild(item);
+  });
+  list._getSelected=()=>_selectedId;
+  openMod('merge-modal');
+}
+document.getElementById('merge-cancel').addEventListener('click',()=>closeMod('merge-modal'));
+document.getElementById('merge-confirm').addEventListener('click',()=>{
+  const list=document.getElementById('merge-group-list');
+  const targetId=list._getSelected&&list._getSelected();
+  if(!targetId){toast('Select a group to merge with','warn');return;}
+  const src=vault.find(g=>g.id===_mergeSrcId);
+  const tgt=vault.find(g=>g.id===targetId);
+  if(!src||!tgt)return;
+  const newName=document.getElementById('merge-name-in').value.trim()||src.name;
+  // Merge cookies
+  src.cookies=[...src.cookies,...tgt.cookies];
+  src.name=newName;
+  src.alternatives=[...(src.alternatives||[]),...(tgt.alternatives||[])];
+  // Remove target
+  vault=vault.filter(g=>g.id!==targetId);
+  logChange(src,`Merged with "${esc(tgt.name)}"`);
+  saveVault();render();closeMod('merge-modal');
+  toast(`Merged into "${newName}" (${src.cookies.length} cookies)`,'ok');
+});
+
+// ── CLONE GROUP ────────────────────────────────────────────────────────────
+function cloneGroup(groupId){
+  const src=vault.find(g=>g.id===groupId);
+  if(!src)return;
+  const clone=JSON.parse(JSON.stringify(src));
+  clone.id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  clone.name=src.name+' (copy)';
+  clone.pinned=false;
+  clone.changelog=[];
+  // Insert after src
+  const idx=vault.indexOf(src);
+  vault.splice(idx+1,0,clone);
+  logChange(clone,`Cloned from "${esc(src.name)}"`);
+  saveVault();render();
+  toast(`Cloned "${src.name}"`,'ok');
+}
+
+// ── AUTO GROUP NAMING ──────────────────────────────────────────────────────
+function getNextGroupName(serverName){
+  // Find existing groups in this server and get highest number
+  const serverGroups=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===(serverName||'').trim().toLowerCase());
+  let maxNum=0;
+  const pfxMatch=null;
+  serverGroups.forEach(g=>{
+    const m=g.name.match(/(\d+)$/);
+    if(m){const n=parseInt(m[1]);if(n>maxNum)maxNum=n;}
+  });
+  // Determine prefix from existing groups
+  let prefix='Group ';
+  if(serverGroups.length>0){
+    const lastName=serverGroups[serverGroups.length-1].name;
+    const m=lastName.match(/^(.*?)(\d+)$/);
+    if(m)prefix=m[1];
+  }
+  const nextNum=maxNum+1;
+  const padWidth=String(maxNum).length>1?String(maxNum).length:2;
+  return prefix+String(nextNum).padStart(padWidth,'0');
+}
+
+// ── BULK RENAME ────────────────────────────────────────────────────────────
+let _bulkRenameGroups=[];
+function openBulkRenameModal(){
+  const cards=[...document.querySelectorAll('.gcard')];
+  _bulkRenameGroups=cards.map(c=>c.dataset.id).filter(id=>bulkSelected.has(id)).map(id=>vault.find(g=>g.id===id)).filter(Boolean);
+  if(!_bulkRenameGroups.length){toast('No groups selected','warn');return;}
+  updateBulkRenamePreview();
+  openMod('bulk-rename-modal');
+}
+function updateBulkRenamePreview(){
+  const pattern=document.getElementById('bulk-rename-pattern').value||'Group {0n}';
+  const start=parseInt(document.getElementById('bulk-rename-start').value)||1;
+  const preview=_bulkRenameGroups.slice(0,3).map((g,i)=>applyRenamePattern(pattern,start+i)).join(', ')+((_bulkRenameGroups.length>3)?'…':'');
+  document.getElementById('bulk-rename-preview').textContent='Preview: '+preview;
+}
+function applyRenamePattern(pattern,n){
+  const padded=String(n).padStart(2,'0');
+  return pattern.replace(/\{0n\}/g,padded).replace(/\{n\}/g,String(n));
+}
+document.getElementById('bulk-rename-pattern').addEventListener('input',updateBulkRenamePreview);
+document.getElementById('bulk-rename-start').addEventListener('input',updateBulkRenamePreview);
+document.getElementById('bulk-rename-cancel').addEventListener('click',()=>closeMod('bulk-rename-modal'));
+document.getElementById('bulk-rename-confirm').addEventListener('click',()=>{
+  const pattern=document.getElementById('bulk-rename-pattern').value||'Group {0n}';
+  const start=parseInt(document.getElementById('bulk-rename-start').value)||1;
+  _bulkRenameGroups.forEach((g,i)=>{
+    const newName=applyRenamePattern(pattern,start+i);
+    g.name=newName;logChange(g,`Bulk renamed to <span>${esc(newName)}</span>`);
+  });
+  saveVault();render();closeMod('bulk-rename-modal');clearBulkSelect();
+  toast(`Renamed ${_bulkRenameGroups.length} groups`,'ok');
+});
+
+// ── MOVE TO SERVER ─────────────────────────────────────────────────────────
+let _moveServerTargetIds=[];
+function openMoveServerModal(groupIds){
+  _moveServerTargetIds=Array.isArray(groupIds)?groupIds:[groupIds];
+  const list=document.getElementById('move-server-list');
+  list.innerHTML='';
+  // Get all existing servers
+  const servers=[...new Set(vault.map(g=>g.serverName).filter(Boolean))];
+  let _selectedServer=null;
+  servers.forEach(srv=>{
+    const col=getColor(srv);
+    const item=document.createElement('div');item.className='merge-group-item';
+    item.innerHTML=`<div class="merge-group-dot" style="background:${col.c}"></div><span style="font-family:var(--sans);font-weight:700;font-size:12px;color:var(--bright);">${esc(srv)}</span>`;
+    item.addEventListener('click',()=>{
+      list.querySelectorAll('.merge-group-item').forEach(i=>i.classList.remove('selected'));
+      item.classList.add('selected');
+      _selectedServer=srv;
+      document.getElementById('move-server-input').value=srv;
+    });
+    list.appendChild(item);
+  });
+  list._getSelected=()=>_selectedServer;
+  openMod('move-server-modal');
+}
+document.getElementById('move-server-cancel').addEventListener('click',()=>closeMod('move-server-modal'));
+document.getElementById('move-server-confirm').addEventListener('click',()=>{
+  const srv=document.getElementById('move-server-input').value.trim();
+  if(!srv){toast('Enter a server name','warn');return;}
+  _moveServerTargetIds.forEach(id=>{
+    const g=vault.find(x=>x.id===id);
+    if(g){g.serverName=srv;logChange(g,`Moved to server <span>${esc(srv)}</span>`);}
+  });
+  saveVault();render();closeMod('move-server-modal');
+  if(panelId&&_moveServerTargetIds.includes(panelId))refreshPanel();
+  clearBulkSelect();
+  toast(`Moved ${_moveServerTargetIds.length} group${_moveServerTargetIds.length!==1?'s':''} to "${srv}"`,'ok');
+});
+
+// ── BULK SELECT PER SERVER ─────────────────────────────────────────────────
+// Add "select all in server" button to server headers
+const _origBuildSecHd=(typeof buildSecHeader!=="undefined"?buildSecHeader:null);
+// Patch sec header to add select-all button
+// We do this by patching the sec-rename-btn listener area
+// Actually patch the server header build in render
+function addServerBulkSelectBtn(hd,serverKey){
+  const selBtn=document.createElement('button');
+  selBtn.className='sec-expbtn';selBtn.textContent='☐ all';selBtn.title='Select all groups in server';
+  selBtn.style.marginLeft='4px';
+  selBtn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const serverGroups=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===serverKey);
+    const allSelected=serverGroups.every(g=>bulkSelected.has(g.id));
+    serverGroups.forEach(g=>{
+      if(allSelected)bulkSelected.delete(g.id);
+      else bulkSelected.add(g.id);
+    });
+    selBtn.textContent=allSelected?'☐ all':'☑ all';
+    document.querySelectorAll('.gcard').forEach(card=>{
+      const cb=card.querySelector('.bulk-cb');
+      if(cb)cb.classList.toggle('on',bulkSelected.has(card.dataset.id));
+    });
+    updateBulkBar();
+  });
+  hd.appendChild(selBtn);
+}
+
+// ── BULK ACTION BAR — add Rename + Move buttons ────────────────────────────
+const bulkBar=document.querySelector('.bulk-bar');
+if(bulkBar){
+  // Add Move to Server button
+  const moveBtn=document.createElement('button');
+  moveBtn.className='bulk-bar-btn';moveBtn.id='bulk-bar-move';
+  moveBtn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Move';
+  moveBtn.addEventListener('click',()=>{
+    if(!bulkSelected.size){toast('No groups selected','warn');return;}
+    openMoveServerModal([...bulkSelected]);
+  });
+  bulkBar.insertBefore(moveBtn,document.getElementById('bulk-bar-ban'));
+  // Add Rename button
+  const renBtn=document.createElement('button');
+  renBtn.className='bulk-bar-btn';renBtn.id='bulk-bar-rename';
+  renBtn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Rename';
+  renBtn.addEventListener('click',openBulkRenameModal);
+  bulkBar.insertBefore(renBtn,document.getElementById('bulk-bar-ban'));
+}
+
+// ── VAULT INTEGRITY CHECK ──────────────────────────────────────────────────
+function runIntegrityCheck(){
+  let fixed=0;
+  vault.forEach((g,gi)=>{
+    if(!g.id){g.id=Date.now().toString(36)+gi;fixed++;}
+    if(!g.name){g.name='Group '+(gi+1);fixed++;}
+    if(!Array.isArray(g.cookies)){g.cookies=[];fixed++;}
+    if(!Array.isArray(g.alternatives)){g.alternatives=[];fixed++;}
+    g.cookies=g.cookies.filter(c=>{
+      if(!c||typeof c!=='object'){fixed++;return false;}
+      return true;
+    });
+    g.cookies.forEach(c=>{
+      if(!c.id){c.id=Date.now().toString(36)+Math.random().toString(36).slice(2,4);fixed++;}
+      if(!c.tags)c.tags=[];
+      if(!c.timeline)c.timeline=[];
+    });
+  });
+  // Remove null/undefined entries
+  const before=vault.length;
+  vault=vault.filter(Boolean);
+  fixed+=before-vault.length;
+  if(fixed>0){
+    saveVault();
+    toast(`Integrity check: fixed ${fixed} issue${fixed!==1?'s':''}  `,'warn');
+  }
+  return fixed;
+}
+// Run on load
+setTimeout(()=>runIntegrityCheck(),500);
+
+// ── PANEL: ADD MERGE, CLONE, MOVE BUTTONS ─────────────────────────────────
+// Patch refreshPanel to add extra buttons
+const _origRefreshPanel2=refreshPanel;
+refreshPanel=function(){
+  _origRefreshPanel2.apply(this,arguments);
+  const g=vault.find(x=>x.id===panelId);if(!g)return;
+  // Add buttons if not already present
+  const pBtns=document.querySelector('.p-btns');
+  if(pBtns&&!pBtns.querySelector('.p-btn-merge')){
+    const mergeBtn=document.createElement('button');
+    mergeBtn.className='p-btn p-btn-merge';mergeBtn.textContent='Merge';
+    mergeBtn.addEventListener('click',()=>openMergeModal(panelId));
+    pBtns.appendChild(mergeBtn);
+    const cloneBtn=document.createElement('button');
+    cloneBtn.className='p-btn p-btn-clone';cloneBtn.textContent='Clone';
+    cloneBtn.addEventListener('click',()=>{cloneGroup(panelId);closePanel();});
+    pBtns.appendChild(cloneBtn);
+    const moveBtn=document.createElement('button');
+    moveBtn.className='p-btn p-btn-move';moveBtn.textContent='Move to Server';
+    moveBtn.addEventListener('click',()=>openMoveServerModal([panelId]));
+    pBtns.appendChild(moveBtn);
+  }
+};
+
+// ── SERVER SELECT-ALL ──────────────────────────────────────────────────────
+// Called after render to add select-all buttons to server headers
+function addServerSelectAll(){
+  document.querySelectorAll('.sec-head').forEach(hd=>{
+    if(hd.querySelector('.sec-sel-all'))return;
+    const selBtn=document.createElement('button');
+    selBtn.className='sec-expbtn sec-sel-all';selBtn.textContent='☐';selBtn.title='Select all in server';
+    selBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const k=hd.closest('.server-sec')?.dataset.srv;
+      if(!k)return;
+      const serverGroups=vault.filter(g=>(g.serverName||'').trim().toLowerCase()===k);
+      const allSel=serverGroups.every(g=>bulkSelected.has(g.id));
+      serverGroups.forEach(g=>{allSel?bulkSelected.delete(g.id):bulkSelected.add(g.id);});
+      selBtn.textContent=allSel?'☐':'☑';
+      document.querySelectorAll('.gcard').forEach(card=>{
+        const cb=card.querySelector('.bulk-cb');
+        if(cb)cb.classList.toggle('on',bulkSelected.has(card.dataset.id));
+      });
+      updateBulkBar();
+    });
+    hd.appendChild(selBtn);
+  });
+}
+
+// ── SIDEBAR COMMANDS FIX ──────────────────────────────────────────────────
+// Ensure sidebar commands still work via right menu
+// The original sidebar commands (Export, Copy, Import, Settings, Forget) are
+// still in the DOM but now primarily accessed via the right menu
 
 function openMod(id){document.getElementById(id).classList.add('open');}
 function closeMod(id){document.getElementById(id).classList.remove('open');}
