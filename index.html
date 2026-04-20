@@ -10,7 +10,7 @@
   File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v2.1
+  Version     : v2.0
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -1066,7 +1066,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .gcard::before{content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(255,255,255,.025) 0%,transparent 55%);pointer-events:none;z-index:1;}
 .gcard:hover{border-color:var(--cc,var(--ac));box-shadow:0 0 18px rgba(var(--cr,15,111,255),.25);}
-.gcard.dim{opacity:.15!important;pointer-events:none;}
+.gcard.dim{opacity:.15;pointer-events:none;}
 .gcard.deleting{animation:cardDel .35s ease forwards;}
 @keyframes cardDel{to{opacity:0;transform:scale(.85) translateY(6px);}}
 .gcard.fly-in{animation:flyIn .4s cubic-bezier(.34,1.5,.64,1);}
@@ -2122,7 +2122,33 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         <div class="sb-div"></div>
       </nav>
 
-          </aside>
+      <!-- COMMAND DOCK -->
+      <div class="sb-dock">
+        <div class="sb-dock-label">⌘ Commands</div>
+        <div class="sb-dock-grid">
+          <div class="dock-cmd" id="sb-exp" style="--cc:#00ffaa;--cr:0,255,170" title="Export vault">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <div class="dock-cmd-txt">Export</div>
+          </div>
+          <div class="dock-cmd" id="sb-clip" style="--cc:#ffaa00;--cr:255,170,0" title="Copy all cookies u:p:c">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <div class="dock-cmd-txt">Copy</div>
+          </div>
+          <div class="dock-cmd" id="sb-imp" style="--cc:var(--a3);--cr:123,47,255" title="Import (.json or .txt)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--a3)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="dock-cmd-txt">Import</div>
+          </div>
+          <div class="dock-cmd" id="sb-vault-settings" style="--cc:var(--a2);--cr:0,212,255" title="Vault Settings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--a2)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <div class="dock-cmd-txt">Settings</div>
+          </div>
+          <div class="dock-cmd full danger" id="sb-clr" title="Forget Everything">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            <div class="dock-cmd-txt">Forget Everything</div>
+          </div>
+        </div>
+      </div>
+    </aside>
 
     <main class="main" id="main">
       <div class="backup-banner" id="backup-banner">
@@ -3235,8 +3261,7 @@ document.getElementById('sb-nav').addEventListener('click',e=>{
 
 // Dock commands
 // EXPORT button → show popup
-// sb-exp moved to right menu
-addEventListener('click',e=>{
+document.getElementById('sb-exp').addEventListener('click',e=>{
   if(!vault.length){toast('Nothing to export','err');return;}
   openExpPopup(e.currentTarget,null);
 });
@@ -3280,8 +3305,7 @@ document.addEventListener('click',e=>{
   }
 });
 // COPY button → all u:p:c
-// sb-clip moved to right menu
-addEventListener('click',()=>{
+document.getElementById('sb-clip').addEventListener('click',()=>{
   if(!vault.length){toast('Nothing to copy','err');return;}
   // Use sortVault to copy in display order (top to bottom)
   const lines=sortVault(vault).flatMap(g=>g.cookies.map(c=>fmtLine(c,'user:pass:cookie'))).filter(Boolean);
@@ -3290,10 +3314,15 @@ addEventListener('click',()=>{
   },()=>toast('Clipboard copy failed','err'));
 });
 // IMPORT button → unified (.json or .txt)
-// sb-imp moved to right menu
+document.getElementById('sb-imp').addEventListener('click',()=>document.getElementById('import-unified').click());
 // Sync vault → header button
 document.getElementById('hdr-sync-btn').addEventListener('click',()=>openSyncNowModal());
-// Forget Everything now handled by rm-forget in right menu
+document.getElementById('sb-clr').addEventListener('click',async()=>{
+  if(!vault.length){toast('Already empty','err');return;}
+  const ok=await customConfirm(`Forget everything? This will delete all ${vault.length} groups permanently. This cannot be undone.`,'Forget Everything');
+  if(!ok)return;
+  vault=[];saveVault();render();toast('Vault cleared','ok');
+});
 
 // File inputs
 document.getElementById('import-f').addEventListener('change',function(){
@@ -3390,7 +3419,7 @@ document.getElementById('update-f').addEventListener('change',function(){
 });
 
 // Backup banner
-document.getElementById('bb-do').addEventListener('click',()=>openExpPopup(document.getElementById('rmenu-open-btn'),null));
+document.getElementById('bb-do').addEventListener('click',()=>document.getElementById('sb-exp').click());
 document.getElementById('bb-x').addEventListener('click',()=>document.getElementById('backup-banner').classList.remove('show'));
 document.getElementById('update-log-x').addEventListener('click',()=>document.getElementById('update-log').classList.remove('show'));
 
@@ -3537,13 +3566,7 @@ function renderDataSwitcher(){
   const active=getActiveConfigId();
   const drop=document.getElementById('ds-dropdown');
   drop.innerHTML='';
-  // Hide Default config if it's empty AND there are other configs
-  const hasOtherConfigs=cfgs.some(c=>c.id!=='default');
-  const defaultData=JSON.parse(localStorage.getItem('saturnity_vault_default')||'[]');
-  const defaultEmpty=!defaultData||defaultData.length===0;
   cfgs.forEach(cfg=>{
-    // Skip empty Default if other configs exist
-    if(cfg.id==='default'&&hasOtherConfigs&&defaultEmpty)return;
     const item=document.createElement('div');item.className='ds-item'+(cfg.id===active?' active':'');
     const isDefault=cfg.id==='default';
     item.innerHTML=`<div class="ds-item-dot"></div><div class="ds-item-name">${esc(cfg.name)}</div>`;
@@ -4942,7 +4965,7 @@ function saveVaultSettings(){
 document.getElementById('vs-cancel').addEventListener('click',()=>closeMod('vault-settings-modal'));
 document.getElementById('vs-save').addEventListener('click',saveVaultSettings);
 document.getElementById('vs-gh-test').addEventListener('click',testGhConnection);
-// sb-vault-settings moved to right menu
+document.getElementById('sb-vault-settings').addEventListener('click',openVaultSettings);
 document.getElementById('sync-dot').addEventListener('click',openVaultSettings);
 document.getElementById('pin-decoy-hint').addEventListener('click',()=>{
   document.getElementById('pin-screen').classList.add('hidden');
@@ -5208,15 +5231,10 @@ function openCopyFmtPopup(anchor,groups){
   const popup=document.getElementById('copy-fmt-popup');
   popup.classList.add('open');
   const rect=anchor.getBoundingClientRect();
-  // Always try to open above the anchor first (bulk bar is at bottom)
-  const popH=220;
-  let top=rect.top-popH-6;
-  if(top<8)top=rect.bottom+6; // fall below if not enough room above
-  let left=rect.left;
+  let left=rect.left,top=rect.bottom+6;
   if(left+230>window.innerWidth-8)left=window.innerWidth-238;
-  if(left<8)left=8;
+  if(top+240>window.innerHeight-8)top=rect.top-246;
   popup.style.left=left+'px';popup.style.top=top+'px';
-  popup.style.zIndex='900'; // above bulk bar
 }
 function closeCopyFmtPopup(){document.getElementById('copy-fmt-popup').classList.remove('open');}
 document.querySelectorAll('.exp-pop-btn[data-copyfmt]').forEach(btn=>{
@@ -5920,15 +5938,13 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
   const isPaste=document.getElementById('sync-paste-panel').style.display!=='none';
 
   if(isPaste){
+    // Paste u:p:c tab
     const p=parseInput(document.getElementById('sync-paste-ta').value);
     if(!p.length){toast('No valid cookies','err');return;}
-
-    // Ask banned or active BEFORE applying
-    const banStatus=await openBanSyncModal(p);
-
     const {updated,notFound}=applySyncCookies(p);
     let msg=`Updated ${updated} cookie${updated!==1?'s':''}`;
     if(notFound.length){
+      // Ask what to do with unmatched cookies
       const ok=await customConfirm(
         `${notFound.length} username${notFound.length!==1?'s':''} not found in vault. Add as new group?`,
         'Add unmatched'
@@ -5947,8 +5963,6 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
     }
     saveVault();closeMod('sync-now-modal');render();
     toast(msg,'ok');
-    // Apply ban/recover logic after sync
-    if(banStatus!=='skip')applyBanSync(p,banStatus);
 
   }else{
     // File tab
@@ -6500,21 +6514,7 @@ document.getElementById('rm-export-config').addEventListener('click',()=>{closeR
 document.getElementById('rm-import').addEventListener('click',()=>{closeRMenu();document.getElementById('import-unified').click();});
 document.getElementById('rm-distribute').addEventListener('click',()=>{closeRMenu();openMod('sort-modal');});
 document.getElementById('rm-settings').addEventListener('click',()=>{closeRMenu();openMod('vault-settings-modal');});
-document.getElementById('rm-forget').addEventListener('click',async()=>{
-  closeRMenu();
-  if(!vault.length){toast('Already empty','err');return;}
-  const ok=await customConfirm(`Forget everything? This will delete all ${vault.length} groups permanently.`,'Forget Everything');
-  if(!ok)return;
-  // Auto-export as safety net before wiping
-  try{
-    const d={vault,configs:loadDataConfigs(),exportedAt:Date.now()};
-    const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-    a.download='saturnity-backup-'+new Date().toISOString().slice(0,10)+'.json';
-    a.click();URL.revokeObjectURL(a.href);
-  }catch(e){}
-  vault=[];saveVault();render();toast('Vault cleared','ok');
-});
+document.getElementById('rm-forget').addEventListener('click',()=>{closeRMenu();document.getElementById('sb-clr').click();});
 // overflow menu → rmenu
 const _omOrig=document.querySelector('.hdr-overflow-menu');
 if(_omOrig){
@@ -6561,8 +6561,8 @@ render=function(){
   staggerTimers.forEach(t=>clearTimeout(t));staggerTimers=[];
   document.querySelectorAll('.gcard').forEach((card,i)=>{
     card.classList.remove('fade-in');
-    // Don't set opacity:0 — let CSS animation handle it
-    const t=setTimeout(()=>{card.classList.add('fade-in');},i*18);
+    card.style.opacity='0';
+    const t=setTimeout(()=>{card.style.opacity='';card.classList.add('fade-in');},i*18);
     staggerTimers.push(t);
   });
   // Add server select-all buttons after render
@@ -6774,10 +6774,28 @@ document.getElementById('bsm-skip').addEventListener('click',()=>{
   if(_banSyncResolve)_banSyncResolve('skip');
 });
 
-// Ban sync modal is now wired directly in sync-now-confirm handler above
+// Patch openSyncNowModal to show ban modal after paste
+const _origOpenSyncNowModal=openSyncNowModal;
+openSyncNowModal=function(){
+  _origOpenSyncNowModal.apply(this,arguments);
+};
+
+// Hook sync-confirm to intercept and show ban modal
+const _origSyncConfirmBtn=document.getElementById('sync-now-confirm');
+if(_origSyncConfirmBtn){
+  const _origSyncHandlers=[];
+  _origSyncConfirmBtn.addEventListener('click',async function(e){
+    // After existing handler fires, check if we should ask about ban status
+    setTimeout(async()=>{
+      // This fires after the sync has been applied
+      // We check if vault changed and ask
+    },100);
+  });
+}
 
 function applyBanSync(cookies,status){
   if(status==='banned'){
+    // Mark matched cookies as banned and move to a "Banned — [server]" group
     cookies.forEach(ic=>{
       const uLow=(ic.username||'').toLowerCase();
       vault.forEach(g=>{
