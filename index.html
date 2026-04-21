@@ -10,7 +10,7 @@
   File Name   : saturnity-vault-v5-5.html
   Language    : HTML5 + CSS3 + Vanilla JavaScript (ES2020+)
   Framework   : None — zero dependencies (Google Fonts CDN only, display only)
-  Version     : v2.2
+  Version     : v2.3
   Status      : Active / Production
   Entry Point : Self-contained. Open directly in any modern browser. No build step.
   Storage     : localStorage + optional GitHub Gist (remote). No mandatory server.
@@ -3265,12 +3265,7 @@ document.getElementById('sb-nav').addEventListener('click',e=>{
 });
 
 // Dock commands
-// EXPORT button → show popup
-// sb-exp moved to right menu
-addEventListener('click',e=>{
-  if(!vault.length){toast('Nothing to export','err');return;}
-  openExpPopup(e.currentTarget,null);
-});
+// Export now accessible via right menu → Export button
 // Unified export popup handler
 let expPopupTarget=null; // null=whole vault, array=specific groups
 function openExpPopup(anchor,groups){
