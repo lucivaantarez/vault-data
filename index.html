@@ -891,6 +891,23 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   transition:color .12s;}
 .srch-clear:hover{color:var(--bright);}
 .srch-clear.visible{display:block;}
+/* ── SEARCH DROPDOWN ── */
+.search-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:rgba(7,11,18,.98);
+  border:1px solid var(--bdrb);border-radius:10px;z-index:650;max-height:320px;overflow-y:auto;
+  display:none;box-shadow:0 8px 32px rgba(0,0,0,.7);animation:qcIn .12s ease;}
+.search-dropdown.open{display:block;}
+.search-dropdown::-webkit-scrollbar{width:3px;}
+.search-dropdown::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.sd-header{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:1.5px;
+  padding:8px 12px 4px;text-transform:uppercase;border-bottom:1px solid var(--bdr);margin-bottom:4px;}
+.sd-item{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;transition:background .1s;border-radius:7px;margin:1px 4px;}
+.sd-item:hover{background:rgba(15,111,255,.1);}
+.sd-username{font-family:var(--mono);font-size:11px;color:var(--bright);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sd-username mark{background:none;color:var(--a2);font-weight:700;font-style:normal;}
+.sd-group{font-family:var(--mono);font-size:9px;color:var(--dim);background:rgba(123,47,255,.1);
+  border:1px solid rgba(123,47,255,.2);border-radius:3px;padding:1px 6px;white-space:nowrap;flex-shrink:0;}
+.sd-idx{font-family:var(--mono);font-size:8px;color:var(--dim);flex-shrink:0;}
+.sd-empty{font-family:var(--mono);font-size:10px;color:var(--dim);padding:14px 12px;text-align:center;}
 .hdr-right{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;min-width:0;}
 .sort-btn,.card-size-btn{background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:7px;
   padding:6px 9px;font-family:var(--mono);font-size:10px;color:var(--dim);cursor:pointer;
@@ -1285,7 +1302,7 @@ body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
 
 /* ── COOKIE ITEMS (terminal line style) ── */
 .ck-item{background:rgba(6,10,16,.7);border:1px solid rgba(26,48,80,.5);border-radius:7px;
-  padding:0;overflow:hidden;position:relative;font-family:var(--mono);}
+  padding:0;overflow:hidden;position:relative;font-family:var(--mono);scroll-margin-top:8px;}
 .ck-item.editing{border-color:var(--ac);box-shadow:0 0 0 1px rgba(15,111,255,.15);}
 .ck-item+.ck-item{border-top-left-radius:0;border-top-right-radius:0;margin-top:-1px;}
 .ck-line{display:flex;align-items:baseline;gap:0;padding:3px 10px;border-bottom:1px solid rgba(26,48,80,.3);min-height:26px;}
@@ -2035,6 +2052,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       </svg>
       <input type="text" id="search-in" placeholder="Search groups or usernames..." dir="ltr" inputmode="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <button class="srch-clear" id="srch-clear" title="Clear search">✕</button>
+      <div class="search-dropdown" id="search-dropdown"></div>
     </div>
     <div class="hdr-right">
       <div class="hdr-desktop-btns">
@@ -3029,43 +3047,129 @@ document.getElementById('list-view-btn').addEventListener('click',()=>{
 });
 
 // Search
+// ── SEARCH DROPDOWN ────────────────────────────────────────────────────────
 let _searchDebounce=null;
-document.getElementById('search-in').addEventListener('input',()=>{
-  const val=document.getElementById('search-in').value;
+const _searchInput=document.getElementById('search-in');
+const _searchDropdown=document.getElementById('search-dropdown');
+
+function closeSearchDropdown(){
+  _searchDropdown.classList.remove('open');
+  _searchDropdown.innerHTML='';
+}
+
+function buildSearchDropdown(q){
+  _searchDropdown.innerHTML='';
+  if(!q||q.length<1){closeSearchDropdown();return;}
+  const qLow=q.toLowerCase();
+  const results=[];
+  // Search cookies by username across all vault groups
+  vault.forEach(g=>{
+    g.cookies.forEach((c,idx)=>{
+      const u=(c.username||'').toLowerCase();
+      if(u.includes(qLow)){
+        results.push({username:c.username||'',group:g,cookieIdx:idx,c});
+      }
+    });
+    // Also match by group name
+    if(g.name.toLowerCase().includes(qLow)&&!results.find(r=>r.group===g&&r.isGroup)){
+      results.unshift({username:null,group:g,cookieIdx:-1,isGroup:true});
+    }
+  });
+  if(!results.length){
+    const empty=document.createElement('div');
+    empty.className='sd-empty';empty.textContent='No matches found';
+    _searchDropdown.appendChild(empty);
+    _searchDropdown.classList.add('open');
+    return;
+  }
+  const hdr=document.createElement('div');
+  hdr.className='sd-header';
+  hdr.textContent=`${Math.min(results.length,50)} result${results.length!==1?'s':''}`;
+  _searchDropdown.appendChild(hdr);
+  results.slice(0,50).forEach(r=>{
+    const item=document.createElement('div');item.className='sd-item';
+    if(r.isGroup){
+      // Group match
+      const col=getColor(r.group.serverName);
+      item.innerHTML=`
+        <div style="width:7px;height:7px;border-radius:50%;background:${col.c};flex-shrink:0;"></div>
+        <div class="sd-username">${highlightMatch(esc(r.group.name),q)}</div>
+        <div class="sd-group">${r.group.cookies.length}c</div>`;
+      item.addEventListener('click',()=>{
+        closeSearchDropdown();
+        _searchInput.value='';
+        document.getElementById('srch-clear').classList.remove('visible');
+        applyFilter();
+        openPanel(r.group.id);
+      });
+    } else {
+      // Username match
+      item.innerHTML=`
+        <div class="sd-username">${highlightMatch(esc(r.username),q)}</div>
+        <div class="sd-group">${esc(r.group.name)}</div>
+        <div class="sd-idx">#${r.cookieIdx+1}</div>`;
+      item.addEventListener('click',()=>{
+        closeSearchDropdown();
+        _searchInput.value='';
+        document.getElementById('srch-clear').classList.remove('visible');
+        applyFilter();
+        openPanel(r.group.id);
+        // Scroll to the specific cookie inside the panel
+        setTimeout(()=>scrollPanelToCookie(r.cookieIdx),300);
+      });
+    }
+    _searchDropdown.appendChild(item);
+  });
+  _searchDropdown.classList.add('open');
+}
+
+function highlightMatch(text,q){
+  if(!q)return text;
+  const idx=text.toLowerCase().indexOf(q.toLowerCase());
+  if(idx<0)return text;
+  return text.slice(0,idx)+'<mark>'+text.slice(idx,idx+q.length)+'</mark>'+text.slice(idx+q.length);
+}
+
+function scrollPanelToCookie(idx){
+  const grid=document.getElementById('p-grid');
+  if(!grid)return;
+  const items=grid.querySelectorAll('.ck-item');
+  if(!items[idx])return;
+  items[idx].scrollIntoView({behavior:'smooth',block:'center'});
+  items[idx].style.transition='box-shadow .15s';
+  items[idx].style.boxShadow='0 0 0 2px var(--a2)';
+  setTimeout(()=>{if(items[idx])items[idx].style.boxShadow='';},1800);
+}
+
+_searchInput.addEventListener('input',()=>{
+  const val=_searchInput.value;
   document.getElementById('srch-clear').classList.toggle('visible',val.length>0);
   clearTimeout(_searchDebounce);
   _searchDebounce=setTimeout(()=>{
     applyFilter();
-    highlightSearchUsernames(val.trim().toLowerCase());
-  },120);
-});
-document.getElementById('srch-clear').addEventListener('click',()=>{
-  document.getElementById('search-in').value='';
-  document.getElementById('srch-clear').classList.remove('visible');
-  clearTimeout(_searchDebounce);
-  applyFilter();
-  highlightSearchUsernames('');
-  document.getElementById('search-in').focus();
+    buildSearchDropdown(val.trim());
+  },150);
 });
 
-// Highlight matching username pills in visible cards
-function highlightSearchUsernames(q){
-  document.querySelectorAll('.gcard-user-pill').forEach(pill=>{
-    pill.classList.remove('search-match');
-  });
-  if(!q||q.length<2)return;
-  document.querySelectorAll('.gcard:not(.dim) .gcard-user-pill').forEach(pill=>{
-    if((pill.textContent||'').toLowerCase().includes(q)){
-      pill.classList.add('search-match');
-    }
-  });
-  // If only one card matches, auto-open it
-  const dimmed=document.querySelectorAll('.gcard:not(.dim)');
-  if(dimmed.length===1){
-    const gid=dimmed[0].dataset.id;
-    if(gid&&gid!==panelId)openPanel(gid);
+_searchInput.addEventListener('focus',()=>{
+  if(_searchInput.value.trim())buildSearchDropdown(_searchInput.value.trim());
+});
+
+document.getElementById('srch-clear').addEventListener('click',()=>{
+  _searchInput.value='';
+  document.getElementById('srch-clear').classList.remove('visible');
+  clearTimeout(_searchDebounce);
+  closeSearchDropdown();
+  applyFilter();
+  _searchInput.focus();
+});
+
+// Close dropdown on outside click
+document.addEventListener('click',e=>{
+  if(!_searchInput.contains(e.target)&&!_searchDropdown.contains(e.target)){
+    closeSearchDropdown();
   }
-}
+});
 
 // Paste
 const ppanel=document.getElementById('paste-panel');
@@ -3596,7 +3700,10 @@ function renderDataSwitcher(){
       });
     });
     actions.appendChild(renBtn);
-    if(!isDefault){
+    // Allow delete if: not default, OR default is empty and other configs exist
+    const defaultDataForDel=JSON.parse(localStorage.getItem('saturnity_vault_default')||'[]');
+    const canDeleteDefault=isDefault&&defaultDataForDel.length===0&&cfgs.filter(c=>c.id!=='default').length>0;
+    if(!isDefault||canDeleteDefault){
       const delBtn=document.createElement('button');delBtn.className='ds-action-btn del';delBtn.title='Delete';
       delBtn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
       delBtn.addEventListener('click',async e=>{
@@ -3606,8 +3713,9 @@ function renderDataSwitcher(){
         const cfgs2=loadDataConfigs().filter(x=>x.id!==cfg.id);
         saveDataConfigs(cfgs2);
         localStorage.removeItem('saturnity_vault_'+cfg.id);
-        if(cfg.id===active)setActiveConfig('default');
-        else renderDataSwitcher();
+        // Switch to first remaining config
+        const firstRemaining=cfgs2[0]?.id||'default';
+        setActiveConfig(firstRemaining);
         toast(`Deleted "${cfg.name}"`,'ok');
       });
       actions.appendChild(delBtn);
@@ -5906,7 +6014,7 @@ document.getElementById('sync-file-pick').addEventListener('click',()=>{
 });
 
 // Core: match incoming cookies into vault by username, update cookie+password in-place
-function applySyncCookies(incomingCookies){
+function applySyncCookies(incomingCookies,forceUpdate){
   let updated=0;
   const notFound=[];
   incomingCookies.forEach(ic=>{
@@ -5916,14 +6024,20 @@ function applySyncCookies(incomingCookies){
     vault.forEach(g=>{
       g.cookies.forEach((c,ci)=>{
         if((c.username||'').toLowerCase()===uLow){
-          const changed=c.cookie!==ic.cookie||(ic.password&&c.password!==ic.password);
-          if(changed){
+          const cookieChanged=c.cookie!==ic.cookie;
+          const passChanged=ic.password&&c.password!==ic.password;
+          // Always update cookie+password when syncing (forceUpdate) or when changed
+          if(cookieChanged||passChanged||forceUpdate){
             c.cookie=ic.cookie;
             if(ic.password)c.password=ic.password;
             c.banStatus=undefined;
+            c.lastSynced=Date.now();
             logChange(g,`Cookie updated via sync: ${esc(ic.username)}`);
             ckLogEvent('edited',`Synced — cookie updated in "${esc(g.name)}"`,ic);
             updated++;
+          } else {
+            // Still stamp lastSynced even if no change
+            c.lastSynced=Date.now();
           }
           found=true;
         }
@@ -5945,7 +6059,7 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
     // Ask banned or active BEFORE applying
     const banStatus=await openBanSyncModal(p);
 
-    const {updated,notFound}=applySyncCookies(p);
+    const {updated,notFound}=applySyncCookies(p,true);
     let msg=`Updated ${updated} cookie${updated!==1?'s':''}`;
     if(notFound.length){
       const ok=await customConfirm(
