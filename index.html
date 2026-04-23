@@ -2340,7 +2340,7 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
       <button class="swap-tab" id="sync-tab-file">Upload file</button>
     </div>
     <div id="sync-paste-panel">
-      <textarea class="finput" id="sync-paste-ta" rows="5" placeholder="username:password:cookie&#10;one per line" style="font-family:var(--mono);font-size:11px;resize:none;"></textarea>
+      <textarea class="finput" id="sync-paste-ta" rows="5" placeholder="username:password:cookie&#10;username:cookie&#10;one per line — cookie prefix optional" style="font-family:var(--mono);font-size:11px;resize:none;"></textarea>
       <div id="sync-paste-info" style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:4px;"></div>
     </div>
     <div id="sync-file-panel" style="display:none;">
@@ -3372,8 +3372,11 @@ document.getElementById('sb-nav').addEventListener('click',e=>{
 // Export now accessible via right menu → Export button
 // Unified export popup handler
 let expPopupTarget=null; // null=whole vault, array=specific groups
+let _expPopupJustOpened=false;
+let _copyFmtJustOpened=false;
 function openExpPopup(anchor,groups){
   expPopupTarget=groups||null;
+  _expPopupJustOpened=true;
   const popup=document.getElementById('exp-popup');
   popup.classList.add('open');
   const rect=anchor.getBoundingClientRect();
@@ -3404,6 +3407,7 @@ document.querySelectorAll('.exp-pop-btn[data-expfmt]').forEach(btn=>{
   });
 });
 document.addEventListener('click',e=>{
+  if(_expPopupJustOpened){_expPopupJustOpened=false;return;}
   const popup=document.getElementById('exp-popup');
   if(popup.classList.contains('open')&&!popup.contains(e.target)&&!e.target.closest('.rmenu-open-btn')&&!e.target.closest('.sec-expbtn')&&!e.target.closest('.bulk-bar-export-anchor')){
     closeExpPopup();
@@ -5332,6 +5336,7 @@ document.getElementById('bulk-bar-export').addEventListener('click',e=>{
 let _copyFmtGroups=null;
 function openCopyFmtPopup(anchor,groups){
   _copyFmtGroups=groups;
+  _copyFmtJustOpened=true;
   const popup=document.getElementById('copy-fmt-popup');
   popup.classList.add('open');
   const rect=anchor.getBoundingClientRect();
@@ -5357,6 +5362,7 @@ document.querySelectorAll('.exp-pop-btn[data-copyfmt]').forEach(btn=>{
   });
 });
 document.addEventListener('click',e=>{
+  if(_copyFmtJustOpened){_copyFmtJustOpened=false;return;}
   const popup=document.getElementById('copy-fmt-popup');
   if(popup&&popup.classList.contains('open')&&!popup.contains(e.target)){
     closeCopyFmtPopup();
@@ -5942,12 +5948,33 @@ function checkSwapReminders(){
   saveSwapReminders(reminders);
 }
 
-// ═══════════════════════════════════════
-// FIX 13: SYNC NOW MODAL
-// ═══════════════════════════════════════
-// ═══════════════════════════════════════
-// FIX: SYNC NOW — username-match + txt support
-// ═══════════════════════════════════════
+// Sync-specific parser: accepts username:password:cookie OR username:cookie OR raw cookie
+// Does NOT require COOKIE_PFX — sync data may come in any format
+function parseSyncLine(line){
+  line=line.trim();if(!line)return null;
+  // If line contains COOKIE_PFX, use normal parseLine
+  if(line.includes(COOKIE_PFX))return parseLine(line);
+  // Otherwise: split by first colon for username, rest is treated as cookie/pass
+  const parts=line.split(':');
+  if(parts.length<2)return null;
+  // Check if last part looks like a cookie (long string)
+  // u:p:c → username:password:cookie
+  // u:c → username:cookie
+  if(parts.length>=3){
+    // Last part is cookie (could contain colons itself — rejoin from index 2)
+    const username=parts[0].trim();
+    const password=parts[1].trim();
+    const cookie=parts.slice(2).join(':').trim();
+    if(!username||!cookie)return null;
+    return{username,password,cookie};
+  }
+  // u:c
+  const username=parts[0].trim();
+  const cookie=parts.slice(1).join(':').trim();
+  if(!username||!cookie)return null;
+  return{username,password:null,cookie};
+}
+function parseSyncInput(txt){return txt.split('\n').map(parseSyncLine).filter(Boolean);}
 let _syncFileData=null; // {type:'json'|'txt', data}
 
 function openSyncNowModal(){
@@ -6053,8 +6080,8 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
   const isPaste=document.getElementById('sync-paste-panel').style.display!=='none';
 
   if(isPaste){
-    const p=parseInput(document.getElementById('sync-paste-ta').value);
-    if(!p.length){toast('No valid cookies','err');return;}
+    const p=parseSyncInput(document.getElementById('sync-paste-ta').value);
+    if(!p.length){toast('No valid cookies — paste as username:password:cookie','err');return;}
 
     // Ask banned or active BEFORE applying
     const banStatus=await openBanSyncModal(p);
@@ -6089,7 +6116,7 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
 
     if(_syncFileData.type==='txt'){
       // .txt: same username-match logic
-      const {updated,notFound}=applySyncCookies(_syncFileData.cookies);
+      const {updated,notFound}=applySyncCookies(_syncFileData.cookies,true);
       let msg=`Updated ${updated} cookie${updated!==1?'s':''}`;
       if(notFound.length){
         const ok=await customConfirm(
@@ -6115,7 +6142,7 @@ document.getElementById('sync-now-confirm').addEventListener('click',async()=>{
       // .json: first do username-match updates on all cookies across all incoming groups,
       // then add any new groups that don't exist by ID
       const allIncoming=_syncFileData.groups.flatMap(g=>(g.cookies||[]).map(c=>({...c,_srcGroup:g})));
-      const {updated,notFound}=applySyncCookies(allIncoming);
+      const {updated,notFound}=applySyncCookies(allIncoming,true);
       // Add groups by ID that don't exist yet
       let added=0;
       _syncFileData.groups.forEach(g=>{
@@ -6841,16 +6868,19 @@ function computeImportDiff(incoming){
 
 // Patch the existing sync/paste flow to show diff first
 const _origApplySyncCookies=applySyncCookies;
-applySyncCookies=function(incomingCookies){
-  // Dedup: filter out cookies where username AND cookie both match
-  const deduped=incomingCookies.filter(ic=>{
-    if(!ic.username)return true;
-    const uLow=ic.username.toLowerCase();
-    return!vault.flatMap(g=>g.cookies).some(c=>(c.username||'').toLowerCase()===uLow&&c.cookie===ic.cookie);
-  });
-  const skipped=incomingCookies.length-deduped.length;
-  if(skipped>0)toast(`Skipped ${skipped} duplicate${skipped!==1?'s':''}  already in vault`,'ok');
-  return _origApplySyncCookies.apply(this,[deduped,...Array.prototype.slice.call(arguments,1)]);
+applySyncCookies=function(incomingCookies,forceUpdate){
+  // Dedup only when NOT force-updating (i.e. not from sync modal)
+  if(!forceUpdate){
+    const deduped=incomingCookies.filter(ic=>{
+      if(!ic.username)return true;
+      const uLow=ic.username.toLowerCase();
+      return!vault.flatMap(g=>g.cookies).some(c=>(c.username||'').toLowerCase()===uLow&&c.cookie===ic.cookie);
+    });
+    const skipped=incomingCookies.length-deduped.length;
+    if(skipped>0)toast(`Skipped ${skipped} duplicate${skipped!==1?'s':''} already in vault`,'ok');
+    return _origApplySyncCookies.apply(this,[deduped,false]);
+  }
+  return _origApplySyncCookies.apply(this,[incomingCookies,true]);
 };
 
 // ── UNDO IMPORT ────────────────────────────────────────────────────────────
@@ -6921,37 +6951,88 @@ document.getElementById('bsm-skip').addEventListener('click',()=>{
 
 function applyBanSync(cookies,status){
   if(status==='banned'){
+    // Find or create a dedicated banned group per server
+    const movedUsers=[];
     cookies.forEach(ic=>{
       const uLow=(ic.username||'').toLowerCase();
       vault.forEach(g=>{
-        g.cookies.forEach(c=>{
-          if((c.username||'').toLowerCase()===uLow){
-            c.banStatus='banned';
+        g.cookies.forEach((c,ci)=>{
+          if((c.username||'').toLowerCase()===uLow&&c.banStatus!=='banned'){
+            // Store last group for recovery
             c._lastGroup=g.id;
-            addCookieTimelineEntry(c,'banned','Marked banned via sync');
+            c._lastGroupIdx=ci;
+            c.banStatus='banned';
+            addCookieTimelineEntry(c,'banned','Moved to banned group via sync');
+            // Find or create banned group for this server
+            const srvName=g.serverName||null;
+            const bannedGrpName=srvName?`Banned — ${srvName}`:'Banned';
+            let bannedGrp=vault.find(bg=>bg.name===bannedGrpName&&bg.banned);
+            if(!bannedGrp){
+              bannedGrp={
+                id:Date.now().toString(36)+Math.random().toString(36).slice(2,5)+movedUsers.length,
+                name:bannedGrpName,serverName:srvName,banned:true,pinned:false,
+                createdAt:Date.now(),alternatives:[],cookies:[],changelog:[]
+              };
+              vault.push(bannedGrp);
+              logChange(bannedGrp,'Created as dedicated banned group');
+            }
+            // Move cookie to banned group (copy it over, remove from source later)
+            const bannedCookie={...c};
+            bannedGrp.cookies.push(bannedCookie);
+            movedUsers.push({groupId:g.id,cookieIdx:ci,username:c.username});
           }
         });
       });
     });
+    // Remove moved cookies from original groups (in reverse to preserve indices)
+    const byGroup=new Map();
+    movedUsers.forEach(({groupId,cookieIdx})=>{
+      if(!byGroup.has(groupId))byGroup.set(groupId,[]);
+      byGroup.get(groupId).push(cookieIdx);
+    });
+    byGroup.forEach((indices,groupId)=>{
+      const g=vault.find(x=>x.id===groupId);
+      if(!g)return;
+      indices.sort((a,b)=>b-a).forEach(i=>g.cookies.splice(i,1));
+    });
     saveVault();render();
-    toast(`Marked ${cookies.length} cookies as banned`,'ok');
+    toast(`Moved ${movedUsers.length} cookie${movedUsers.length!==1?'s':''} to banned group`,'ok');
   } else if(status==='active'){
-    // Recover from banned — move back to last group
+    // Recover from banned groups — move back to last group
     let recovered=0;
-    cookies.forEach(ic=>{
-      const uLow=(ic.username||'').toLowerCase();
-      vault.forEach(g=>{
-        g.cookies.forEach(c=>{
-          if((c.username||'').toLowerCase()===uLow&&c.banStatus==='banned'){
-            c.banStatus=undefined;
-            addCookieTimelineEntry(c,'recovered','Recovered via sync');
-            recovered++;
+    // Find all banned groups
+    const bannedGroups=vault.filter(g=>g.banned);
+    bannedGroups.forEach(bg=>{
+      const toRecover=[];
+      bg.cookies.forEach((c,ci)=>{
+        const match=cookies.find(ic=>(ic.username||'').toLowerCase()===(c.username||'').toLowerCase());
+        if(match){
+          c.banStatus=undefined;
+          addCookieTimelineEntry(c,'recovered','Recovered via sync');
+          // Move back to last group if known
+          const lastGrp=c._lastGroup?vault.find(g=>g.id===c._lastGroup):null;
+          if(lastGrp){
+            lastGrp.cookies.push({...c,banStatus:undefined});
+          } else {
+            // No last group — create recovery group
+            let recGrp=vault.find(g=>g.name==='Recovered Cookies');
+            if(!recGrp){
+              recGrp={id:Date.now().toString(36)+ci,name:'Recovered Cookies',
+                serverName:bg.serverName,banned:false,pinned:false,
+                createdAt:Date.now(),alternatives:[],cookies:[],changelog:[]};
+              vault.push(recGrp);
+            }
+            recGrp.cookies.push({...c,banStatus:undefined});
           }
-        });
+          toRecover.push(ci);
+          recovered++;
+        }
       });
+      // Remove recovered cookies from banned group (reverse order)
+      toRecover.sort((a,b)=>b-a).forEach(i=>bg.cookies.splice(i,1));
     });
     saveVault();render();
-    toast(`Recovered ${recovered} cookie${recovered!==1?'s':''}  from banned`,'ok');
+    toast(`Recovered ${recovered} cookie${recovered!==1?'s':''} from banned`,'ok');
   }
 }
 
