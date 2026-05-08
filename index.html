@@ -1044,6 +1044,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* ── SECTIONS ── */
 .server-sec{margin-bottom:24px;scroll-margin-top:14px;}
+/* ── BANNED SECTION (always pinned at top) ── */
+.banned-sec{margin-bottom:24px;border:1px solid rgba(255,48,96,.3);border-radius:14px;
+  padding:14px;background:rgba(255,48,96,.04);position:relative;}
+.banned-sec::before{content:'';position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,48,96,.06),transparent 50%);pointer-events:none;}
+.banned-sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;z-index:1;}
+.banned-sec-dot{width:9px;height:9px;border-radius:50%;background:var(--danger);box-shadow:0 0 12px var(--danger);}
+.banned-sec-name{font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:1.5px;color:var(--danger);flex:1;text-transform:uppercase;}
+.banned-sec-meta{font-family:var(--mono);font-size:9px;color:var(--danger);opacity:.7;letter-spacing:1px;}
+.banned-sec .gcard{border-color:rgba(255,48,96,.3);}
 .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bdr);}
 .sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .sec-name{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:1px;color:var(--bright);flex:1;}
@@ -1203,6 +1213,12 @@ body.list-view .gcard-rename-btn:hover{border-color:var(--a2);color:var(--a2);}
 .exp-pop-btn svg{flex-shrink:0;opacity:.8;}
 .exp-pop-btn-main{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--bright);flex-shrink:0;min-width:60px;}
 .exp-pop-btn-sub{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto;}
+.exp-pop-limit-row{display:flex;align-items:center;gap:8px;padding:6px 10px;margin-top:4px;
+  border-top:1px solid var(--bdr);}
+.exp-pop-limit-lbl{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;flex:1;text-transform:uppercase;}
+.exp-pop-limit-row input{width:60px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);
+  border-radius:5px;padding:3px 6px;font-family:var(--mono);font-size:10px;color:var(--bright);outline:none;text-align:center;}
+.exp-pop-limit-row input:focus{border-color:var(--a2);}
 .exp-pop-sep{height:1px;background:var(--bdr);margin:4px 6px;}
 
 /* ── SIDEBAR COMMANDS ── */
@@ -1673,8 +1689,9 @@ body.compact-cards .gcard-sparkline{display:none;}
 .import-diff-lbl{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;}
 .undo-import-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,170,0,.12);
   border-top:1px solid rgba(255,170,0,.3);padding:10px 16px;display:flex;align-items:center;gap:12px;
-  z-index:600;transform:translateY(100%);transition:transform .3s;font-family:var(--mono);font-size:11px;color:var(--warn);}
-.undo-import-bar.show{transform:translateY(0);}
+  z-index:600;transform:translateY(100%);transition:transform .3s;font-family:var(--mono);font-size:11px;color:var(--warn);
+  pointer-events:none;}
+.undo-import-bar.show{transform:translateY(0);pointer-events:auto;}
 .undo-import-btn{background:rgba(255,170,0,.2);border:1px solid rgba(255,170,0,.4);border-radius:6px;
   padding:5px 14px;font-family:var(--mono);font-size:10px;color:var(--warn);cursor:pointer;}
 .undo-import-progress{height:2px;background:rgba(255,170,0,.4);position:absolute;bottom:0;left:0;transition:width linear;}
@@ -1877,6 +1894,25 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
 .cx-info{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.5px;min-height:14px;}
 .cx-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .cx-results{display:flex;flex-direction:column;gap:4px;max-height:400px;overflow-y:auto;}
+/* Bulk Lookup result lists */
+.bl-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+@media(max-width:600px){.bl-cols{grid-template-columns:1fr;}}
+.bl-col{background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:9px;padding:10px;
+  display:flex;flex-direction:column;}
+.bl-col-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.bl-col-title{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;}
+.bl-col.matched .bl-col-title{color:var(--ok);}
+.bl-col.missing .bl-col-title{color:var(--warn);}
+.bl-col-list{font-family:var(--mono);font-size:10px;color:var(--txt);max-height:240px;overflow-y:auto;
+  padding-right:4px;display:flex;flex-direction:column;gap:3px;}
+.bl-col-list::-webkit-scrollbar{width:3px;}
+.bl-col-list::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.bl-row{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:5px;
+  background:rgba(255,255,255,.02);}
+.bl-row.matched{background:rgba(0,255,170,.04);}
+.bl-row.missing{background:rgba(255,170,0,.04);color:var(--warn);}
+.bl-row-user{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bl-row-grp{font-size:8px;color:var(--dim);background:rgba(123,47,255,.1);padding:1px 5px;border-radius:3px;flex-shrink:0;}
 .cx-results::-webkit-scrollbar{width:3px;}
 .cx-results::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
 .cx-result-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;
@@ -2207,6 +2243,33 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
         </div>
       </div>
 
+      <!-- BULK LOOKUP -->
+      <div class="cx-panel" id="bl-panel" style="margin-top:8px;">
+        <div class="cx-hdr" id="bl-toggle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H1l8-8 8 8h-8v10"/><path d="M21 13v8h-8"/></svg>
+          <div class="cx-title">Bulk Lookup</div>
+          <div id="bl-match-count" class="cx-match-count"></div>
+          <span class="cx-chev" id="bl-chev">▾</span>
+        </div>
+        <div class="cx-body" id="bl-body">
+          <textarea class="cx-ta" id="bl-ta" placeholder="Paste usernames — one per line&#10;username1&#10;username2&#10;username3"></textarea>
+          <div class="cx-info" id="bl-info"></div>
+          <div class="cx-actions">
+            <button class="btn-primary" id="bl-search-btn" style="font-size:11px;padding:7px 14px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Lookup
+            </button>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-family:var(--mono);font-size:9px;color:var(--dim);white-space:nowrap;">limit</span>
+              <input id="bl-limit" type="number" min="0" max="10000" value="0" style="width:60px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:6px;padding:4px 6px;font-family:var(--mono);font-size:10px;color:var(--bright);outline:none;text-align:center;" title="0 = no limit">
+            </div>
+            <button class="bsm b-ghost" id="bl-copy-btn" style="display:none;font-size:11px;">Copy matched</button>
+            <button class="bsm b-ghost" id="bl-export-btn" style="display:none;font-size:11px;">Export</button>
+            <button class="bsm b-ghost" id="bl-clear-btn" style="font-size:11px;">Clear</button>
+          </div>
+          <div id="bl-results" style="margin-top:10px;"></div>
+        </div>
+      </div>
+
       <div class="filter-bar" id="filter-bar">
         <button class="filter-pill on" data-filter="all">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>All
@@ -2257,6 +2320,10 @@ body.list-view .gcard.bulk-selected .gcard-chk::after{content:'✓';font-size:13
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
     <span class="exp-pop-btn-main">c</span><span class="exp-pop-btn-sub">cookie only</span>
   </button>
+  <div class="exp-pop-limit-row">
+    <span class="exp-pop-limit-lbl">limit per group</span>
+    <input type="number" id="copy-fmt-limit" min="0" max="10000" value="0" placeholder="0=all" title="0 = no limit, otherwise top N per group">
+  </div>
 </div>
 
 <!-- EXPORT POPUP -->
@@ -3538,9 +3605,8 @@ document.addEventListener('mouseleave',e=>{
 },true);
 
 // Close export popup on outside click
+// Old duplicate exp-popup close handler removed — primary handler with justOpened guard is above
 document.addEventListener('click',e=>{
-  const popup=document.getElementById('exp-popup');
-  if(popup&&!popup.contains(e.target)&&e.target.id!=='sb-exp')popup.classList.remove('open');
   const dsDrop=document.getElementById('ds-dropdown');
   if(dsDrop&&!document.getElementById('data-switch-btn').contains(e.target))dsDrop.classList.remove('open');
 });
@@ -4067,8 +4133,11 @@ function render(){
   staggerTimers.forEach(t=>clearTimeout(t));staggerTimers=[];
   const vEl=document.getElementById('vault');vEl.innerHTML='';
   const sorted=sortVault(vault);
+  // Separate banned groups - they always render at top regardless of server filter
+  const bannedGroups=sorted.filter(g=>g.banned);
+  const nonBanned=sorted.filter(g=>!g.banned);
   const srvMap=new Map(),ug=[];
-  sorted.forEach(g=>{
+  nonBanned.forEach(g=>{
     if(g.serverName&&g.serverName.trim()){
       const k=g.serverName.trim().toLowerCase();
       if(!srvMap.has(k))srvMap.set(k,{label:g.serverName.trim(),groups:[]});
@@ -4079,6 +4148,18 @@ function render(){
   if(!vault.length){
     vEl.innerHTML=`<div class="empty-state"><p>No cookies stored yet.<br>Paste or import to get started.</p></div>`;
     animStats(0,0,0);return;
+  }
+  // Render banned section at top
+  if(bannedGroups.length){
+    const totalBannedC=bannedGroups.reduce((s,g)=>s+g.cookies.length,0);
+    const bsec=document.createElement('div');bsec.className='banned-sec';
+    bsec.innerHTML=`<div class="banned-sec-head">
+      <div class="banned-sec-dot"></div>
+      <div class="banned-sec-name">⚠ Banned Cookies</div>
+      <div class="banned-sec-meta">${bannedGroups.length}g · ${totalBannedC}c</div>
+    </div>`;
+    const bgrid=mkGrid();bannedGroups.forEach(g=>bgrid.appendChild(mkCard(g)));
+    bsec.appendChild(bgrid);vEl.appendChild(bsec);
   }
   if(ug.length){
     const sec=document.createElement('div');sec.className='ug-sec';
@@ -5355,8 +5436,14 @@ document.querySelectorAll('.exp-pop-btn[data-copyfmt]').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const fmt=btn.dataset.copyfmt;
     const src=_copyFmtGroups||(sortVault(vault));
-    const lines=src.flatMap(g=>g.cookies.map(c=>fmtLine(c,fmt))).filter(Boolean);
-    copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} lines (${fmt})`,'ok'),()=>toast('Copy failed','err'));
+    const limitRaw=parseInt(document.getElementById('copy-fmt-limit')?.value);
+    const limit=(!limitRaw||limitRaw<=0)?Infinity:Math.min(10000,limitRaw);
+    const lines=src.flatMap(g=>{
+      const slice=limit===Infinity?g.cookies:g.cookies.slice(0,limit);
+      return slice.map(c=>fmtLine(c,fmt));
+    }).filter(Boolean);
+    const limitNote=limit===Infinity?'':` (top ${limit}/group)`;
+    copyText(lines.join('\n'),()=>toast(`Copied ${lines.length} lines (${fmt})${limitNote}`,'ok'),()=>toast('Copy failed','err'));
     closeCopyFmtPopup();
     clearBulkSelect();
   });
@@ -5380,10 +5467,36 @@ document.getElementById('bulk-bar-copy').addEventListener('click',e=>{
 document.getElementById('bulk-bar-ban').addEventListener('click',async()=>{
   if(!bulkSelected.size)return;
   const n=bulkSelected.size;
-  const ok=await customConfirm(`Mark ${n} group${n!==1?'s':''} as banned?`,'Ban All');
+  const ok=await customConfirm(`Move all cookies from ${n} group${n!==1?'s':''} to banned group?`,'Ban All');
   if(!ok)return;
-  getBulkGroups().forEach(g=>{g.banned=true;logChange(g,'Bulk banned');});
-  saveVault();render();clearBulkSelect();toast(`${n} group${n!==1?'s':''} banned`,'ok');
+  // Move each group's cookies into its server's dedicated banned group
+  const groups=getBulkGroups();
+  let totalMoved=0;
+  groups.forEach(g=>{
+    if(g.banned)return; // already a banned group
+    const srvName=g.serverName||null;
+    const bannedGrpName=srvName?`Banned — ${srvName}`:'Banned';
+    let bannedGrp=vault.find(bg=>bg.name===bannedGrpName&&bg.banned);
+    if(!bannedGrp){
+      bannedGrp={
+        id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+        name:bannedGrpName,serverName:srvName,banned:true,pinned:false,
+        createdAt:Date.now(),alternatives:[],cookies:[],changelog:[]
+      };
+      vault.push(bannedGrp);
+      logChange(bannedGrp,'Created as dedicated banned group');
+    }
+    g.cookies.forEach(c=>{
+      c._lastGroup=g.id;c.banStatus='banned';
+      addCookieTimelineEntry(c,'banned','Bulk banned');
+      bannedGrp.cookies.push({...c});
+      totalMoved++;
+    });
+    g.cookies=[]; // empty source
+    logChange(g,'All cookies moved to banned group');
+  });
+  saveVault();render();clearBulkSelect();
+  toast(`Moved ${totalMoved} cookie${totalMoved!==1?'s':''} to banned`,'ok');
 });
 
 document.getElementById('bulk-bar-delete').addEventListener('click',async()=>{
@@ -6353,6 +6466,109 @@ document.getElementById('cx-clear-btn').addEventListener('click',()=>{
   document.getElementById('cx-info').textContent='';
   document.getElementById('cx-match-count').textContent='';
   document.getElementById('cx-copy-all-btn').style.display='none';
+});
+
+// ═══════════════════════════════════════
+// BULK LOOKUP — paste many usernames, show matched + missing, copy/export
+// ═══════════════════════════════════════
+let _blMatched=[]; // {username, group, cookie}
+let _blMissing=[]; // username strings
+
+document.getElementById('bl-toggle').addEventListener('click',()=>{
+  document.getElementById('bl-body').classList.toggle('open');
+  document.getElementById('bl-chev').classList.toggle('rotated');
+});
+
+function getBlLimit(){
+  const v=parseInt(document.getElementById('bl-limit')?.value);
+  return (!v||v<=0)?Infinity:Math.min(10000,v);
+}
+
+function parseBlInput(txt){
+  return txt.split('\n').map(s=>s.trim()).filter(Boolean);
+}
+
+document.getElementById('bl-search-btn').addEventListener('click',()=>{
+  const usernames=parseBlInput(document.getElementById('bl-ta').value);
+  if(!usernames.length){toast('Paste usernames first','warn');return;}
+  const limit=getBlLimit();
+  // Build a per-group cookie pool, sliced top-to-bottom by limit
+  const allCookies=vault.flatMap(g=>{
+    const slice=limit===Infinity?g.cookies:g.cookies.slice(0,limit);
+    return slice.map(c=>({c,g}));
+  });
+  _blMatched=[];_blMissing=[];
+  usernames.forEach(u=>{
+    const uLow=u.toLowerCase();
+    const found=allCookies.find(({c})=>(c.username||'').toLowerCase()===uLow);
+    if(found)_blMatched.push({username:found.c.username,group:found.g,cookie:found.c});
+    else _blMissing.push(u);
+  });
+  renderBlResults();
+});
+
+function renderBlResults(){
+  const out=document.getElementById('bl-results');
+  out.innerHTML='';
+  if(!_blMatched.length&&!_blMissing.length)return;
+  const wrap=document.createElement('div');wrap.className='bl-cols';
+  // Matched
+  const mc=document.createElement('div');mc.className='bl-col matched';
+  mc.innerHTML=`<div class="bl-col-hdr"><span class="bl-col-title">Matched</span><span style="font-family:var(--mono);font-size:9px;color:var(--ok);">${_blMatched.length}</span></div>`;
+  const ml=document.createElement('div');ml.className='bl-col-list';
+  _blMatched.forEach(r=>{
+    const row=document.createElement('div');row.className='bl-row matched';
+    row.innerHTML=`<span class="bl-row-user">${esc(r.username)}</span><span class="bl-row-grp">${esc(r.group.name)}</span>`;
+    row.style.cursor='pointer';
+    row.addEventListener('click',()=>{
+      openPanel(r.group.id);
+      const idx=r.group.cookies.indexOf(r.cookie);
+      if(idx>=0)setTimeout(()=>scrollPanelToCookie(idx),300);
+    });
+    ml.appendChild(row);
+  });
+  mc.appendChild(ml);wrap.appendChild(mc);
+  // Missing
+  const mic=document.createElement('div');mic.className='bl-col missing';
+  mic.innerHTML=`<div class="bl-col-hdr"><span class="bl-col-title">Missing</span><span style="font-family:var(--mono);font-size:9px;color:var(--warn);">${_blMissing.length}</span></div>`;
+  const mil=document.createElement('div');mil.className='bl-col-list';
+  _blMissing.forEach(u=>{
+    const row=document.createElement('div');row.className='bl-row missing';
+    row.innerHTML=`<span class="bl-row-user">${esc(u)}</span>`;
+    mil.appendChild(row);
+  });
+  mic.appendChild(mil);wrap.appendChild(mic);
+  out.appendChild(wrap);
+  // Show copy/export buttons
+  document.getElementById('bl-copy-btn').style.display=_blMatched.length?'':'none';
+  document.getElementById('bl-export-btn').style.display=_blMatched.length?'':'none';
+  // Update info
+  document.getElementById('bl-info').textContent=`${_blMatched.length} matched · ${_blMissing.length} missing`;
+  document.getElementById('bl-info').style.color=_blMatched.length>0?'var(--ok)':'var(--dim)';
+  document.getElementById('bl-match-count').textContent=`${_blMatched.length}/${_blMatched.length+_blMissing.length}`;
+}
+
+document.getElementById('bl-copy-btn').addEventListener('click',e=>{
+  if(!_blMatched.length)return;
+  // Open format popup with bulk lookup matched cookies as the source
+  const lookupGroups=[{cookies:_blMatched.map(r=>r.cookie),name:'_bulk_lookup'}];
+  openCopyFmtPopup(e.currentTarget,lookupGroups);
+});
+
+document.getElementById('bl-export-btn').addEventListener('click',e=>{
+  if(!_blMatched.length)return;
+  const lookupGroups=[{cookies:_blMatched.map(r=>r.cookie),name:'bulk-lookup',serverName:''}];
+  openExpPopup(e.currentTarget,lookupGroups);
+});
+
+document.getElementById('bl-clear-btn').addEventListener('click',()=>{
+  document.getElementById('bl-ta').value='';
+  document.getElementById('bl-results').innerHTML='';
+  document.getElementById('bl-info').textContent='';
+  document.getElementById('bl-match-count').textContent='';
+  document.getElementById('bl-copy-btn').style.display='none';
+  document.getElementById('bl-export-btn').style.display='none';
+  _blMatched=[];_blMissing=[];
 });
 
 // ═══════════════════════════════════════
