@@ -6475,8 +6475,11 @@ let _blMatched=[]; // {username, group, cookie}
 let _blMissing=[]; // username strings
 
 document.getElementById('bl-toggle').addEventListener('click',()=>{
-  document.getElementById('bl-body').classList.toggle('open');
-  document.getElementById('bl-chev').classList.toggle('rotated');
+  const body=document.getElementById('bl-body');
+  const chev=document.getElementById('bl-chev');
+  const open=body.style.display==='flex';
+  body.style.display=open?'none':'flex';
+  chev.style.transform=open?'':'rotate(180deg)';
 });
 
 function getBlLimit(){
